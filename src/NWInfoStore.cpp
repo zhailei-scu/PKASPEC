@@ -73,7 +73,8 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 	double preEng;
 	double postEng;
 	double deltaEng;
-	char buff[MAXLENONELINE];
+	std::stringstream ss;
+	std::string tempBuf;
 
 	int trackIndex;
 	int dumpCountTrackInfo;
@@ -82,15 +83,20 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 
 	ofs.open(path, std::ios::in);
 
-	while (!ofs.eof()) {
+	getline(ofs, tempBuf); // the first line
 
-		ofs.getline(buff, MAXLENONELINE);
+	while (getline(ofs, tempBuf)) {
 
-		if (strlen(buff) < 1) {
+		ss.clear();
+		ss.str("");
+
+		ss << tempBuf;
+
+		if (tempBuf.size() < 1) {
 			continue;
 		}
-		
-		ofs >> EventID
+
+		ss >> EventID
 			>> TrackID
 			>> StepID
 			>> preEng
@@ -99,6 +105,8 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 			>> prestep_x>> prestep_y >> prestep_z
 			>> poststep_x >> poststep_y >> poststep_z;
 
+
+		std::cout << EventID << std::endl;
 
 		if (0 == NWInfoStore::GetInstance()->GetEventsInfo()->count(EventID)) {
 
@@ -120,7 +128,7 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 				trackIndex++;
 
 				if (dumpCountTrackInfo > 1) {
-					cout << "There are dumplicate case for event: " << NWGlobal::GetInstance()->CurrentEventID
+					cout << "There are dumplicate case for event: " << EventID
 						<< "track : " << TrackID << endl;
 					system("pause");
 				}
@@ -134,15 +142,14 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 
 			trackIndex = trackVector->size() - 1;
 		}
-		tempTrackInfo = &trackVector->at(trackIndex);
-
+		tempTrackInfo = &trackVector->at(trackIndex);		
 
 		if (tempTrackInfo->GetStepsInfo()->size()) {
 			for (vector<StepInfo>::iterator itStep = tempTrackInfo->GetStepsInfo()->begin(); itStep != tempTrackInfo->GetStepsInfo()->end(); itStep++) {
 				if (itStep->GetStepID() == StepID) {
-					cout << "There are dumplicate case for event: " << NWGlobal::GetInstance()->CurrentEventID
-						<< "track : " << TrackID
-						<< "step : " << StepID << endl;
+					cout << "There are dumplicate case for event: " << EventID
+						<< " track : " << TrackID
+						<< " step : " << StepID << endl;
 					system("pause");
 				}
 			}

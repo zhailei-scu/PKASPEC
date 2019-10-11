@@ -97,18 +97,25 @@ void NWSteppingAction::UserSteppingAction(const G4Step* stepping) {
 								prePosition = stepping->GetPreStepPoint()->GetPosition();
 								postPosition = stepping->GetPostStepPoint()->GetPosition();
 
-
 								NWGlobal::GetInstance()->ofsSimRecord << std::setw(OutWidth) << NWGlobal::GetInstance()->CurrentEventID
 									<< std::setw(OutWidth) << stepping->GetTrack()->GetTrackID()
-									<< std::setw(OutWidth) << stepping->GetTrack()->GetCurrentStepNumber()
-									<< std::setw(OutWidth) << PreEng << std::setw(OutWidth) << PostEng << std::setw(OutWidth) << DeltaEng
-									<< std::setw(OutWidth) << prePosition.getX() << std::setw(OutWidth) << prePosition.getY() << std::setw(OutWidth) << prePosition.getZ()
-									<< std::setw(OutWidth) << postPosition.getX() << std::setw(OutWidth) << postPosition.getY() << std::setw(OutWidth) << postPosition.getZ()
+									<< std::setw(OutWidth) <<std::setiosflags(std::ios::scientific)<<std::setprecision(7)<< stepping->GetTrack()->GetCurrentStepNumber()
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << PreEng 
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << PostEng 
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << DeltaEng
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << prePosition.getX()
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << prePosition.getY()
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << prePosition.getZ()
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << postPosition.getX()
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << postPosition.getY()
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << postPosition.getZ()
 									<< endl;
 
 
 								//store info
 								
+								/*
+
 								if (0 == NWInfoStore::GetInstance()->GetEventsInfo()->count(NWGlobal::GetInstance()->CurrentEventID)) {
 
 									NWInfoStore::GetInstance()->GetEventsInfo()->insert(map<int, vector<TrackInfo>>::value_type(NWGlobal::GetInstance()->CurrentEventID, vector<TrackInfo>()));
@@ -163,13 +170,13 @@ void NWSteppingAction::UserSteppingAction(const G4Step* stepping) {
 								tempStepInfo.SetpostPosition(postPosition);
 
 								tempTrackInfo->GetStepsInfo()->push_back(tempStepInfo);
-								
+								*/
 							}
 						}
 					}
 					
 
-					std::cout << name << std::endl;
+					//std::cout << name << std::endl;
 
 					/*
 					

@@ -76,7 +76,7 @@ void RunTheSimulation(int argc, char* argv[]) {
 
 	NWGlobal::GetInstance()->ofsSimRecord.flush();
 
-	NWAnalysis::GetInstance()->AnalysisResult(NWInfoStore::GetInstance()->GetEventsInfo());
+	//NWAnalysis::GetInstance()->AnalysisResult(NWInfoStore::GetInstance()->GetEventsInfo());
 
 	if (runManager) delete runManager;
 }
@@ -99,6 +99,8 @@ void AnalysisTheResult(int argc, char* argv[]) {
 	NWGlobal::GetInstance()->InitialGlobal(argv[1], argv[3]);
 
 	NWInfoStore::GetInstance()->ReadEventsInfo(originalDataFilePath);
+
+	std::cout << "Read done..." << std::endl;
 
 	NWAnalysis::GetInstance()->AnalysisResult(NWInfoStore::GetInstance()->GetEventsInfo());
 

@@ -3,6 +3,7 @@
 #include "stdio.h"
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 /*The singleton instance*/
 NWAnalysis* NWAnalysis::NWAnalysisInstance = new NWAnalysis();
 
@@ -99,12 +100,11 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 						G4ThreeVector pKADist = prePKAPos - postPKAPos;
 
-						prePKAPos = postPKAPos;
-
 						double distance = pKADist.mag();
 
-						ofsOrignalDistance << distance << std::endl;
+						ofsOrignalDistance << std::setiosflags(std::ios::scientific) << std::setprecision(7) << distance << std::endl;
 
+						prePKAPos = postPKAPos;
 
 						theDistance.push_back(distance);
 
@@ -113,8 +113,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 					}
 				}
 			}
-
-
 
 		}
 	}
@@ -174,7 +172,8 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 	for (int i = 0; i < binNum; i++) {
 		int outwidth = NWGlobal::GetInstance()->OutWidth;
-		ofsAnalysis << std::setw(outwidth) << binEnds[i] << std::setw(outwidth) << score[i] << std::endl;
+		ofsAnalysis << std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << binEnds[i] 
+					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score[i] << std::endl;
 	}
 
 	ofsAnalysis.close();
