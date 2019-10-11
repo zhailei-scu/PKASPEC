@@ -43,6 +43,10 @@ public:
 public:
 	std::fstream ofsSimRecord;
 
+	int flushFrequence = 100;
+
+	int flushRecord = 0;
+
 	int CurrentEventID;
 
 	int EventLoopsNumber;

@@ -111,6 +111,11 @@ void NWSteppingAction::UserSteppingAction(const G4Step* stepping) {
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << postPosition.getZ()
 									<< endl;
 
+								NWGlobal::GetInstance()->flushRecord++;
+
+								if (0 == NWGlobal::GetInstance()->flushRecord%NWGlobal::GetInstance()->flushFrequence) {
+									NWGlobal::GetInstance()->ofsSimRecord.flush();
+								}
 
 								//store info
 								
