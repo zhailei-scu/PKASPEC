@@ -121,6 +121,8 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	std::cout << "maxDistance: " << maxDistance << std::endl;
 
 
+	minDistance = std::max(NWGlobal::GetInstance()->minPrecision, minDistance);
+
 	minLog = std::floor(std::log10(minDistance));
 	maxLog = std::ceil(std::log10(maxDistance));
 
@@ -165,7 +167,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 	for (int i = 0; i < binNum; i++) {
 
-		score[i] = score[i] / pow(10, i / NWGlobal::GetInstance()->BinNumberEachPower);
+		score[i] = score[i] / pow(10, std::max(i-1,0) / NWGlobal::GetInstance()->BinNumberEachPower);
 
 	}
 
