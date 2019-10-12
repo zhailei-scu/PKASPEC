@@ -85,6 +85,26 @@ public:
 
 };
 
+class EventInfo {
+public:
+	EventInfo() = delete;
+	EventInfo(int EventID);
+	~EventInfo();
+private:
+	int EventID;
+	std::vector<TrackInfo> tracksInfo;
+
+public:
+
+	inline int GetEventID() {
+		return this->EventID;
+	}
+
+	inline std::vector<TrackInfo>* GetTracksInfo() {
+		return &this->tracksInfo;
+	}
+};
+
 class NWInfoStore {
 private:
 	NWInfoStore();

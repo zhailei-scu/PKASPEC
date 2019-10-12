@@ -29,9 +29,11 @@ void NWAnalysis::ReleaseInstance() {
 
 void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedData) {
 	std::fstream ofsOrignalDistance;
-	std::fstream ofsAnalysis;
+	std::fstream ofsAnalysis_EqualInterval;
+	std::fstream ofsAnalysis_PowerInterval;
 	std::string OrignalDistancePath;
-	std::string AnalysisPath;
+	std::string AnalysisPath_EqualInterval;
+	std::string AnalysisPath_PowerInterval;
 	std::vector<double> theDistance;
 	double maxDistance = -1.0;
 	double minDistance = 1E32;
@@ -41,36 +43,78 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	double *binEnds;
 	double *score;
 	std::stringstream ss;
+	int PowerInterval_BinNum = 200;
+	double PowerInterval_Min = 0.01;
+	double PowerInterval_Max = 200;
+	double PowerInterval_DeltaLength;
+	double *binEnds_PowerInterval;
+	int *score_PowerInterval;
 
-	ss.clear();
 
-	ss.str("");
+	binEnds_PowerInterval = new double[PowerInterval_BinNum];
+
+	score_PowerInterval = new int[PowerInterval_BinNum];
+
+	PowerInterval_DeltaLength = (std::log10(PowerInterval_Max) - std::log10(PowerInterval_Min)) / PowerInterval_BinNum;
+
 
 	if(NWGlobal::GetInstance()->OutPath.length() >0){
+
+		ss.clear();
+
+		ss.str("");
+
 		ss << NWGlobal::GetInstance()->OutPath.c_str() << "\\" << "DistanceResult_OriginDistance.txt";
+
+		ss >> OrignalDistancePath;
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << NWGlobal::GetInstance()->OutPath.c_str() << "\\" << "DistanceResult_Analysis_EqualInterval.txt";
+
+		ss >> AnalysisPath_EqualInterval;
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << NWGlobal::GetInstance()->OutPath.c_str() << "\\" << "DistanceResult_Analysis_PowerInterval.txt";
+
+		ss >> AnalysisPath_PowerInterval;
 	}
 	else {
-		ss << "DistanceResult_OriginDistance.txt";
-	}
+		ss.clear();
 
-	ss >> OrignalDistancePath;
+		ss.str("");
+
+		ss << "DistanceResult_OriginDistance.txt";
+
+		ss >> OrignalDistancePath;
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << "DistanceResult_Analysis_EqualInterval.txt";
+
+		ss >> AnalysisPath_EqualInterval;
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << "DistanceResult_Analysis_PowerInterval.txt";
+
+		ss >> AnalysisPath_PowerInterval;
+	}
 
 	ofsOrignalDistance.open(OrignalDistancePath, std::ios::out | std::ios::ate);
 
-	ss.clear();
+	ofsAnalysis_EqualInterval.open(AnalysisPath_EqualInterval, std::ios::out | std::ios::ate);
 
-	ss.str("");
-
-	if (NWGlobal::GetInstance()->OutPath.length() > 0) {
-		ss << NWGlobal::GetInstance()->OutPath.c_str() << "\\" << "DistanceResult_Analysis.txt";
-	}
-	else {
-		ss << "DistanceResult_Analysis.txt";
-	}
-
-	ss >> AnalysisPath;
-
-	ofsAnalysis.open(AnalysisPath, std::ios::out | std::ios::ate);
+	ofsAnalysis_PowerInterval.open(AnalysisPath_PowerInterval, std::ios::out | std::ios::ate);
 
 	std::map<int, std::vector<TrackInfo>>::iterator it = storedData->begin();
 
@@ -120,24 +164,27 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	std::cout << "minDistance: " << minDistance << std::endl;
 	std::cout << "maxDistance: " << maxDistance << std::endl;
 
-
-	minDistance = std::max(NWGlobal::GetInstance()->minPrecision, minDistance);
+	minDistance = std::max(minPrecision, minDistance);
 
 	minLog = std::floor(std::log10(minDistance));
 	maxLog = std::ceil(std::log10(maxDistance));
 
 
-	binNum = (maxLog - minLog)*NWGlobal::GetInstance()->BinNumberEachPower;
+	binNum = (maxLog - minLog)*BinNumberEachPower;
 
 	binEnds = new double[binNum];
 	score = new double[binNum];
 
 	for (int i = 0; i < binNum; i++) {
-		double base = pow(10, minLog + i / NWGlobal::GetInstance()->BinNumberEachPower);
-		binEnds[i] = base + (i % NWGlobal::GetInstance()->BinNumberEachPower)*base * 9 / NWGlobal::GetInstance()->BinNumberEachPower;
+		double base = pow(10, minLog + i / BinNumberEachPower);
+		binEnds[i] = base + (i % BinNumberEachPower)*base * 9 / BinNumberEachPower;
 		score[i] = 0;
 	}
 
+	for (int i = 0; i < PowerInterval_BinNum; i++) {
+		binEnds_PowerInterval[i] = PowerInterval_Min*std::pow(10, i*PowerInterval_DeltaLength);
+		score_PowerInterval[i] = 0;
+	}
 
 	std::vector<double>::iterator itDistance = theDistance.begin();
 
@@ -161,26 +208,47 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 				break;
 			}
 		}
+
+		if (*itDistance >= PowerInterval_Min && *itDistance <= PowerInterval_Max) {
+			int binPos = std::floor((std::log10(*itDistance) - std::log10(PowerInterval_Min)) / PowerInterval_DeltaLength);
+			score_PowerInterval[binPos]++;
+		}
 		
 	}
 
 
 	for (int i = 0; i < binNum; i++) {
 
-		score[i] = score[i] / pow(10, std::max(i-1,0) / NWGlobal::GetInstance()->BinNumberEachPower);
+		score[i] = score[i] / pow(10, std::max(i-1,0) / BinNumberEachPower);
 
 	}
 
 
+	int outwidth = NWGlobal::GetInstance()->OutWidth;
+
 	for (int i = 0; i < binNum; i++) {
-		int outwidth = NWGlobal::GetInstance()->OutWidth;
-		ofsAnalysis << std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << binEnds[i] 
+		ofsAnalysis_EqualInterval << std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << binEnds[i]
 					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score[i] << std::endl;
 	}
 
-	ofsAnalysis.close();
+
+	for (int i = 0; i < PowerInterval_BinNum; i++) {
+		ofsAnalysis_PowerInterval << std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << binEnds_PowerInterval[i]
+			<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score_PowerInterval[i] << std::endl;
+	}
+
+
+	ofsAnalysis_EqualInterval.close();
+
+	ofsAnalysis_PowerInterval.close();
 
 	ofsOrignalDistance.close();
+
+	if (!binEnds) delete[] binEnds;
+	if (!score) delete[] score;
+
+	if (!binEnds_PowerInterval) delete[] binEnds_PowerInterval;
+	if (!score_PowerInterval) delete[] score_PowerInterval;
 }
 
 

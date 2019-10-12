@@ -36,6 +36,8 @@ private:
 	int targetTrackID;
 
 	string targetProcessName;
+
+	EventInfo eventInfo;
 };
 
 

@@ -26,6 +26,15 @@ public:
 
 	static NWAnalysisGarbo NWAnalysisGarboInstance;
 
+public:
+
+	int BinNumberEachPower = 100;
+
+	double minBin = 0.01;
+	double maxBin = 200;
+
+	double minPrecision = 1e-7;
+
 };
 
 

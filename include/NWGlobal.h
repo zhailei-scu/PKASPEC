@@ -36,11 +36,7 @@ public:
 public:
 	std::string OutPath;
 
-	int BinNumberEachPower = 100;
-
 	int OutWidth = 20;
-
-	double minPrecision = 1e-7;
 
 public:
 	std::fstream ofsSimRecord;

@@ -33,6 +33,18 @@ TrackInfo::~TrackInfo() {
 	std::vector<StepInfo>().swap(this->stepsInfo);
 }
 
+EventInfo::EventInfo(int EventID) {
+	this->EventID = EventID;
+	this->tracksInfo.clear();
+	std::vector<TrackInfo>().swap(this->tracksInfo);
+}
+
+EventInfo::~EventInfo() {
+	this->EventID = -1;
+	this->tracksInfo.clear();
+	std::vector<TrackInfo>().swap(this->tracksInfo);
+}
+
 
 
 /*The singleton instance */
