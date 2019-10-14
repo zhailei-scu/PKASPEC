@@ -7,6 +7,7 @@
 #include "G4PVPlacement.hh"
 #include "G4VPhysicalVolume.hh"
 #include "NWGlobal.h"
+#include "G4PhysicalConstants.hh"
 
 NWGeometry::NWGeometry() {
 
@@ -27,7 +28,9 @@ G4VPhysicalVolume* NWGeometry::Construct() {
 
 	G4NistManager * nist = G4NistManager::Instance();
 	/*The world volum*/
-	G4Material* worldMaterial = nist->FindOrBuildMaterial("G4_AIR");
+
+	//G4Material* worldMaterial = nist->FindOrBuildMaterial("G4_AIR");
+	G4Material* worldMaterial = new G4Material("world_Vacum",1.0, 1.01*g /mole, universe_mean_density, kStateGas, 0.1*kelvin,1.e-19*kelvin);
 	//G4cout << worldMaterial << G4endl;
 
 	G4Box* worldBoxShape = new G4Box("worldBoxShape", 1.0*targetBox_x, 1.0*targetBox_y, 1.0*targetBox_z);

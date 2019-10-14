@@ -87,7 +87,7 @@ public:
 
 class EventInfo {
 public:
-	EventInfo() = delete;
+	EventInfo();
 	EventInfo(int EventID);
 	~EventInfo();
 private:

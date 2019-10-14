@@ -84,10 +84,25 @@ void NWGlobal::InitialGlobal(const char* mode,const  char* outPath) {
 
 		ofsSimRecord.open(outFile, std::ios::out | std::ios::ate);
 
-		ofsSimRecord << std::setw(OutWidth) << "EventID" << std::setw(OutWidth) << "TrackID" << std::setw(OutWidth) << "StepID"
-			<< std::setw(OutWidth) << "PreEng" << std::setw(OutWidth) << "PostEng" << std::setw(OutWidth) << "DeltaEng"
-			<< std::setw(OutWidth) << "PrePos(x)" << std::setw(OutWidth) << "PrePos(y)" << std::setw(OutWidth) << "PrePos(z)"
-			<< std::setw(OutWidth) << "PostPos(x)" << std::setw(OutWidth) << "PostPos(y)" << std::setw(OutWidth) << "PostPos(z)" << std::endl;
+		ofsSimRecord 
+			<< std::setw(OutWidth) << "EventID"    
+			<< std::setw(OutWidth) << "TrackID"    
+			<< std::setw(OutWidth) << "StepID"
+			<< std::setw(OutWidth) << "PreEng(MeV)"     
+			<< std::setw(OutWidth) << "PostEng(MeV)"   
+			<< std::setw(OutWidth) << "DeltaEng(MeV)"
+			<< std::setw(OutWidth) << "DeltaTime(ns)"
+			<< std::setw(OutWidth) << "OriginPos_x(mm)"
+			<< std::setw(OutWidth) << "OriginPos_y(mm)"
+			<< std::setw(OutWidth) << "OriginPos_z(mm)"
+			<< std::setw(OutWidth) << "PrePos_x(mm)"  
+			<< std::setw(OutWidth) << "PrePos_y(mm)"  
+			<< std::setw(OutWidth) << "PrePos_z(mm)"
+			<< std::setw(OutWidth) << "PostPos_x(mm)" 
+			<< std::setw(OutWidth) << "PostPos_y(mm)" 
+			<< std::setw(OutWidth) << "PostPos_z(mm)" 
+			<< std::setw(OutWidth) << "ProcessName"
+			<< std::endl;
 	}
 }
 

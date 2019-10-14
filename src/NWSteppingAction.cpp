@@ -6,6 +6,7 @@
 
 using namespace std;
 
+
 NWSteppingAction::NWSteppingAction() {
 
 }
@@ -71,25 +72,28 @@ void NWSteppingAction::UserSteppingAction(const G4Step* stepping) {
 		G4int Cond = (*fpSteppingManager->GetfSelectedPostStepDoItVector())[PostStepLoops - np - 1];
 
 		if (Cond != InActivated) {
-			if (((Cond == NotForced) && (fpSteppingManager->GetfStepStatus() == fPostStepDoItProc)) //||  //Here, we only care about the non-transportation process
-				//((Cond == Forced) && (fpSteppingManager->GetfStepStatus() != fExclusivelyForcedProc)) ||
-				//	   ((Cond == Conditionally) && (fpSteppingManager->GetfStepStatus() == fAlongStepDoItProc)) ||
-				//((Cond == ExclusivelyForced) && (fpSteppingManager->GetfStepStatus() == fExclusivelyForcedProc)) ||
-				//((Cond == StronglyForced))
+			if (((Cond == NotForced) && (fpSteppingManager->GetfStepStatus() == fPostStepDoItProc)) ||  //Here, we only care about the non-transportation or touch-boundary processes
+				((Cond == Forced) && (fpSteppingManager->GetfStepStatus() != fExclusivelyForcedProc)) ||
+					   ((Cond == Conditionally) && (fpSteppingManager->GetfStepStatus() == fAlongStepDoItProc)) ||
+				((Cond == ExclusivelyForced) && (fpSteppingManager->GetfStepStatus() == fExclusivelyForcedProc)) ||
+				((Cond == StronglyForced))
 				) {
 
 				if (this->targetTrackID == stepping->GetTrack()->GetTrackID()) {
 
-					if ((PostStepLoops - np - 1) != PSDIPIDTriggered) {
-						std::cout << "The are wrong between : " << PostStepLoops - np - 1 << " and " << PSDIPIDTriggered << std::endl;
-						//system("pause");
-					}
-
 					name = ((*fpSteppingManager->GetfPostStepDoItVector())[np])->GetProcessName();
 
-					if (0 == name.compare(this->targetProcessName)) {
-						if (NULL != stepping->GetPostStepPoint()->GetMaterial()) {
-							if (0 == stepping->GetPostStepPoint()->GetMaterial()->GetName().compare(NWGlobal::GetInstance()->targetMaterial)) {
+					//if (0 == name.compare(this->targetProcessName)) {
+					if ((Cond == NotForced && fPostStepDoItProc == fpSteppingManager->GetfStepStatus()) || fGeomBoundary == fpSteppingManager->GetfStepStatus() ) {
+
+						if (Cond == NotForced &&  (PostStepLoops - np - 1) != PSDIPIDTriggered) {
+							std::cout << "The are wrong between : " << PostStepLoops - np - 1 << " and " << PSDIPIDTriggered << std::endl;
+							//system("pause");
+						}
+
+
+						if (NULL != stepping->GetPreStepPoint()->GetMaterial()) {
+							if (0 == stepping->GetPreStepPoint()->GetMaterial()->GetName().compare(NWGlobal::GetInstance()->targetMaterial)) {
 								
 								PreEng = stepping->GetPreStepPoint()->GetKineticEnergy();
 								PostEng = stepping->GetPostStepPoint()->GetKineticEnergy();
@@ -99,16 +103,21 @@ void NWSteppingAction::UserSteppingAction(const G4Step* stepping) {
 
 								NWGlobal::GetInstance()->ofsSimRecord << std::setw(OutWidth) << NWGlobal::GetInstance()->CurrentEventID
 									<< std::setw(OutWidth) << stepping->GetTrack()->GetTrackID()
-									<< std::setw(OutWidth) <<std::setiosflags(std::ios::scientific)<<std::setprecision(7)<< stepping->GetTrack()->GetCurrentStepNumber()
-									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << PreEng 
-									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << PostEng 
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << stepping->GetTrack()->GetCurrentStepNumber()
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << PreEng
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << PostEng
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << DeltaEng
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << stepping->GetDeltaTime()
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << NWGlobal::GetInstance()->particleOriginPos.getX()
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << NWGlobal::GetInstance()->particleOriginPos.getY()
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << NWGlobal::GetInstance()->particleOriginPos.getZ()
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << prePosition.getX()
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << prePosition.getY()
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << prePosition.getZ()
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << postPosition.getX()
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << postPosition.getY()
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << postPosition.getZ()
+									<< std::setw(OutWidth) << name
 									<< endl;
 
 								NWGlobal::GetInstance()->flushRecord++;

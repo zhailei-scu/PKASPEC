@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <iostream>
+#include "G4ThreeVector.hh"
 
 extern std::string simMode;
 extern std::string analysisMode;
@@ -54,6 +55,8 @@ public:
 	std::string gunParticleName;
 
 	std::string targetMaterial;
+
+	G4ThreeVector particleOriginPos;
 
 public:
 	void PrintInfo();

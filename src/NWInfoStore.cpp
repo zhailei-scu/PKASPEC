@@ -33,6 +33,12 @@ TrackInfo::~TrackInfo() {
 	std::vector<StepInfo>().swap(this->stepsInfo);
 }
 
+EventInfo::EventInfo() {
+	this->EventID = 0;
+	this->tracksInfo.clear();
+	std::vector<TrackInfo>().swap(this->tracksInfo);
+}
+
 EventInfo::EventInfo(int EventID) {
 	this->EventID = EventID;
 	this->tracksInfo.clear();

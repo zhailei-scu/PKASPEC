@@ -4,6 +4,7 @@
 
 #include "G4UserSteppingAction.hh"
 #include <string>
+#include "NWInfoStore.h"
 
 using namespace std;
 
@@ -39,6 +40,8 @@ private:
 
 	EventInfo eventInfo;
 };
+
+
 
 
 #endif

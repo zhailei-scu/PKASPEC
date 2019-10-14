@@ -129,5 +129,7 @@ void NWPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
 
 	NWGlobal::GetInstance()->CurrentEventID = anEvent->GetEventID();
 
+	NWGlobal::GetInstance()->particleOriginPos = G4ThreeVector(X0, Y0, Z0);
+
 	G4cout << "Event : " << anEvent->GetEventID() << G4endl;
 }
