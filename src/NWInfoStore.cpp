@@ -86,11 +86,14 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 	int EventID;
 	int TrackID;
 	int StepID;
-	double prestep_x, prestep_y, prestep_z;
-	double poststep_x, poststep_y, poststep_z;
 	double preEng;
 	double postEng;
 	double deltaEng;
+	double deltaTime;
+	double originstep_x, originstep_y, originstep_z;
+	double prestep_x, prestep_y, prestep_z;
+	double poststep_x, poststep_y, poststep_z;
+	std::string processname;
 	std::stringstream ss;
 	std::string tempBuf;
 
@@ -114,14 +117,20 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 			continue;
 		}
 
+		processname.clear();
+		processname.swap(std::string());
+
 		ss >> EventID
 			>> TrackID
 			>> StepID
 			>> preEng
 			>> postEng
 			>> deltaEng
+			>> deltaTime
+			>> originstep_x >> originstep_y >> originstep_z
 			>> prestep_x>> prestep_y >> prestep_z
-			>> poststep_x >> poststep_y >> poststep_z;
+			>> poststep_x >> poststep_y >> poststep_z
+			>> processname;
 
 
 		std::cout << EventID << std::endl;
@@ -177,13 +186,14 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 
 		tempStepInfo.SetpreEng(preEng);
 		tempStepInfo.SetpostEng(postEng);
+		tempStepInfo.SetDeltaEng(deltaEng);
+		tempStepInfo.SetDeltaTime(deltaTime);
+		tempStepInfo.SetOriginPosition(G4ThreeVector(originstep_x, originstep_y, originstep_z));
 		tempStepInfo.SetprePosition(G4ThreeVector(prestep_x, prestep_y, prestep_z));
 		tempStepInfo.SetpostPosition(G4ThreeVector(poststep_x, poststep_y, poststep_z));
+		tempStepInfo.SetProcessName(processname);
 
 		tempTrackInfo->GetStepsInfo()->push_back(tempStepInfo);
-
-
-
 	}
 
 

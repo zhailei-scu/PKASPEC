@@ -18,15 +18,59 @@ public:
 private:
 	int stepID;
 
-	G4ThreeVector prePosition;
-	G4ThreeVector postPosition;
 	double preEng;
 	double postEng;
+	double deltaEng;
+	double deltaTime;
+	G4ThreeVector originPosition;
+	G4ThreeVector prePosition;
+	G4ThreeVector postPosition;
+	std::string processName;
 
 public:
 
 	inline int GetStepID(){
 		return this->stepID;
+	}
+
+	inline void SetpreEng(double preEng) {
+		this->preEng = preEng;
+	}
+
+	inline double GetpreEng() {
+		return this->preEng;
+	}
+
+	inline void SetpostEng(double postEng) {
+		this->postEng = postEng;
+	}
+
+	inline double GetpostEng() {
+		return this->postEng;
+	}
+
+	inline void SetDeltaEng(double deltaEng) {
+		this->deltaEng = deltaEng;
+	}
+
+	inline double GetDeltaEng() {
+		return this->deltaEng;
+	}
+
+	inline void SetDeltaTime(double deltaTime) {
+		this->deltaTime = deltaTime;
+	}
+
+	inline double GetDeltaTime() {
+		return this->deltaTime;
+	}
+
+	inline void SetOriginPosition(G4ThreeVector originPosition) {
+		this->originPosition = originPosition;
+	}
+
+	inline G4ThreeVector GetOriginPosition() {
+		return this->originPosition;
 	}
 
 	inline void SetprePosition(G4ThreeVector prePosition) {
@@ -45,21 +89,16 @@ public:
 		return this->postPosition;
 	}
 
-	inline void SetpreEng(double preEng) {
-		this->preEng = preEng;
+
+	inline void SetProcessName(std::string processName) {
+		this->processName = processName;
 	}
 
-	inline double GetpreEng() {
-		return this->preEng;
+	inline std::string GetProcessName() {
+		return this->processName;
 	}
 
-	inline void SetpostEng(double postEng) {
-		this->postEng = postEng;
-	}
 
-	inline double GetpostEng() {
-		return this->postEng;
-	}
 };
 
 
