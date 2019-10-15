@@ -58,6 +58,8 @@ public:
 
 	G4ThreeVector particleOriginPos;
 
+	G4ThreeVector particleOriginDirection;
+
 public:
 	void PrintInfo();
 

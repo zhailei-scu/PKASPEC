@@ -35,6 +35,9 @@ public:
 
 	double minPrecision = 1e-7;
 
+public:
+	std::string targetProcessName;
+
 };
 
 

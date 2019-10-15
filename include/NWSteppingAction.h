@@ -30,13 +30,9 @@ public:
 
 	void SetTargetTrackID(int targetTrackID);
 
-	void SetTargetProcessName(string targetProcessName);
-
 private:
 
 	int targetTrackID;
-
-	string targetProcessName;
 
 	EventInfo eventInfo;
 };

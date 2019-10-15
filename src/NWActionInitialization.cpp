@@ -20,8 +20,6 @@ void NWActionInitialization::Build() const{
 
 	theNWSteppingAction->SetTargetTrackID(1);
 
-	theNWSteppingAction->SetTargetProcessName("hadElastic");
-
 	SetUserAction(theNWSteppingAction);
 }
 

@@ -31,9 +31,13 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	std::fstream ofsOrignalDistance;
 	std::fstream ofsAnalysis_EqualInterval;
 	std::fstream ofsAnalysis_PowerInterval;
+	std::fstream ofsAnalysis_EndReason;
+	std::fstream ofsAnalysis_DeviateAxesDistance;
 	std::string OrignalDistancePath;
 	std::string AnalysisPath_EqualInterval;
 	std::string AnalysisPath_PowerInterval;
+	std::string AnalysisPath_EndReason;
+	std::string AnalysisPath_DeviateAxesDistance;
 	std::vector<double> theDistance;
 	double maxDistance = -1.0;
 	double minDistance = 1E32;
@@ -49,7 +53,24 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	double PowerInterval_DeltaLength;
 	double *binEnds_PowerInterval;
 	int *score_PowerInterval;
+	int outwidth;
+	std::map<int, std::vector<TrackInfo>>::iterator it;
+	std::vector<TrackInfo>::iterator iteratorTrackInfo;
+	std::vector<StepInfo>::iterator iteratorStepInfo;
+	G4ThreeVector prePKAPos;
+	G4ThreeVector postPKAPos;
+	int index;
+	G4ThreeVector pKADist;
+	double distance;
+	double distanceToOriginAxe;
+	G4ThreeVector vectorToOrigin;
+	double vectorMultiple;
+	double magOriginDirection;
+	double magvectorToOrigin;
+	//---Body---
 
+
+	outwidth = NWGlobal::GetInstance()->OutWidth;
 
 	binEnds_PowerInterval = new double[PowerInterval_BinNum];
 
@@ -68,6 +89,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss >> OrignalDistancePath;
 
+
 		ss.clear();
 
 		ss.str("");
@@ -76,6 +98,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss >> AnalysisPath_EqualInterval;
 
+
 		ss.clear();
 
 		ss.str("");
@@ -83,6 +106,25 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 		ss << NWGlobal::GetInstance()->OutPath.c_str() << "\\" << "DistanceResult_Analysis_PowerInterval.txt";
 
 		ss >> AnalysisPath_PowerInterval;
+
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << NWGlobal::GetInstance()->OutPath.c_str() << "\\" << "DistanceResult_Analysis_EndReason.txt";
+
+		ss >> AnalysisPath_EndReason;
+
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << NWGlobal::GetInstance()->OutPath.c_str() << "\\" << "DistanceResult_Analysis_DeviateAxesDistance.txt";
+
+		ss >> AnalysisPath_DeviateAxesDistance;
+
 	}
 	else {
 		ss.clear();
@@ -93,6 +135,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss >> OrignalDistancePath;
 
+
 		ss.clear();
 
 		ss.str("");
@@ -101,6 +144,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss >> AnalysisPath_EqualInterval;
 
+
 		ss.clear();
 
 		ss.str("");
@@ -108,6 +152,25 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 		ss << "DistanceResult_Analysis_PowerInterval.txt";
 
 		ss >> AnalysisPath_PowerInterval;
+
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << "DistanceResult_Analysis_EndReason.txt";
+
+		ss >> AnalysisPath_EndReason;
+
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << "DistanceResult_Analysis_DeviateAxesDistance.txt";
+
+		ss >> AnalysisPath_DeviateAxesDistance;
+
 	}
 
 	ofsOrignalDistance.open(OrignalDistancePath, std::ios::out | std::ios::ate);
@@ -116,23 +179,40 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 	ofsAnalysis_PowerInterval.open(AnalysisPath_PowerInterval, std::ios::out | std::ios::ate);
 
-	std::map<int, std::vector<TrackInfo>>::iterator it = storedData->begin();
+	ofsAnalysis_EndReason.open(AnalysisPath_EndReason, std::ios::out | std::ios::ate);
+
+	ofsAnalysis_EndReason << std::setw(outwidth) << "EventID:"
+		<< std::setw(outwidth) << "EndReason" << std::setw(outwidth) << "EndEnergy" << std::endl;
+
+	ofsAnalysis_DeviateAxesDistance.open(AnalysisPath_DeviateAxesDistance, std::ios::out | std::ios::ate);
+
+	ofsAnalysis_DeviateAxesDistance << std::setw(outwidth) << "EventID:"
+									<< std::setw(outwidth) << "ToOrgVector(mm)" << std::endl;
+
+	it = storedData->begin();
 
 	for (; it != storedData->end(); it++) {
-		std::vector<TrackInfo>::iterator iteratorTrackInfo = it->second.begin();
+		iteratorTrackInfo = it->second.begin();
 
 		for (; iteratorTrackInfo != it->second.end(); iteratorTrackInfo++) {
 
-			std::vector<StepInfo>::iterator iteratorStepInfo = iteratorTrackInfo->GetStepsInfo()->begin();
+			iteratorStepInfo = iteratorTrackInfo->GetStepsInfo()->begin();
 
 			if (iteratorTrackInfo->GetStepsInfo()->size() > 0) {
 
-				int index = 0;
-
-				G4ThreeVector prePKAPos;
-				G4ThreeVector postPKAPos;
+				index = 0;
 
 				for (; iteratorStepInfo != iteratorTrackInfo->GetStepsInfo()->end(); iteratorStepInfo++) {
+
+					if (0 != iteratorStepInfo->GetProcessName().compare(this->targetProcessName)) {
+
+						ofsAnalysis_EndReason << std::setw(outwidth) << it->first
+							<< std::setw(outwidth) << StepInfo::ConvertToProcessID(iteratorStepInfo->GetProcessName())
+							<<std::setw(outwidth)  << std::setiosflags(std::ios::scientific)<< iteratorStepInfo->GetpreEng()
+							<< std::endl;
+						break;
+					}
+
 					index++;
 
 					if (index <= 1) {
@@ -142,9 +222,9 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 					else {
 						postPKAPos = iteratorStepInfo->GetpostPosition();
 
-						G4ThreeVector pKADist = prePKAPos - postPKAPos;
+						pKADist = prePKAPos - postPKAPos;
 
-						double distance = pKADist.mag();
+						distance = pKADist.mag();
 
 						ofsOrignalDistance << std::setiosflags(std::ios::scientific) << std::setprecision(7) << distance << std::endl;
 
@@ -155,6 +235,27 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 						maxDistance = std::max(maxDistance, distance);
 						minDistance = std::min(minDistance, distance);
 					}
+
+
+					vectorToOrigin = iteratorStepInfo->GetpostPosition() - iteratorStepInfo->GetOriginPosition();
+
+					vectorMultiple = vectorToOrigin * iteratorStepInfo->GetOriginDirection();
+
+					magvectorToOrigin = vectorToOrigin.mag();
+
+					magOriginDirection = iteratorStepInfo->GetOriginDirection().mag();
+
+					if (magvectorToOrigin <= 0 || magOriginDirection <= 0) {
+						distanceToOriginAxe = 0.0;
+					}
+					else {
+						distanceToOriginAxe = magvectorToOrigin * std::sqrt(1 - pow(std::fabs(vectorMultiple) / (magvectorToOrigin*magOriginDirection), 2));
+					}
+
+					ofsAnalysis_DeviateAxesDistance << std::setw(outwidth) << it->first
+						<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << distanceToOriginAxe 
+						<< std::endl;
+
 				}
 			}
 
@@ -168,7 +269,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 	minLog = std::floor(std::log10(minDistance));
 	maxLog = std::ceil(std::log10(maxDistance));
-
 
 	binNum = (maxLog - minLog)*BinNumberEachPower;
 
@@ -186,10 +286,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 		score_PowerInterval[i] = 0;
 	}
 
-	std::vector<double>::iterator itDistance = theDistance.begin();
-
-
-	for (; itDistance != theDistance.end(); itDistance++) {
+	for (std::vector<double>::iterator itDistance = theDistance.begin(); itDistance != theDistance.end(); itDistance++) {
 
 		/*
 		int  LogPos = std::floor(std::log10(*itDistance));
@@ -200,7 +297,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 		score[truePos]++;
 		*/
 
-		
 		for (int i = 0; i < binNum; i++) {
 
 			if (*itDistance < binEnds[i]) {
@@ -224,8 +320,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	}
 
 
-	int outwidth = NWGlobal::GetInstance()->OutWidth;
-
 	for (int i = 0; i < binNum; i++) {
 		ofsAnalysis_EqualInterval << std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << binEnds[i]
 					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score[i] << std::endl;
@@ -243,6 +337,10 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	ofsAnalysis_PowerInterval.close();
 
 	ofsOrignalDistance.close();
+
+	ofsAnalysis_EndReason.close();
+
+	ofsAnalysis_DeviateAxesDistance.close();
 
 	if (!binEnds) delete[] binEnds;
 	if (!score) delete[] score;

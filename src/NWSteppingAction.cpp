@@ -16,7 +16,6 @@ NWSteppingAction::NWSteppingAction(const NWSteppingAction &r) {
 	if (NULL != &r) {
 
 		this->targetTrackID = r.targetTrackID;
-		this->targetProcessName = r.targetProcessName;
 	}
 	
 }
@@ -27,7 +26,6 @@ NWSteppingAction NWSteppingAction::operator=(const NWSteppingAction &r) {
 	if (NULL != &r) {
 
 		this->targetTrackID = r.targetTrackID;
-		this->targetProcessName = r.targetProcessName;
 	}
 
 
@@ -108,6 +106,9 @@ void NWSteppingAction::UserSteppingAction(const G4Step* stepping) {
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << PostEng
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << DeltaEng
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << stepping->GetDeltaTime()
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << NWGlobal::GetInstance()->particleOriginDirection.getX()
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << NWGlobal::GetInstance()->particleOriginDirection.getY()
+									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << NWGlobal::GetInstance()->particleOriginDirection.getZ()
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << NWGlobal::GetInstance()->particleOriginPos.getX()
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << NWGlobal::GetInstance()->particleOriginPos.getY()
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << NWGlobal::GetInstance()->particleOriginPos.getZ()
@@ -256,8 +257,4 @@ void NWSteppingAction::UserSteppingAction(const G4Step* stepping) {
 
 void NWSteppingAction::SetTargetTrackID(int targetTrackID) {
 	this->targetTrackID = targetTrackID;
-}
-
-void NWSteppingAction::SetTargetProcessName(string targetProcessName) {
-	this->targetProcessName = targetProcessName;
 }

@@ -106,6 +106,9 @@ void AnalysisTheResult(int argc, char* argv[]) {
 
 	ss << argv[4];
 
+	/*Here, we only care about hadElastic process*/
+	NWAnalysis::GetInstance()->targetProcessName = std::string("hadElastic");
+
 	ss >> NWAnalysis::GetInstance()->BinNumberEachPower;
 
 	NWInfoStore::GetInstance()->ReadEventsInfo(originalDataFilePath);

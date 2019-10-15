@@ -1,5 +1,4 @@
 #include "NWInfoStore.h"
-#include "NWGlobal.h"
 #include <fstream>
 #include <map>
 #include <vector>
@@ -13,10 +12,66 @@ StepInfo::StepInfo(int stepID) {
 
 StepInfo::~StepInfo() {
 	this->stepID = -1;
+	this->originPosition = G4ThreeVector(0,0,0);
 	this->prePosition = G4ThreeVector(0, 0, 0);
 	this->postPosition = G4ThreeVector(0,0,0);
 	this->preEng = 0.0;
 	this->postEng = 0.0;
+	this->deltaEng = 0.0;
+	this->deltaTime = 0.0;
+	this->processName.clear();
+	this->processName.swap(std::string());
+}
+
+QGSP_BIC_HP_Process StepInfo::ConvertToProcessID(std::string processName) {
+	QGSP_BIC_HP_Process theResult;
+
+	if (0 == processName.compare("nFission")) {
+		theResult = QGSP_BIC_HP_Process(nFission);
+	}
+	else if (0 == processName.compare("nCapture")) {
+		theResult = QGSP_BIC_HP_Process(nCapture);
+	}else if (0 == processName.compare("neutronInelastic")) {
+		theResult = QGSP_BIC_HP_Process(neutronInelastic);
+	}else if (0 == processName.compare("hadElastic")) {
+		theResult = QGSP_BIC_HP_Process(hadElastic);
+	}else if (0 == processName.compare("Decay")) {
+		theResult = QGSP_BIC_HP_Process(Decay);
+	}else if (0 == processName.compare("Transportation")) {
+		theResult = QGSP_BIC_HP_Process(Transportation);
+	}
+	else {
+		std::cout << "Unkonown process name in QGSP_BIC_HP model: " << processName << std::endl;
+		system("pause");
+		exit(1);
+	}
+
+	return theResult;
+}
+
+
+std::string StepInfo::ConvertToProcessName(const QGSP_BIC_HP_Process processID) {
+	std::string processName;
+
+	if (processID == QGSP_BIC_HP_Process(nFission)) {
+		processName = std::string("nFission");
+	}else if (processID == QGSP_BIC_HP_Process(nCapture)) {
+		processName = std::string("nCapture");
+	}else if (processID == QGSP_BIC_HP_Process(neutronInelastic)) {
+		processName = std::string("neutronInelastic");
+	}else if (processID == QGSP_BIC_HP_Process(hadElastic)) {
+		processName = std::string("hadElastic");
+	}else if (processID == QGSP_BIC_HP_Process(Decay)) {
+		processName = std::string("Decay");
+	}else if (processID == QGSP_BIC_HP_Process(Transportation)) {
+		processName = std::string("Transportation");
+	}else {
+		std::cout << "Unkonown process ID in QGSP_BIC_HP model: " << processID << std::endl;
+		system("pause");
+		exit(1);
+	}
+
+	return processName;
 }
 
 
@@ -90,6 +145,7 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 	double postEng;
 	double deltaEng;
 	double deltaTime;
+	double originVector_x, originVector_y, originVector_z;
 	double originstep_x, originstep_y, originstep_z;
 	double prestep_x, prestep_y, prestep_z;
 	double poststep_x, poststep_y, poststep_z;
@@ -127,6 +183,7 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 			>> postEng
 			>> deltaEng
 			>> deltaTime
+			>> originVector_x>> originVector_y>> originVector_z
 			>> originstep_x >> originstep_y >> originstep_z
 			>> prestep_x>> prestep_y >> prestep_z
 			>> poststep_x >> poststep_y >> poststep_z
@@ -188,6 +245,7 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 		tempStepInfo.SetpostEng(postEng);
 		tempStepInfo.SetDeltaEng(deltaEng);
 		tempStepInfo.SetDeltaTime(deltaTime);
+		tempStepInfo.SetOriginDirection(G4ThreeVector(originVector_x, originVector_y, originVector_z));
 		tempStepInfo.SetOriginPosition(G4ThreeVector(originstep_x, originstep_y, originstep_z));
 		tempStepInfo.SetprePosition(G4ThreeVector(prestep_x, prestep_y, prestep_z));
 		tempStepInfo.SetpostPosition(G4ThreeVector(poststep_x, poststep_y, poststep_z));
@@ -195,11 +253,6 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 
 		tempTrackInfo->GetStepsInfo()->push_back(tempStepInfo);
 	}
-
-
-
-
-
 
 	ofs.close();
 }

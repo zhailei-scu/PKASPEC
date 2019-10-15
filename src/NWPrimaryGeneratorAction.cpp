@@ -79,10 +79,11 @@ NWPrimaryGeneratorAction::~NWPrimaryGeneratorAction() {
 
 void NWPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
 
+	NWGlobal::GetInstance()->particleOriginDirection = G4ThreeVector(0, 0, -1);
 	
 	/*Set the particle gun for this event*/
 	particleGun->SetNumberOfParticles(G4int(1));
-	particleGun->SetParticleMomentumDirection(G4ThreeVector(0, 0, -1));
+	particleGun->SetParticleMomentumDirection(NWGlobal::GetInstance()->particleOriginDirection);
 	particleGun->SetParticleEnergy(NWGlobal::GetInstance()->gunEnergy*MeV);
 
 	//G4Box* fTargetBox = (G4Box*)(G4LogicalVolumeStore::GetInstance()->GetVolume("targetBoxLogical")->GetSolid());
@@ -123,13 +124,13 @@ void NWPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
 	G4double Y0 = 0.0;
 	G4double Z0 = 0.5*(Z_High + Z_Low);
 
-	particleGun->SetParticlePosition(G4ThreeVector(X0,Y0,Z0));
+	NWGlobal::GetInstance()->particleOriginPos = G4ThreeVector(X0, Y0, Z0);
+
+	particleGun->SetParticlePosition(NWGlobal::GetInstance()->particleOriginPos);
 
 	particleGun->GeneratePrimaryVertex(anEvent);
 
 	NWGlobal::GetInstance()->CurrentEventID = anEvent->GetEventID();
-
-	NWGlobal::GetInstance()->particleOriginPos = G4ThreeVector(X0, Y0, Z0);
 
 	G4cout << "Event : " << anEvent->GetEventID() << G4endl;
 }

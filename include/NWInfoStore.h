@@ -9,6 +9,16 @@
 
 #define MAXLENONELINE 1024
 
+enum QGSP_BIC_HP_Process
+{
+	nFission,
+	nCapture,
+	neutronInelastic,
+	hadElastic,
+	Decay,
+	Transportation
+};
+
 class StepInfo {
 public:
 	StepInfo() = delete;
@@ -22,6 +32,7 @@ private:
 	double postEng;
 	double deltaEng;
 	double deltaTime;
+	G4ThreeVector originDirection;
 	G4ThreeVector originPosition;
 	G4ThreeVector prePosition;
 	G4ThreeVector postPosition;
@@ -65,6 +76,14 @@ public:
 		return this->deltaTime;
 	}
 
+	inline void SetOriginDirection(G4ThreeVector originDirection) {
+		this->originDirection = originDirection;
+	}
+
+	inline G4ThreeVector GetOriginDirection() {
+		return this->originDirection;
+	}
+
 	inline void SetOriginPosition(G4ThreeVector originPosition) {
 		this->originPosition = originPosition;
 	}
@@ -98,7 +117,9 @@ public:
 		return this->processName;
 	}
 
+	static QGSP_BIC_HP_Process ConvertToProcessID(std::string processName);
 
+	static std::string  ConvertToProcessName(const QGSP_BIC_HP_Process processID);
 };
 
 
