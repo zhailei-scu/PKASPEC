@@ -105,6 +105,7 @@ void NWGlobal::InitialGlobal(const char* mode,const  char* outPath) {
 			<< std::setw(OutWidth) << "PostPos_y(mm)" 
 			<< std::setw(OutWidth) << "PostPos_z(mm)" 
 			<< std::setw(OutWidth) << "ProcessName"
+			<< std::setw(OutWidth) << "TrackStatus"
 			<< std::endl;
 	}
 }

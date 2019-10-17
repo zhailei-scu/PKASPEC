@@ -119,6 +119,7 @@ void NWSteppingAction::UserSteppingAction(const G4Step* stepping) {
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << postPosition.getY()
 									<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << postPosition.getZ()
 									<< std::setw(OutWidth) << name
+									<< std::setw(OutWidth) << stepping->GetTrack()->GetTrackStatus()
 									<< endl;
 
 								NWGlobal::GetInstance()->flushRecord++;
