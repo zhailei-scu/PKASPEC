@@ -12,6 +12,9 @@
 
 void RunTheSimulation(int argc, char* argv[]) {
 
+	int EventLoopsNumber;
+	double gunEnergy;
+
 	if (argc < 7) {
 		std::cout << "The argument number is: " << argc << std::endl;
 		std::cout << "You must special the 1) model \n \
@@ -31,10 +34,11 @@ void RunTheSimulation(int argc, char* argv[]) {
 	ss.str("");
 	ss << argv[2];
 
-	ss >> NWGlobal::GetInstance()->EventLoopsNumber;
+	ss >> EventLoopsNumber;
+	NWGlobal::GetInstance()->GetSimParamters()->SetEventLoopsNumber(EventLoopsNumber);
 
 	/*Particle name*/
-	NWGlobal::GetInstance()->gunParticleName = std::string(argv[3]);
+	NWGlobal::GetInstance()->GetSimParamters()->SetGunParticleName(std::string(argv[3]));
 
 	/*Particle energy*/
 	ss.clear();
@@ -42,10 +46,11 @@ void RunTheSimulation(int argc, char* argv[]) {
 
 	ss << argv[4];
 
-	ss >> NWGlobal::GetInstance()->gunEnergy;
+	ss >> gunEnergy;
+	NWGlobal::GetInstance()->GetSimParamters()->SetGunEnergy(gunEnergy);
 
 	/*Target Material*/
-	NWGlobal::GetInstance()->targetMaterial = std::string(argv[5]);
+	NWGlobal::GetInstance()->GetSimParamters()->SetTargetMaterial(std::string(argv[5]));
 
 	/*Out Path*/
 	NWGlobal::GetInstance()->InitialGlobal(argv[1],argv[6]);
@@ -70,7 +75,7 @@ void RunTheSimulation(int argc, char* argv[]) {
 
 	runManager->Initialize();
 
-	runManager->BeamOn(NWGlobal::GetInstance()->EventLoopsNumber);
+	runManager->BeamOn(NWGlobal::GetInstance()->GetSimParamters()->GetEventLoopsNumber());
 
 	//if (myGeometry) delete myGeometry;
 

@@ -70,7 +70,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	//---Body---
 
 
-	outwidth = NWGlobal::GetInstance()->OutWidth;
+	outwidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
 
 	binEnds_PowerInterval = new double[PowerInterval_BinNum];
 
@@ -79,13 +79,13 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	PowerInterval_DeltaLength = (std::log10(PowerInterval_Max) - std::log10(PowerInterval_Min)) / PowerInterval_BinNum;
 
 
-	if(NWGlobal::GetInstance()->OutPath.length() >0){
+	if(NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->length() >0){
 
 		ss.clear();
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->OutPath.c_str() << "\\" << "DistanceResult_OriginDistance.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_OriginDistance.txt";
 
 		ss >> OrignalDistancePath;
 
@@ -94,7 +94,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->OutPath.c_str() << "\\" << "DistanceResult_Analysis_EqualInterval.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_EqualInterval.txt";
 
 		ss >> AnalysisPath_EqualInterval;
 
@@ -103,7 +103,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->OutPath.c_str() << "\\" << "DistanceResult_Analysis_PowerInterval.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_PowerInterval.txt";
 
 		ss >> AnalysisPath_PowerInterval;
 
@@ -112,7 +112,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->OutPath.c_str() << "\\" << "DistanceResult_Analysis_EndReason.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_EndReason.txt";
 
 		ss >> AnalysisPath_EndReason;
 
@@ -121,7 +121,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->OutPath.c_str() << "\\" << "DistanceResult_Analysis_DeviateAxesDistance.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_DeviateAxesDistance.txt";
 
 		ss >> AnalysisPath_DeviateAxesDistance;
 

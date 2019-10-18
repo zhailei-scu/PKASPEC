@@ -2,10 +2,6 @@
 #include <iomanip>
 #include <sstream>
 
-std::string simMode = std::string("sim");
-std::string analysisMode = std::string("analysis");
-
-
 /*The singleton*/
 
 NWGlobal* NWGlobal::nWGlobalInstance = new NWGlobal();
@@ -30,51 +26,22 @@ NWGlobal* NWGlobal::GetInstance() {
 	return nWGlobalInstance;
 }
 
-void NWGlobal::PrintInfo() {
-
-	if(0 == this->mode.compare(simMode)){
-		std::cout << "###  The parameters summary ###" << std::endl;
-
-		std::cout << "The event loops number is: " << this->EventLoopsNumber << std::endl;
-
-		std::cout << "The particle gun name is: " << this->gunParticleName.c_str() << std::endl;
-
-		std::cout << "The particle gun energy is: " << this->gunEnergy << std::endl;
-
-		std::cout << "The target material is: " << this->targetMaterial.c_str() << std::endl;
-
-		std::cout << "The target material is: " << this->targetMaterial.c_str() << std::endl;
-
-		std::cout << "The out path is : " << OutPath.c_str() << std::endl;
-
-		std::cout << "### End of the parameters summary ###" << std::endl;
-	}
-	else if (0 == this->mode.compare(analysisMode)) {
-
-		std::cout << "###  The parameters summary ###" << std::endl;
-
-		std::cout << "The out path is : " << OutPath.c_str() << std::endl;
-
-		std::cout << "### End of the parameters summary ###" << std::endl;
-	}
-
-
-}
-
 void NWGlobal::InitialGlobal(const char* mode,const  char* outPath) {
 
-	this->mode = std::string(mode);
+	int OutWidth;
 
-	this->OutPath = std::string(outPath);
+	this->simParamters.SetMode(std::string(mode));
 
-	if (0 == this->mode.compare(simMode)) {
+	this->simParamters.SetOutPath(std::string(outPath));
+
+	if (0 == this->simParamters.GetMode()->compare(simMode)) {
 		std::stringstream ss;
 		std::string outFile;
 		ss.clear();
 		ss.str("");
 
-		if (this->OutPath.length() > 0) {
-			ss << this->OutPath.c_str() << "\\" << "OutPutResult.txt";
+		if (this->simParamters.GetOutPath()->length() > 0) {
+			ss << this->simParamters.GetOutPath()->c_str() << "\\" << "OutPutResult.txt";
 		}
 		else {
 			ss<< "OutPutResult.txt";
@@ -83,6 +50,8 @@ void NWGlobal::InitialGlobal(const char* mode,const  char* outPath) {
 		ss >> outFile;
 
 		ofsSimRecord.open(outFile, std::ios::out | std::ios::ate);
+
+		OutWidth = this->simParamters.GetOutWidth();
 
 		ofsSimRecord 
 			<< std::setw(OutWidth) << "EventID"    
@@ -108,6 +77,14 @@ void NWGlobal::InitialGlobal(const char* mode,const  char* outPath) {
 			<< std::setw(OutWidth) << "TrackStatus"
 			<< std::endl;
 	}
+}
+
+void NWGlobal::PrintInfo(){
+	this->simParamters.PrintParameters();
+}
+
+NWSimParameters * NWGlobal::GetSimParamters() {
+	return &this->simParamters;
 }
 
 

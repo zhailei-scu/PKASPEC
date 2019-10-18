@@ -39,7 +39,7 @@ NWSteppingAction::~NWSteppingAction() {
 
 void NWSteppingAction::UserSteppingAction(const G4Step* stepping) {
 
-	int OutWidth = NWGlobal::GetInstance()->OutWidth;
+	int OutWidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
 
 	double PreEng;
 	double PostEng;
@@ -91,7 +91,7 @@ void NWSteppingAction::UserSteppingAction(const G4Step* stepping) {
 
 
 						if (NULL != stepping->GetPreStepPoint()->GetMaterial()) {
-							if (0 == stepping->GetPreStepPoint()->GetMaterial()->GetName().compare(NWGlobal::GetInstance()->targetMaterial)) {
+							if (0 == stepping->GetPreStepPoint()->GetMaterial()->GetName().compare(NWGlobal::GetInstance()->GetSimParamters()->GetTargetMaterial()->c_str())) {
 								
 								PreEng = stepping->GetPreStepPoint()->GetKineticEnergy();
 								PostEng = stepping->GetPostStepPoint()->GetKineticEnergy();
@@ -124,7 +124,7 @@ void NWSteppingAction::UserSteppingAction(const G4Step* stepping) {
 
 								NWGlobal::GetInstance()->flushRecord++;
 
-								if (0 == NWGlobal::GetInstance()->flushRecord%NWGlobal::GetInstance()->flushFrequence) {
+								if (0 == NWGlobal::GetInstance()->flushRecord%NWGlobal::GetInstance()->GetSimParamters()->GetFlushFrequence()) {
 									NWGlobal::GetInstance()->ofsSimRecord.flush();
 								}
 
