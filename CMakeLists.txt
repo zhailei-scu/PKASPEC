@@ -44,14 +44,17 @@ foreach(_conftype ${CMAKE_CONFIGURATION_TYPES})
 endforeach()
 
 
+set(BCALIBS Common)
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/BCALIB/Common)
+foreach(LIBNAME ${BCALIBS})
+  add_subdirectory(${PROJECT_SOURCE_DIR}/BCALIB/${LIBNAME})
+endforeach()
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/BCALIB/APPLICATIONS)
+set(BCABINS APPLICATIONS ANALYSIS)
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/BCALIB/ANALYSIS)
-
-message(${Geant4_LIBRARIES})
+foreach(BINNAME ${BCABINS})
+  add_subdirectory(${PROJECT_SOURCE_DIR}/BCALIB/${BINNAME})
+endforeach()
 
 message("CMAKE_CURRENT_LIST_FILE is : " ${CMAKE_CURRENT_LIST_FILE})
 
