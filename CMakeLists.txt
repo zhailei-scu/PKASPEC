@@ -16,7 +16,7 @@ message("The current project source direction is: " ${PROJECT_SOURCE_DIR})
 message("The project binary direction is: " ${PROJECT_BINARY_DIR})
 
 if(NOT DEFINED CMAKE_INSTALL_BINDIR)
-	set(CMAKE_INSTALL_BINDIR "lib")
+	set(CMAKE_INSTALL_BINDIR "bin")
 endif()
 
 if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
