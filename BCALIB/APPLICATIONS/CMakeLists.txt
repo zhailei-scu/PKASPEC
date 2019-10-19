@@ -12,8 +12,6 @@ endforeach()
 
 include_directories(${PROJECT_SOURCE_DIR}/../src/include/APPLICATIONS)
 
-set(APPS NeutronW_Simulation)
-
 foreach(APPNAME ${APPS})
 	add_executable(${APPNAME} ${PROJECT_SOURCE_DIR}/../src/source/APPLICATIONS/${APPNAME}.cpp)
 	target_link_libraries(${APPNAME} ${BCALIBS} ${Geant4_LIBRARIES})

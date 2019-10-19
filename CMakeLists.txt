@@ -45,12 +45,16 @@ endforeach()
 
 
 set(BCALIBS Common)
+set(BCABINS APPLICATIONS ANALYSIS)
+
+set(APPS NeutronW_Simulation)
+set(ANALYS NeutronW_Analysis)
 
 foreach(LIBNAME ${BCALIBS})
   add_subdirectory(${PROJECT_SOURCE_DIR}/BCALIB/${LIBNAME})
 endforeach()
 
-set(BCABINS APPLICATIONS ANALYSIS)
+
 
 foreach(BINNAME ${BCABINS})
   add_subdirectory(${PROJECT_SOURCE_DIR}/BCALIB/${BINNAME})
@@ -61,8 +65,4 @@ message("CMAKE_CURRENT_LIST_FILE is : " ${CMAKE_CURRENT_LIST_FILE})
 message("_geant4_thisdir : " ${_geant4_thisdir})
 message("Geant4_INCLUDE_DIR: " ${Geant4_INCLUDE_DIR})
 
-
-#add_custom_target(BCAPKASpec DEPENDS Common NeutronW_Simulation)
-
-
-#install(TARGETS NeutronTungsten DESTINATION bin)
+add_custom_target(BCAPKASpec DEPENDS ${BCALIBS} ${APPS} ${ANALYS})

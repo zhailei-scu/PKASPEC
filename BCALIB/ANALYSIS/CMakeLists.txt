@@ -12,8 +12,6 @@ endforeach()
 
 include_directories(${PROJECT_SOURCE_DIR}/../src/include/ANALYSIS)
 
-set(ANALYS NeutronW_Analysis)
-
 foreach(ANALYSNAME ${ANALYS})
 	add_executable(${ANALYSNAME} ${PROJECT_SOURCE_DIR}/../src/source/ANALYSIS/${ANALYSNAME}.cpp)
 	target_link_libraries(${ANALYSNAME} ${BCALIBS} ${Geant4_LIBRARIES})
