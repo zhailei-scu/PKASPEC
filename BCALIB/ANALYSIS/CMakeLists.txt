@@ -14,7 +14,7 @@ include_directories(${PROJECT_SOURCE_DIR}/../src/include/ANALYSIS)
 
 foreach(ANALYSNAME ${ANALYS})
 	add_executable(${ANALYSNAME} ${PROJECT_SOURCE_DIR}/../src/source/ANALYSIS/${ANALYSNAME}.cpp)
-	target_link_libraries(${ANALYSNAME} ${BCALIBS} ${Geant4_LIBRARIES})
+	target_link_libraries(${ANALYSNAME} ${UTILLIBS} ${BCALIBS} ${Geant4_LIBRARIES})
 
 	install(TARGETS ${ANALYSNAME} RUNTIME DESTINATION bin)
 endforeach()

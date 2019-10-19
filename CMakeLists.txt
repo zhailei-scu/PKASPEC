@@ -44,17 +44,21 @@ foreach(_conftype ${CMAKE_CONFIGURATION_TYPES})
 endforeach()
 
 
+
+set(UTILLIBS MiniUtilities)
 set(BCALIBS Common)
 set(BCABINS APPLICATIONS ANALYSIS)
 
 set(APPS NeutronW_Simulation)
 set(ANALYS NeutronW_Analysis)
 
+foreach(UTILLIBNAME ${UTILLIBS})
+  add_subdirectory(${PROJECT_SOURCE_DIR}/LIB/${UTILLIBNAME})
+endforeach()
+
 foreach(LIBNAME ${BCALIBS})
   add_subdirectory(${PROJECT_SOURCE_DIR}/BCALIB/${LIBNAME})
 endforeach()
-
-
 
 foreach(BINNAME ${BCABINS})
   add_subdirectory(${PROJECT_SOURCE_DIR}/BCALIB/${BINNAME})
@@ -65,4 +69,4 @@ message("CMAKE_CURRENT_LIST_FILE is : " ${CMAKE_CURRENT_LIST_FILE})
 message("_geant4_thisdir : " ${_geant4_thisdir})
 message("Geant4_INCLUDE_DIR: " ${Geant4_INCLUDE_DIR})
 
-add_custom_target(BCAPKASpec DEPENDS ${BCALIBS} ${APPS} ${ANALYS})
+add_custom_target(BCAPKASpec DEPENDS ${UTILLIBS} ${BCALIBS} ${APPS} ${ANALYS})

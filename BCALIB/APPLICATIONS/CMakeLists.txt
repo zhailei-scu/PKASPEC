@@ -14,7 +14,7 @@ include_directories(${PROJECT_SOURCE_DIR}/../src/include/APPLICATIONS)
 
 foreach(APPNAME ${APPS})
 	add_executable(${APPNAME} ${PROJECT_SOURCE_DIR}/../src/source/APPLICATIONS/${APPNAME}.cpp)
-	target_link_libraries(${APPNAME} ${BCALIBS} ${Geant4_LIBRARIES})
+	target_link_libraries(${APPNAME} ${UTILLIBS} ${BCALIBS} ${Geant4_LIBRARIES})
 
 	install(TARGETS ${APPNAME} RUNTIME DESTINATION bin)
 endforeach()
