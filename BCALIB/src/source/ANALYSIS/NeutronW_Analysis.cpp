@@ -2,37 +2,25 @@
 #include "NWGlobal.h"
 #include "NWInfoStore.h"
 #include "NWAnalysis.h"
+#include "NWSimParameters.h"
 #include <sstream>
-
 
 void AnalysisTheResult(int argc, char* argv[]) {
 
-	if (argc < 5) {
+	if (argc < 2) {
 		std::cout << "The argument number is: " << argc << std::endl;
-		std::cout << "You must special the 1) model \n \
-										   2) the original file path \n \
-										   3) OutPath \n \
-										   4) the bin number for each 10 power"  << std::endl;
+		std::cout << "You must special the 1) the original file path" << std::endl;
 		system("pause");
 		exit(1);
 	}
 	std::string originalDataFilePath;
 
-	std::stringstream ss;
+	originalDataFilePath = std::string(argv[1]);
 
-	ss.clear();
-	ss.str("");
-
-	originalDataFilePath = std::string(argv[2]);
-
-	NWGlobal::GetInstance()->InitialGlobal(argv[1], argv[3]);
-
-	ss << argv[4];
+	NWGlobal::GetInstance()->InitialGlobal();
 
 	/*Here, we only care about hadElastic process*/
 	NWAnalysis::GetInstance()->targetProcessName = std::string("hadElastic");
-
-	ss >> NWAnalysis::GetInstance()->BinNumberEachPower;
 
 	NWInfoStore::GetInstance()->ReadEventsInfo(originalDataFilePath);
 

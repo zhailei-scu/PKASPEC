@@ -4,9 +4,11 @@
 #include <string>
 #include <fstream>
 #include "G4ThreeVector.hh"
+#include "NWBeam.h"
 
 extern std::string simMode;
 extern std::string analysisMode;
+
 
 /*Singleton class*/
 class NWSimParameters {
@@ -24,8 +26,6 @@ public:
 
 	void Clean();
 
-private:
-	std::string mode;
 
 private:
 	std::string OutPath;
@@ -37,15 +37,10 @@ private:
 
 	int EventLoopsNumber;
 
-	double gunEnergy;
-
-	std::string gunParticleName;
-
-	G4ThreeVector gunParticleStartPos;
-
-	G4ThreeVector gunParticleStartDirection;
-
 	std::string targetMaterial;
+
+private:
+	NWBeam beam;
 
 public:
 
@@ -53,23 +48,15 @@ public:
 
 	void PrintParameters();
 
+	void SetDefulatValue();
+
 public:
-
-
-
-	inline void SetMode(const std::string &mode) {
-		this->mode = mode;
-	}
-
-	inline const std::string * GetMode() {
-		return &this->mode;
-	}
 
 	inline void SetOutPath(const std::string &OutPath) {
 		this->OutPath = OutPath;
 	}
 
-	inline const std::string * GetOutPath() {
+	inline const std::string * GetOutPath() const{
 		return &this->OutPath;
 	}
 
@@ -77,7 +64,7 @@ public:
 		this->OutWidth = OutWidth;
 	}
 
-	inline const int GetOutWidth() {
+	inline const int GetOutWidth() const{
 		return this->OutWidth;
 	}
 
@@ -85,7 +72,7 @@ public:
 		this->flushFrequence = flushFrequence;
 	}
 
-	inline const int GetFlushFrequence() {
+	inline const int GetFlushFrequence() const{
 		return this->flushFrequence;
 	}
 
@@ -93,48 +80,24 @@ public:
 		this->EventLoopsNumber = EventLoopsNumber;
 	}
 
-	inline const int GetEventLoopsNumber() {
+	inline const int GetEventLoopsNumber() const{
 		return this->EventLoopsNumber;
-	}
-
-	inline void SetGunEnergy(const double & gunEnergy) {
-		this->gunEnergy = gunEnergy;
-	}
-
-	inline const double GetGunEnergy() {
-		return this->gunEnergy;
-	}
-
-	inline void SetGunParticleName(const std::string &gunParticleName) {
-		this->gunParticleName = gunParticleName;
-	}
-
-	inline const std::string * GetGunParticleName() {
-		return &this->gunParticleName;
-	}
-
-	inline void SetGunParticleStartPos(const G4ThreeVector &gunParticleStartPos) {
-		this->gunParticleStartPos = gunParticleStartPos;
-	}
-
-	inline const G4ThreeVector * GetGunParticleStartPos() {
-		return &this->gunParticleStartPos;
-	}
-
-	inline void SetGunParticleStartDirection(const G4ThreeVector &gunParticleStartDirection) {
-		this->gunParticleStartDirection = gunParticleStartDirection;
-	}
-
-	inline const G4ThreeVector * GetGunParticleStartDirection() {
-		return &this->gunParticleStartDirection;
 	}
 
 	inline void SetTargetMaterial(const std::string &targetMaterial) {
 		this->targetMaterial = targetMaterial;
 	}
 
-	inline const std::string * GetTargetMaterial() {
+	inline const std::string * GetTargetMaterial() const{
 		return &this->targetMaterial;
+	}
+
+	inline void SetBeam(const NWBeam & beam) {
+		this->beam = beam;
+	}
+
+	inline NWBeam * GetNWBeam(){
+		return &this->beam;
 	}
 
 };

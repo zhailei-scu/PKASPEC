@@ -26,34 +26,30 @@ NWGlobal* NWGlobal::GetInstance() {
 	return nWGlobalInstance;
 }
 
-void NWGlobal::InitialGlobal(const char* mode,const  char* outPath) {
+void NWGlobal::InitialGlobal() {
 
 	int OutWidth;
+	std::stringstream ss;
+	std::string outFile;
+	ss.clear();
+	ss.str("");
 
-	this->simParamters.SetMode(std::string(mode));
+	this->simParamters.SetDefulatValue();
 
-	this->simParamters.SetOutPath(std::string(outPath));
+	if (this->simParamters.GetOutPath()->length() > 0) {
+		ss << this->simParamters.GetOutPath()->c_str() << "\\" << "OutPutResult.txt";
+	}
+	else {
+		ss<< "OutPutResult.txt";
+	}
 
-	if (0 == this->simParamters.GetMode()->compare(simMode)) {
-		std::stringstream ss;
-		std::string outFile;
-		ss.clear();
-		ss.str("");
+	ss >> outFile;
 
-		if (this->simParamters.GetOutPath()->length() > 0) {
-			ss << this->simParamters.GetOutPath()->c_str() << "\\" << "OutPutResult.txt";
-		}
-		else {
-			ss<< "OutPutResult.txt";
-		}
+	ofsSimRecord.open(outFile, std::ios::out | std::ios::ate);
 
-		ss >> outFile;
+	OutWidth = this->simParamters.GetOutWidth();
 
-		ofsSimRecord.open(outFile, std::ios::out | std::ios::ate);
-
-		OutWidth = this->simParamters.GetOutWidth();
-
-		ofsSimRecord 
+	ofsSimRecord 
 			<< std::setw(OutWidth) << "EventID"    
 			<< std::setw(OutWidth) << "TrackID"    
 			<< std::setw(OutWidth) << "StepID"
@@ -76,7 +72,6 @@ void NWGlobal::InitialGlobal(const char* mode,const  char* outPath) {
 			<< std::setw(OutWidth) << "ProcessName"
 			<< std::setw(OutWidth) << "TrackStatus"
 			<< std::endl;
-	}
 }
 
 void NWGlobal::PrintInfo(){

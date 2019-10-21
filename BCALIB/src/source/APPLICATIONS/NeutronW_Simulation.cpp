@@ -6,52 +6,14 @@
 #include "G4VModularPhysicsList.hh"
 #include "QGSP_BIC_HP.hh"
 #include "NWGlobal.h"
+#include "NWSimParameters.h"
 #include <sstream>
+#include "../../../../LIB/src/include/MiniUtilities/EXNUMB.h"
 
-void RunTheSimulation(int argc, char* argv[]) {
-
-	int EventLoopsNumber;
-	double gunEnergy;
-
-	if (argc < 7) {
-		std::cout << "The argument number is: " << argc << std::endl;
-		std::cout << "You must special the 1) model \n \
-										   2) number of Events \n  \
-										   3) particle name,  \n  \
-										   4) particle energy \n  \
-										   5) target materials \n \
-										   6) OutPath ." << std::endl;
-		system("pause");
-		exit(1);
-	}
-
-	std::stringstream ss;
-
-	/*Event number*/
-	ss.clear();
-	ss.str("");
-	ss << argv[2];
-
-	ss >> EventLoopsNumber;
-	NWGlobal::GetInstance()->GetSimParamters()->SetEventLoopsNumber(EventLoopsNumber);
-
-	/*Particle name*/
-	NWGlobal::GetInstance()->GetSimParamters()->SetGunParticleName(std::string(argv[3]));
-
-	/*Particle energy*/
-	ss.clear();
-	ss.str("");
-
-	ss << argv[4];
-
-	ss >> gunEnergy;
-	NWGlobal::GetInstance()->GetSimParamters()->SetGunEnergy(gunEnergy);
-
-	/*Target Material*/
-	NWGlobal::GetInstance()->GetSimParamters()->SetTargetMaterial(std::string(argv[5]));
+void RunTheSimulation() {
 
 	/*Out Path*/
-	NWGlobal::GetInstance()->InitialGlobal(argv[1],argv[6]);
+	NWGlobal::GetInstance()->InitialGlobal();
 
 	NWGlobal::GetInstance()->PrintInfo();
 
@@ -86,7 +48,7 @@ void RunTheSimulation(int argc, char* argv[]) {
 
 int main(int argc, char* argv[]) {
 
-	RunTheSimulation(argc, argv);
+	RunTheSimulation();
 
 	return 0;
 }

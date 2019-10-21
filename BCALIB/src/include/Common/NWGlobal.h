@@ -40,12 +40,9 @@ public:
 public:
 	void PrintInfo();
 
-	void InitialGlobal(const char* mode,const char* outPath);
-
+	void InitialGlobal();
 
 	NWSimParameters * GetSimParamters();
-
-
 
 public:
 	class NWGlobalGarbo {

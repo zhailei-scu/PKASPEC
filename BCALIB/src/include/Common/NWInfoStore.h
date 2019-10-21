@@ -40,7 +40,7 @@ private:
 
 public:
 
-	inline int GetStepID(){
+	inline int GetStepID() const{
 		return this->stepID;
 	}
 
@@ -48,7 +48,7 @@ public:
 		this->preEng = preEng;
 	}
 
-	inline double GetpreEng() {
+	inline double GetpreEng() const{
 		return this->preEng;
 	}
 
@@ -56,7 +56,7 @@ public:
 		this->postEng = postEng;
 	}
 
-	inline double GetpostEng() {
+	inline double GetpostEng() const{
 		return this->postEng;
 	}
 
@@ -64,7 +64,7 @@ public:
 		this->deltaEng = deltaEng;
 	}
 
-	inline double GetDeltaEng() {
+	inline double GetDeltaEng() const{
 		return this->deltaEng;
 	}
 
@@ -72,7 +72,7 @@ public:
 		this->deltaTime = deltaTime;
 	}
 
-	inline double GetDeltaTime() {
+	inline double GetDeltaTime() const{
 		return this->deltaTime;
 	}
 
@@ -80,7 +80,7 @@ public:
 		this->originDirection = originDirection;
 	}
 
-	inline G4ThreeVector GetOriginDirection() {
+	inline G4ThreeVector GetOriginDirection() const{
 		return this->originDirection;
 	}
 
@@ -88,7 +88,7 @@ public:
 		this->originPosition = originPosition;
 	}
 
-	inline G4ThreeVector GetOriginPosition() {
+	inline G4ThreeVector GetOriginPosition() const{
 		return this->originPosition;
 	}
 
@@ -96,7 +96,7 @@ public:
 		this->prePosition = prePosition;
 	}
 
-	inline G4ThreeVector GetprePosition() {
+	inline G4ThreeVector GetprePosition() const{
 		return this->prePosition;
 	}
 
@@ -104,7 +104,7 @@ public:
 		this->postPosition = postPosition;
 	}
 
-	inline G4ThreeVector GetpostPosition() {
+	inline G4ThreeVector GetpostPosition() const{
 		return this->postPosition;
 	}
 
@@ -113,7 +113,7 @@ public:
 		this->processName = processName;
 	}
 
-	inline std::string GetProcessName() {
+	inline std::string GetProcessName() const{
 		return this->processName;
 	}
 
@@ -160,7 +160,7 @@ public:
 		return this->EventID;
 	}
 
-	inline std::vector<TrackInfo>* GetTracksInfo() {
+	inline std::vector<TrackInfo>* GetTracksInfo(){
 		return &this->tracksInfo;
 	}
 };
@@ -195,7 +195,7 @@ private:
 
 public:
 
-	inline std::map<int, std::vector<TrackInfo>>* GetEventsInfo() {
+	inline std::map<int, std::vector<TrackInfo>>* GetEventsInfo(){
 		return &this->EventsInfo;
 	}
 

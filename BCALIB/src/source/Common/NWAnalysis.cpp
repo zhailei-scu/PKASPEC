@@ -33,11 +33,13 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	std::fstream ofsAnalysis_PowerInterval;
 	std::fstream ofsAnalysis_EndReason;
 	std::fstream ofsAnalysis_DeviateAxesDistance;
+	std::fstream ofsAnalysisPath_DistanceXYZ;
 	std::string OrignalDistancePath;
 	std::string AnalysisPath_EqualInterval;
 	std::string AnalysisPath_PowerInterval;
 	std::string AnalysisPath_EndReason;
 	std::string AnalysisPath_DeviateAxesDistance;
+	std::string AnalysisPath_DistanceXYZ;
 	std::vector<double> theDistance;
 	double maxDistance = -1.0;
 	double minDistance = 1E32;
@@ -67,8 +69,44 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	double vectorMultiple;
 	double magOriginDirection;
 	double magvectorToOrigin;
+	std::vector<StepInfo*>* linkedCells;
+	int ceilingNum;
+	int ceilingNum_X;
+	int ceilingNum_Y;
+	int ceilingNum_Z;
+	double minPos_X;
+	double maxPos_X;
+	double minPos_Y;
+	double maxPos_Y;
+	double minPos_Z;
+	double maxPos_Z;
+	double ceiling_Interval_X;
+	double ceiling_Interval_Y;
+	double ceiling_Interval_Z;
+	int ceilIndex_X;
+	int ceilIndex_Y;
+	int ceilIndex_Z;
+	int linkID;
 	//---Body---
 
+	minPos_X = 1.e32;
+	minPos_Y = 1.e32;
+	minPos_Z = 1.e32;
+	maxPos_X = -1.e32;
+	maxPos_Y = -1.e32;
+	maxPos_Z = -1.e32;
+
+	ceilingNum_X = 10;
+	ceilingNum_Y = 10;
+	ceilingNum_Z = 10;
+
+	ceilingNum = ceilingNum_X * ceilingNum_Y*ceilingNum_Z;
+
+	linkedCells = new std::vector<StepInfo*>[ceilingNum];
+
+	for (int i = 0; i < ceilingNum; i++) {
+		linkedCells[i].swap(std::vector<StepInfo*>());
+	}
 
 	outwidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
 
@@ -77,6 +115,8 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	score_PowerInterval = new int[PowerInterval_BinNum];
 
 	PowerInterval_DeltaLength = (std::log10(PowerInterval_Max) - std::log10(PowerInterval_Min)) / PowerInterval_BinNum;
+
+
 
 
 	if(NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->length() >0){
@@ -125,6 +165,14 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss >> AnalysisPath_DeviateAxesDistance;
 
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_DistanceXYZ.txt";
+
+		ss >> AnalysisPath_DistanceXYZ;
 	}
 	else {
 		ss.clear();
@@ -171,6 +219,14 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss >> AnalysisPath_DeviateAxesDistance;
 
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << "DistanceResult_Analysis_DistanceXYZ.txt";
+
+		ss >> AnalysisPath_DistanceXYZ;
 	}
 
 	ofsOrignalDistance.open(OrignalDistancePath, std::ios::out | std::ios::ate);
@@ -188,6 +244,21 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 	ofsAnalysis_DeviateAxesDistance << std::setw(outwidth) << "EventID:"
 									<< std::setw(outwidth) << "ToOrgVector(mm)" << std::endl;
+
+
+	ofsAnalysisPath_DistanceXYZ.open(AnalysisPath_DistanceXYZ, std::ios::out | std::ios::ate);
+
+	ofsAnalysisPath_DistanceXYZ 
+		<< std::setw(outwidth) << "SubjectEventID"
+		<< std::setw(outwidth) << "SubjectTrackID"
+		<< std::setw(outwidth) << "SubjectStepID"
+		<< std::setw(outwidth) << "ObjectEventID"
+		<< std::setw(outwidth) << "ObjectTrackID"
+		<< std::setw(outwidth) << "ObjectStepID"
+		<< std::setw(outwidth) << "DeltaX(mm)"
+		<< std::setw(outwidth) << "DeltaY(mm)"
+		<< std::setw(outwidth) << "DeltaZ(mm)" << std::endl;
+
 
 	it = storedData->begin();
 
@@ -238,6 +309,13 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 
 					vectorToOrigin = iteratorStepInfo->GetpostPosition() - iteratorStepInfo->GetOriginPosition();
+
+					minPos_X = min(iteratorStepInfo->GetpostPosition().getX(), minPos_X);
+					minPos_Y = min(iteratorStepInfo->GetpostPosition().getY(), minPos_Y);
+					minPos_Z = min(iteratorStepInfo->GetpostPosition().getZ(), minPos_Z);
+					maxPos_X = max(iteratorStepInfo->GetpostPosition().getX(), maxPos_X);
+					maxPos_Y = max(iteratorStepInfo->GetpostPosition().getY(), maxPos_Y);
+					maxPos_Z = max(iteratorStepInfo->GetpostPosition().getZ(), maxPos_Z);
 
 					vectorMultiple = vectorToOrigin * iteratorStepInfo->GetOriginDirection();
 
@@ -331,6 +409,39 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 			<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score_PowerInterval[i] << std::endl;
 	}
 
+	ceiling_Interval_X = (maxPos_X - minPos_X) / ceilingNum_X;
+	ceiling_Interval_Y = (maxPos_Y - minPos_Y) / ceilingNum_Y;
+	ceiling_Interval_Z = (maxPos_Z - minPos_Z) / ceilingNum_Z;
+
+	it = storedData->begin();
+
+	for (; it != storedData->end(); it++) {
+		iteratorTrackInfo = it->second.begin();
+
+		for (; iteratorTrackInfo != it->second.end(); iteratorTrackInfo++) {
+
+			iteratorStepInfo = iteratorTrackInfo->GetStepsInfo()->begin();
+
+			if (iteratorTrackInfo->GetStepsInfo()->size() > 0) {
+
+				for (; iteratorStepInfo != iteratorTrackInfo->GetStepsInfo()->end(); iteratorStepInfo++) {
+
+					ceilIndex_X = min(int((iteratorStepInfo->GetpostPosition().getX() - minPos_X) / ceiling_Interval_X), ceilingNum_X - 1);
+					ceilIndex_Y = min(int((iteratorStepInfo->GetpostPosition().getY() - minPos_Y) / ceiling_Interval_Y), ceilingNum_Y - 1);
+					ceilIndex_Z = min(int((iteratorStepInfo->GetpostPosition().getZ() - minPos_Z) / ceiling_Interval_Z), ceilingNum_Z - 1);
+
+					linkID = ceilIndex_Z * ceilingNum_Y*ceilingNum_Z + ceilIndex_Y * ceilingNum_X + ceilIndex_X;
+					linkedCells[linkID].push_back(iteratorStepInfo._Ptr);
+
+				}
+			}
+
+		}
+	}
+
+
+
+
 
 	ofsAnalysis_EqualInterval.close();
 
@@ -342,11 +453,13 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 	ofsAnalysis_DeviateAxesDistance.close();
 
-	if (!binEnds) delete[] binEnds;
-	if (!score) delete[] score;
+	if (NULL != binEnds) delete[] binEnds;
+	if (NULL != score) delete[] score;
 
-	if (!binEnds_PowerInterval) delete[] binEnds_PowerInterval;
-	if (!score_PowerInterval) delete[] score_PowerInterval;
+	if (NULL != binEnds_PowerInterval) delete[] binEnds_PowerInterval;
+	if (NULL != score_PowerInterval) delete[] score_PowerInterval;
+
+	if (NULL != linkedCells) delete[] linkedCells;
 }
 
 
