@@ -1,5 +1,6 @@
 #include "NWSimParameters.h"
 #include <stdlib.h>
+#include "G4SystemOfUnits.hh"
 /*Singleton instance*/
 
 
@@ -82,16 +83,16 @@ void NWSimParameters::SetDefulatValue() {
 	//beam
 	this->beam.SetTurnOnMode(BeamMode(Area_Random));
 
-	this->beam.SetGunEnergy(1.0);
+	this->beam.SetGunEnergy(1);
 
 	this->beam.SetGunParticleName(G4String("neutron"));
 
 	this->beam.SetGunParticleStartDirection(G4ThreeVector(0, 0, -1));
 
-	FluxRange[0][0] = -10;  //x0
-	FluxRange[0][1] = 10;  //x1
-	FluxRange[1][0] = -10;  //y0
-	FluxRange[1][1] = 10;  //y1
+	FluxRange[0][0] = -10 * mm;  //x0
+	FluxRange[0][1] = 10 * mm;  //x1
+	FluxRange[1][0] = -10 * mm;  //y0
+	FluxRange[1][1] = 10 * mm;  //y1
 	this->beam.SetFluxRange(FluxRange);
 }
 

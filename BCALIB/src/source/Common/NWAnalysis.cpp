@@ -386,14 +386,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 			<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score_PowerInterval[i] << std::endl;
 	}
 
-	std::cout 
-		<< boundary[0][0] <<"  " 
-		<< boundary[0][1] <<"  "
-		<< boundary[1][0] <<"  "
-		<< boundary[1][1] << "  "
-		<< boundary[2][0] << "  "
-		<< boundary[2][1] << std::endl;
-
 	Cal_MinDist_LinkedCell(storedData,boundary,ceilingNum, &ofsAnalysisPath_DistanceXYZ);
 
 
@@ -449,15 +441,6 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 		linkedCells_TrackID[i].swap(std::vector<int>());
 		linkedCells_StepInfo[i].swap(std::vector<StepInfo*>());
 	}
-
-
-	std::cout
-		<< boundary[0][0] << "  "
-		<< boundary[0][1] << "  "
-		<< boundary[1][0] << "  "
-		<< boundary[1][1] << "  "
-		<< boundary[2][0] << "  "
-		<< boundary[2][1] << std::endl;
 
 	ceiling_Interval[0] = (boundary[0][1] - boundary[0][0]) / ceilNum[0];
 	ceiling_Interval[1] = (boundary[1][1] - boundary[1][0]) / ceilNum[1];
