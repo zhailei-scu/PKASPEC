@@ -69,44 +69,20 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	double vectorMultiple;
 	double magOriginDirection;
 	double magvectorToOrigin;
-	std::vector<StepInfo*>* linkedCells;
-	int ceilingNum;
-	int ceilingNum_X;
-	int ceilingNum_Y;
-	int ceilingNum_Z;
-	double minPos_X;
-	double maxPos_X;
-	double minPos_Y;
-	double maxPos_Y;
-	double minPos_Z;
-	double maxPos_Z;
-	double ceiling_Interval_X;
-	double ceiling_Interval_Y;
-	double ceiling_Interval_Z;
-	int ceilIndex_X;
-	int ceilIndex_Y;
-	int ceilIndex_Z;
-	int linkID;
+	int ceilingNum[3];
+	double boundary[3][2];
 	//---Body---
 
-	minPos_X = 1.e32;
-	minPos_Y = 1.e32;
-	minPos_Z = 1.e32;
-	maxPos_X = -1.e32;
-	maxPos_Y = -1.e32;
-	maxPos_Z = -1.e32;
+	boundary[0][0] = 1.e32;
+	boundary[1][0] = 1.e32;
+	boundary[2][0] = 1.e32;
+	boundary[0][1] = -1.e32;
+	boundary[1][1] = -1.e32;
+	boundary[2][1] = -1.e32;
 
-	ceilingNum_X = 10;
-	ceilingNum_Y = 10;
-	ceilingNum_Z = 10;
-
-	ceilingNum = ceilingNum_X * ceilingNum_Y*ceilingNum_Z;
-
-	linkedCells = new std::vector<StepInfo*>[ceilingNum];
-
-	for (int i = 0; i < ceilingNum; i++) {
-		linkedCells[i].swap(std::vector<StepInfo*>());
-	}
+	ceilingNum[0] = 10;
+	ceilingNum[1] = 10;
+	ceilingNum[2] = 10;
 
 	outwidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
 
@@ -255,9 +231,10 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 		<< std::setw(outwidth) << "ObjectEventID"
 		<< std::setw(outwidth) << "ObjectTrackID"
 		<< std::setw(outwidth) << "ObjectStepID"
-		<< std::setw(outwidth) << "DeltaX(mm)"
-		<< std::setw(outwidth) << "DeltaY(mm)"
-		<< std::setw(outwidth) << "DeltaZ(mm)" << std::endl;
+		<< std::setw(outwidth) << "MinDeltaX(mm)"
+		<< std::setw(outwidth) << "MinDeltaY(mm)"
+		<< std::setw(outwidth) << "MinDeltaZ(mm)" 
+		<< std::setw(outwidth) << "MinDeltaDist(mm)" << std::endl;
 
 
 	it = storedData->begin();
@@ -310,12 +287,12 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 					vectorToOrigin = iteratorStepInfo->GetpostPosition() - iteratorStepInfo->GetOriginPosition();
 
-					minPos_X = min(iteratorStepInfo->GetpostPosition().getX(), minPos_X);
-					minPos_Y = min(iteratorStepInfo->GetpostPosition().getY(), minPos_Y);
-					minPos_Z = min(iteratorStepInfo->GetpostPosition().getZ(), minPos_Z);
-					maxPos_X = max(iteratorStepInfo->GetpostPosition().getX(), maxPos_X);
-					maxPos_Y = max(iteratorStepInfo->GetpostPosition().getY(), maxPos_Y);
-					maxPos_Z = max(iteratorStepInfo->GetpostPosition().getZ(), maxPos_Z);
+					boundary[0][0] = min(iteratorStepInfo->GetpostPosition().getX(), boundary[0][0]);
+					boundary[1][0] = min(iteratorStepInfo->GetpostPosition().getY(), boundary[1][0]);
+					boundary[2][0] = min(iteratorStepInfo->GetpostPosition().getZ(), boundary[2][0]);
+					boundary[0][1] = max(iteratorStepInfo->GetpostPosition().getX(), boundary[0][1]);
+					boundary[1][1] = max(iteratorStepInfo->GetpostPosition().getY(), boundary[1][1]);
+					boundary[2][1] = max(iteratorStepInfo->GetpostPosition().getZ(), boundary[2][1]);
 
 					vectorMultiple = vectorToOrigin * iteratorStepInfo->GetOriginDirection();
 
@@ -409,38 +386,15 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 			<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score_PowerInterval[i] << std::endl;
 	}
 
-	ceiling_Interval_X = (maxPos_X - minPos_X) / ceilingNum_X;
-	ceiling_Interval_Y = (maxPos_Y - minPos_Y) / ceilingNum_Y;
-	ceiling_Interval_Z = (maxPos_Z - minPos_Z) / ceilingNum_Z;
+	std::cout 
+		<< boundary[0][0] <<"  " 
+		<< boundary[0][1] <<"  "
+		<< boundary[1][0] <<"  "
+		<< boundary[1][1] << "  "
+		<< boundary[2][0] << "  "
+		<< boundary[2][1] << std::endl;
 
-	it = storedData->begin();
-
-	for (; it != storedData->end(); it++) {
-		iteratorTrackInfo = it->second.begin();
-
-		for (; iteratorTrackInfo != it->second.end(); iteratorTrackInfo++) {
-
-			iteratorStepInfo = iteratorTrackInfo->GetStepsInfo()->begin();
-
-			if (iteratorTrackInfo->GetStepsInfo()->size() > 0) {
-
-				for (; iteratorStepInfo != iteratorTrackInfo->GetStepsInfo()->end(); iteratorStepInfo++) {
-
-					ceilIndex_X = min(int((iteratorStepInfo->GetpostPosition().getX() - minPos_X) / ceiling_Interval_X), ceilingNum_X - 1);
-					ceilIndex_Y = min(int((iteratorStepInfo->GetpostPosition().getY() - minPos_Y) / ceiling_Interval_Y), ceilingNum_Y - 1);
-					ceilIndex_Z = min(int((iteratorStepInfo->GetpostPosition().getZ() - minPos_Z) / ceiling_Interval_Z), ceilingNum_Z - 1);
-
-					linkID = ceilIndex_Z * ceilingNum_Y*ceilingNum_Z + ceilIndex_Y * ceilingNum_X + ceilIndex_X;
-					linkedCells[linkID].push_back(iteratorStepInfo._Ptr);
-
-				}
-			}
-
-		}
-	}
-
-
-
+	Cal_MinDist_LinkedCell(storedData,boundary,ceilingNum, &ofsAnalysisPath_DistanceXYZ);
 
 
 	ofsAnalysis_EqualInterval.close();
@@ -453,13 +407,179 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 	ofsAnalysis_DeviateAxesDistance.close();
 
+	ofsAnalysisPath_DistanceXYZ.close();
+
 	if (NULL != binEnds) delete[] binEnds;
 	if (NULL != score) delete[] score;
 
 	if (NULL != binEnds_PowerInterval) delete[] binEnds_PowerInterval;
 	if (NULL != score_PowerInterval) delete[] score_PowerInterval;
+}
 
-	if (NULL != linkedCells) delete[] linkedCells;
+
+void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData,double boundary[][2],int ceilNum[3],fstream* ofsAnalysisPath_DistanceXYZ){
+	/*Local Vars*/
+	int ceilingNum;
+	double ceiling_Interval[3];
+	int ceilIndex[3];
+	int linkID;
+	int subjectLinkID;
+	int objectLinkID;
+	std::map<int, std::vector<TrackInfo>>::iterator it;
+	std::vector<TrackInfo>::iterator iteratorTrackInfo;
+	std::vector<StepInfo>::iterator iteratorStepInfo;
+	std::vector<int>* linkedCells_EventID;
+	std::vector<int>* linkedCells_TrackID;
+	std::vector<StepInfo*>* linkedCells_StepInfo;
+	G4ThreeVector objectPostion;
+	G4ThreeVector pKADist;
+	double distance;
+	int outwidth;
+	/*Body*/
+	outwidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
+
+	ceilingNum = ceilNum[0] * ceilNum[1] * ceilNum[2];
+
+	linkedCells_EventID = new std::vector<int>[ceilingNum];
+	linkedCells_TrackID = new std::vector<int>[ceilingNum];
+	linkedCells_StepInfo = new std::vector<StepInfo*>[ceilingNum];
+
+	for (int i = 0; i < ceilingNum; i++) {
+		linkedCells_EventID[i].swap(std::vector<int>());
+		linkedCells_TrackID[i].swap(std::vector<int>());
+		linkedCells_StepInfo[i].swap(std::vector<StepInfo*>());
+	}
+
+
+	std::cout
+		<< boundary[0][0] << "  "
+		<< boundary[0][1] << "  "
+		<< boundary[1][0] << "  "
+		<< boundary[1][1] << "  "
+		<< boundary[2][0] << "  "
+		<< boundary[2][1] << std::endl;
+
+	ceiling_Interval[0] = (boundary[0][1] - boundary[0][0]) / ceilNum[0];
+	ceiling_Interval[1] = (boundary[1][1] - boundary[1][0]) / ceilNum[1];
+	ceiling_Interval[2] = (boundary[2][1] - boundary[2][0]) / ceilNum[2];
+
+	it= storedData->begin();
+
+	for (; it != storedData->end(); it++) {
+		iteratorTrackInfo = it->second.begin();
+
+		for (; iteratorTrackInfo != it->second.end(); iteratorTrackInfo++) {
+
+			iteratorStepInfo = iteratorTrackInfo->GetStepsInfo()->begin();
+
+			if (iteratorTrackInfo->GetStepsInfo()->size() > 0) {
+
+				for (; iteratorStepInfo != iteratorTrackInfo->GetStepsInfo()->end(); iteratorStepInfo++) {
+
+					if (0 != iteratorStepInfo->GetProcessName().compare(this->targetProcessName)) {
+						break;
+					}
+
+					ceilIndex[0] = min(int((iteratorStepInfo->GetpostPosition().getX() - boundary[0][0]) / ceiling_Interval[0]), ceilNum[0] - 1);
+					ceilIndex[1] = min(int((iteratorStepInfo->GetpostPosition().getY() - boundary[1][0]) / ceiling_Interval[1]), ceilNum[1] - 1);
+					ceilIndex[2] = min(int((iteratorStepInfo->GetpostPosition().getZ() - boundary[2][0]) / ceiling_Interval[2]), ceilNum[2] - 1);
+
+					ceilIndex[0] = max(ceilIndex[0], 0);
+					ceilIndex[1] = max(ceilIndex[1], 0);
+					ceilIndex[2] = max(ceilIndex[2], 0);
+
+					linkID = ceilIndex[2]*ceilNum[0]*ceilNum[1] + ceilIndex[1]*ceilNum[0] + ceilIndex[0];
+					linkedCells_EventID[linkID].push_back(it->first);
+					linkedCells_TrackID[linkID].push_back(iteratorTrackInfo->GetTrackID());
+					linkedCells_StepInfo[linkID].push_back(iteratorStepInfo._Ptr);
+				}
+			}
+
+		}
+	}
+
+
+	for (int k = 0; k < ceilNum[2]; k++) {
+		for (int j = 0; j < ceilNum[1]; j++) {
+			for (int i = 0; i < ceilNum[0]; i++) {
+
+				subjectLinkID = k * ceilNum[0]* ceilNum[1] + j * ceilNum[0] + i;
+
+				for (int l = 0; l < linkedCells_StepInfo[subjectLinkID].size(); l++) {
+
+					int subjectEventID = linkedCells_EventID[subjectLinkID].at(l);
+					int subjectTrackID = linkedCells_TrackID[subjectLinkID].at(l);
+					int subjectStepID = linkedCells_StepInfo[subjectLinkID].at(l)->GetStepID();
+					G4ThreeVector subjectPostion = linkedCells_StepInfo[subjectLinkID].at(l)->GetpostPosition();
+
+					double minDist = 1.e32;
+					int minDist_objectEventID;
+					int minDist_objectTrackID;
+					int minDist_objectStepID;
+					double minDist_x;
+					double minDist_y;
+					double minDist_z;
+
+					for (int kk = max(k - 1, 0); kk < min(k + 2, ceilNum[2]); kk++) {
+						for (int jj = max(j - 1, 0); jj < min(j + 2, ceilNum[1]); jj++) {
+							for (int ii = max(i - 1, 0); ii < min(i + 2, ceilNum[0]); ii++) {
+								objectLinkID = kk * ceilNum[0]* ceilNum[1] + jj * ceilNum[0] + ii;
+
+								for (int m = 0; m < linkedCells_StepInfo[objectLinkID].size(); m++) {
+
+									int objectEventID = linkedCells_EventID[objectLinkID].at(m);
+									int objectTrackID = linkedCells_TrackID[objectLinkID].at(m);
+									int objectStepID = linkedCells_StepInfo[objectLinkID].at(m)->GetStepID();
+
+									if (subjectEventID != objectEventID || subjectTrackID != objectTrackID || subjectStepID != objectStepID) {
+										objectPostion = linkedCells_StepInfo[objectLinkID].at(m)->GetpostPosition();
+										pKADist = subjectPostion - objectPostion;
+										distance = pKADist.mag();
+
+										if (distance < minDist) {
+
+											minDist = distance;
+
+											minDist_x = abs(pKADist.getX());
+											minDist_y = abs(pKADist.getY());
+											minDist_z = abs(pKADist.getZ());
+
+											minDist_objectEventID = objectEventID;
+											minDist_objectTrackID = objectTrackID;
+											minDist_objectStepID = objectStepID;
+										}
+
+									}
+
+								}
+
+							}
+
+						}
+					}
+
+
+					*ofsAnalysisPath_DistanceXYZ
+						<< std::setw(outwidth) << subjectEventID
+						<< std::setw(outwidth) << subjectTrackID
+						<< std::setw(outwidth) << subjectStepID
+						<< std::setw(outwidth) << minDist_objectEventID
+						<< std::setw(outwidth) << minDist_objectTrackID
+						<< std::setw(outwidth) << minDist_objectStepID
+						<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << minDist_x
+						<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << minDist_y
+						<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << minDist_z
+						<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << minDist << std::endl;
+				}
+
+			}
+		}
+	}
+
+	if (NULL != linkedCells_EventID) delete[] linkedCells_EventID;
+	if (NULL != linkedCells_TrackID) delete[] linkedCells_TrackID;
+	if (NULL != linkedCells_StepInfo) delete[] linkedCells_StepInfo;
+
 }
 
 

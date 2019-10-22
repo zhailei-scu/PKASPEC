@@ -2,6 +2,7 @@
 #define NWANALYSIS_H
 
 #include "NWInfoStore.h"
+#include <fstream>
 
 class NWAnalysis {
 private:
@@ -16,6 +17,8 @@ public:
 	static void ReleaseInstance();
 
 	void AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedData);
+
+	void Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData,double boundary[][2], int ceilNum[3], std::fstream* ofsAnalysisPath_DistanceXYZ);
 
 public:
 	class NWAnalysisGarbo {

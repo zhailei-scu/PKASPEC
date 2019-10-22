@@ -73,7 +73,7 @@ void NWSimParameters::SetDefulatValue() {
 
 	this->flushFrequence = 100;
 
-	this->EventLoopsNumber = 1000;
+	this->EventLoopsNumber = 100;
 
 	this->targetMaterial.clear();
 	this->targetMaterial.swap(std::string(""));
