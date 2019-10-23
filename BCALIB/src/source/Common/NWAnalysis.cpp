@@ -35,6 +35,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	std::fstream ofsAnalysis_DeviateAxesDistance;
 	std::fstream ofsAnalysisPath_DistanceXYZ;
 	std::fstream ofsAnalysisPath_DistanceXYZ_ZONE;
+	std::fstream ofsAnalysisPath_linkedCellPosition;
 	std::string OrignalDistancePath;
 	std::string AnalysisPath_EqualInterval;
 	std::string AnalysisPath_PowerInterval;
@@ -42,6 +43,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	std::string AnalysisPath_DeviateAxesDistance;
 	std::string AnalysisPath_DistanceXYZ;
 	std::string AnalysisPath_DistanceXYZ_ZONE;
+	std::string AnalysisPath_linkedCellPosition;
 	std::vector<double> theDistance;
 	double maxDistance = -1.0;
 	double minDistance = 1E32;
@@ -158,6 +160,16 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_DistanceXYZ_ZONE.txt";
 
 		ss >> AnalysisPath_DistanceXYZ_ZONE;
+
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_linkedCellPosition.txt";
+
+		ss >> AnalysisPath_linkedCellPosition;
+
 	}
 	else {
 		ss.clear();
@@ -221,6 +233,15 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 		ss << "DistanceResult_Analysis_DistanceXYZ_ZONE.txt";
 
 		ss >> AnalysisPath_DistanceXYZ_ZONE;
+
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << "DistanceResult_Analysis_linkedCellPosition.txt";
+
+		ss >> AnalysisPath_linkedCellPosition;
 	}
 
 	ofsOrignalDistance.open(OrignalDistancePath, std::ios::out | std::ios::ate);
@@ -270,6 +291,15 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 		<< std::setw(outwidth) << "MinDeltaY(mm)"
 		<< std::setw(outwidth) << "MinDeltaZ(mm)"
 		<< std::setw(outwidth) << "MinDeltaDist(mm)" << std::endl;
+
+
+	ofsAnalysisPath_linkedCellPosition.open(AnalysisPath_linkedCellPosition, std::ios::out | std::ios::ate);
+
+	ofsAnalysisPath_linkedCellPosition
+		<< std::setw(outwidth) << "ZONEID"
+		<< std::setw(outwidth) << "cent_x(mm)"
+		<< std::setw(outwidth) << "cent_y(mm)"
+		<< std::setw(outwidth) << "cent_z(mm)" << std::endl;
 
 
 	it = storedData->begin();
@@ -421,7 +451,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 			<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score_PowerInterval[i] << std::endl;
 	}
 
-	Cal_MinDist_LinkedCell(storedData,boundary, ceilingNum_OneDim, &ofsAnalysisPath_DistanceXYZ,&ofsAnalysisPath_DistanceXYZ_ZONE);
+	Cal_MinDist_LinkedCell(storedData,boundary, &ofsAnalysisPath_DistanceXYZ,&ofsAnalysisPath_DistanceXYZ_ZONE, &ofsAnalysisPath_linkedCellPosition);
 
 
 	ofsAnalysis_EqualInterval.close();
@@ -438,6 +468,8 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 	ofsAnalysisPath_DistanceXYZ_ZONE.close();
 
+	ofsAnalysisPath_linkedCellPosition.close();
+
 	if (NULL != binEnds) delete[] binEnds;
 	if (NULL != score) delete[] score;
 
@@ -446,7 +478,8 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 }
 
 
-void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData,double boundary[][2],fstream* ofsAnalysisPath_DistanceXYZ,fstream *ofsAnalysisPath_DistanceXYZ_ZONE){
+void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData,double boundary[][2],
+	fstream* ofsAnalysisPath_DistanceXYZ,fstream *ofsAnalysisPath_DistanceXYZ_ZONE,fstream *ofsAnalysisPath_linkedCellPosition){
 	/*Local Vars*/
 	int ceilingNum;
 	double ceil_Interval;
@@ -516,6 +549,21 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 		linkedCells_EventID[i].swap(std::vector<int>());
 		linkedCells_TrackID[i].swap(std::vector<int>());
 		linkedCells_StepInfo[i].swap(std::vector<StepInfo*>());
+	}
+
+
+	for (int k = 0; k < ceilingNum_OneDim[2]; k++) {
+		for (int j = 0; j < ceilingNum_OneDim[1]; j++) {
+			for (int i = 0; i < ceilingNum_OneDim[0]; i++) {
+
+				*ofsAnalysisPath_linkedCellPosition
+					<< std::setw(outwidth) << k * ceilingNum_OneDim[0] * ceilingNum_OneDim[1] + j * ceilingNum_OneDim[0] + i
+					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[0][0] + (i + 0.5)*ceil_Interval
+					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[1][0] + (j + 0.5)*ceil_Interval
+					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[2][0] + (k + 0.5)*ceil_Interval
+					<< std::endl;
+			}
+		}
 	}
 
 	it= storedData->begin();
