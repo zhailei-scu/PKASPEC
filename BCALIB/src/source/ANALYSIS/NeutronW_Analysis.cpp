@@ -17,7 +17,7 @@ void AnalysisTheResult(int argc, char* argv[]) {
 
 	originalDataFilePath = std::string(argv[1]);
 
-	NWGlobal::GetInstance()->InitialGlobal();
+	NWGlobal::GetInstance()->InitialGlobal(analysisMode);
 
 	/*Here, we only care about hadElastic process*/
 	NWAnalysis::GetInstance()->targetProcessName = std::string("hadElastic");

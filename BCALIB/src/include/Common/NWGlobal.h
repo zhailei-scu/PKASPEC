@@ -40,7 +40,7 @@ public:
 public:
 	void PrintInfo();
 
-	void InitialGlobal();
+	void InitialGlobal(const std::string& mode);
 
 	NWSimParameters * GetSimParamters();
 

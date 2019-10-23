@@ -14,7 +14,7 @@
 void RunTheSimulation() {
 
 	/*Out Path*/
-	NWGlobal::GetInstance()->InitialGlobal();
+	NWGlobal::GetInstance()->InitialGlobal(simMode);
 
 	NWGlobal::GetInstance()->PrintInfo();
 
