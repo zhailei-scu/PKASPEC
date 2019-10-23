@@ -629,10 +629,10 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 	for (int zoneID = 0; zoneID < ZoneNum; zoneID++) {
 
-		y_Range[0] = ZoneCenter[0] - zoneID;
-		y_Range[1] = zoneID - ZoneCenter[1];
 		x_Range[0] = ZoneCenter[0] - zoneID;
-		x_Range[1] = zoneID - ZoneCenter[1];
+		x_Range[1] = ZoneCenter[1] + zoneID;
+		y_Range[0] = ZoneCenter[0] - zoneID;
+		y_Range[1] = ZoneCenter[1] + zoneID;
 
 		for (int k = 0; k < ceilingNum_OneDim; k++) {
 
@@ -676,7 +676,6 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 								}
 
 								for (int ii = x_Range[0]; ii <= x_Range[1]; ii = ii + xInterval) {
-
 
 									objectLinkID = kk * ceilingNum_OneDim* ceilingNum_OneDim + jj * ceilingNum_OneDim + ii;
 
