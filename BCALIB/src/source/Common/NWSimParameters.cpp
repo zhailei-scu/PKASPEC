@@ -31,6 +31,8 @@ NWSimParameters& NWSimParameters::operator=(const NWSimParameters & r) {
 
 	this->EventLoopsNumber = r.EventLoopsNumber;
 
+	this->linkCellInterval = r.linkCellInterval;
+
 	this->targetMaterial = r.targetMaterial;
 
 	this->beam = r.beam;
@@ -48,6 +50,8 @@ void NWSimParameters::Clean() {
 	this->flushFrequence = 100;
 
 	this->EventLoopsNumber = 0;
+
+	this->linkCellInterval = 10 * mm;
 
 	this->targetMaterial.clear();
 	this->targetMaterial.swap(std::string(""));
@@ -75,6 +79,8 @@ void NWSimParameters::SetDefulatValue() {
 	this->flushFrequence = 100;
 
 	this->EventLoopsNumber = 100;
+
+	this->linkCellInterval = 10 * mm;
 
 	this->targetMaterial.clear();
 	this->targetMaterial.swap(std::string(""));

@@ -79,8 +79,14 @@ public:
 		}
 	}
 
-	inline void GetFluxRange(const double (*ptr)[2]) const{
+	inline void GetFluxRange( double (*ptr)[2]){
 		ptr = FluxRange;
+	}
+
+	inline void GetFluxCenter( double Center[2]) const {
+		for (int i = 0; i < 2; i++) {
+			Center[i] = 0.5*(this->FluxRange[i][0] + this->FluxRange[i][1]);
+		}
 	}
 
 };

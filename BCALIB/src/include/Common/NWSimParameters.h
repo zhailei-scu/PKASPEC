@@ -37,6 +37,8 @@ private:
 
 	int EventLoopsNumber;
 
+	double linkCellInterval;
+
 	std::string targetMaterial;
 
 private:
@@ -82,6 +84,14 @@ public:
 
 	inline const int GetEventLoopsNumber() const{
 		return this->EventLoopsNumber;
+	}
+
+	inline void SetLinkCellInterval(const double linkCellInterval) {
+		this->linkCellInterval = linkCellInterval;
+	}
+
+	inline double GetLinkCellInterval() {
+		return this->linkCellInterval;
 	}
 
 	inline void SetTargetMaterial(const std::string &targetMaterial) {
