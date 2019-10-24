@@ -78,13 +78,13 @@ void NWSimParameters::SetDefulatValue() {
 
 	this->flushFrequence = 100;
 
-	this->EventLoopsNumber = 100;
+	this->EventLoopsNumber = 100000;
 
 	this->linkCellInterval = 10 * mm;
 
 	this->targetMaterial.clear();
 	this->targetMaterial.swap(std::string(""));
-	this->targetMaterial = std::string("G4_Zr");
+	this->targetMaterial = std::string("G4_W");
 
 	//beam
 	this->beam.SetTurnOnMode(BeamMode(Area_Random));

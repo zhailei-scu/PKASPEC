@@ -34,7 +34,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	std::fstream ofsAnalysis_EndReason;
 	std::fstream ofsAnalysis_DeviateAxesDistance;
 	std::fstream ofsAnalysisPath_DistanceXYZ;
-	std::fstream ofsAnalysisPath_DistanceXYZ_ZONE;
 	std::fstream ofsAnalysisPath_linkedCellPosition;
 	std::string OrignalDistancePath;
 	std::string AnalysisPath_EqualInterval;
@@ -42,7 +41,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	std::string AnalysisPath_EndReason;
 	std::string AnalysisPath_DeviateAxesDistance;
 	std::string AnalysisPath_DistanceXYZ;
-	std::string AnalysisPath_DistanceXYZ_ZONE;
 	std::string AnalysisPath_linkedCellPosition;
 	std::vector<double> theDistance;
 	double maxDistance = -1.0;
@@ -157,15 +155,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_DistanceXYZ_ZONE.txt";
-
-		ss >> AnalysisPath_DistanceXYZ_ZONE;
-
-
-		ss.clear();
-
-		ss.str("");
-
 		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_linkedCellPosition.txt";
 
 		ss >> AnalysisPath_linkedCellPosition;
@@ -230,15 +219,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss.str("");
 
-		ss << "DistanceResult_Analysis_DistanceXYZ_ZONE.txt";
-
-		ss >> AnalysisPath_DistanceXYZ_ZONE;
-
-
-		ss.clear();
-
-		ss.str("");
-
 		ss << "DistanceResult_Analysis_linkedCellPosition.txt";
 
 		ss >> AnalysisPath_linkedCellPosition;
@@ -264,10 +244,13 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	ofsAnalysisPath_DistanceXYZ.open(AnalysisPath_DistanceXYZ, std::ios::out | std::ios::ate);
 
 	ofsAnalysisPath_DistanceXYZ 
-		<< std::setw(outwidth) << "ZONEID"
+		<< std::setw(outwidth) << "SubjectZONEID"
+		<< std::setw(outwidth) << "SubjectLinkedID"
 		<< std::setw(outwidth) << "SubjectEventID"
 		<< std::setw(outwidth) << "SubjectTrackID"
 		<< std::setw(outwidth) << "SubjectStepID"
+		<< std::setw(outwidth) << "ObjectZONEID"
+		<< std::setw(outwidth) << "ObjectLinkedID"
 		<< std::setw(outwidth) << "ObjectEventID"
 		<< std::setw(outwidth) << "ObjectTrackID"
 		<< std::setw(outwidth) << "ObjectStepID"
@@ -277,26 +260,11 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 		<< std::setw(outwidth) << "MinDeltaDist(mm)" << std::endl;
 
 
-	ofsAnalysisPath_DistanceXYZ_ZONE.open(AnalysisPath_DistanceXYZ_ZONE,std::ios::out | std::ios::ate);
-
-	ofsAnalysisPath_DistanceXYZ_ZONE
-		<< std::setw(outwidth) << "ZONEID"
-		<< std::setw(outwidth) << "SubjectEventID"
-		<< std::setw(outwidth) << "SubjectTrackID"
-		<< std::setw(outwidth) << "SubjectStepID"
-		<< std::setw(outwidth) << "ObjectEventID"
-		<< std::setw(outwidth) << "ObjectTrackID"
-		<< std::setw(outwidth) << "ObjectStepID"
-		<< std::setw(outwidth) << "MinDeltaX(mm)"
-		<< std::setw(outwidth) << "MinDeltaY(mm)"
-		<< std::setw(outwidth) << "MinDeltaZ(mm)"
-		<< std::setw(outwidth) << "MinDeltaDist(mm)" << std::endl;
-
-
 	ofsAnalysisPath_linkedCellPosition.open(AnalysisPath_linkedCellPosition, std::ios::out | std::ios::ate);
 
 	ofsAnalysisPath_linkedCellPosition
-		<< std::setw(outwidth) << "ZONEID"
+		<< std::setw(outwidth) << "CellID"
+		<< std::setw(outwidth) << "ZoneID"
 		<< std::setw(outwidth) << "cent_x(mm)"
 		<< std::setw(outwidth) << "cent_y(mm)"
 		<< std::setw(outwidth) << "cent_z(mm)" << std::endl;
@@ -451,7 +419,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 			<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score_PowerInterval[i] << std::endl;
 	}
 
-	Cal_MinDist_LinkedCell(storedData,boundary, &ofsAnalysisPath_DistanceXYZ,&ofsAnalysisPath_DistanceXYZ_ZONE, &ofsAnalysisPath_linkedCellPosition);
+	Cal_MinDist_LinkedCell(storedData,boundary, &ofsAnalysisPath_DistanceXYZ,&ofsAnalysisPath_linkedCellPosition);
 
 
 	ofsAnalysis_EqualInterval.close();
@@ -466,8 +434,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 	ofsAnalysisPath_DistanceXYZ.close();
 
-	ofsAnalysisPath_DistanceXYZ_ZONE.close();
-
 	ofsAnalysisPath_linkedCellPosition.close();
 
 	if (NULL != binEnds) delete[] binEnds;
@@ -479,7 +445,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 
 void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData,double boundary[][2],
-	fstream* ofsAnalysisPath_DistanceXYZ,fstream *ofsAnalysisPath_DistanceXYZ_ZONE,fstream *ofsAnalysisPath_linkedCellPosition){
+	fstream* ofsAnalysisPath_DistanceXYZ,fstream *ofsAnalysisPath_linkedCellPosition){
 	/*Local Vars*/
 	int ceilingNum;
 	double ceil_Interval;
@@ -502,9 +468,12 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	int outwidth;
 	int ZoneNum;
 	int ZoneCenter[2];
-	int ZoneID;
-	int ZoneID_X;
-	int ZoneID_Y;
+	int SubjectZoneID;
+	int SubjectZoneID_X;
+	int SubjectZoneID_Y;
+	int ObjectZoneID;
+	int ObjectZoneID_X;
+	int ObjectZoneID_Y;
 	int x_Range[2];
 	int y_Range[2];
 	int xInterval;
@@ -527,7 +496,7 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	/*Zone ID start from 0(Center zone)*/
 	ZoneNum = ceilingNum_OneDim[0] / 2;
 	ZoneCenter[0] = ceilingNum_OneDim[0] / 2 - 1;
-	ZoneCenter[1] = ceilingNum_OneDim[1] / 2 - 1;
+	ZoneCenter[1] = ceilingNum_OneDim[0] / 2;
 
 	/*new boundary*/
 	for (int i = 0; i <= 1; i++ ) {
@@ -554,10 +523,17 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 	for (int k = 0; k < ceilingNum_OneDim[2]; k++) {
 		for (int j = 0; j < ceilingNum_OneDim[1]; j++) {
+			SubjectZoneID_Y = max(ZoneCenter[0] - j, j - ZoneCenter[1]);
+
 			for (int i = 0; i < ceilingNum_OneDim[0]; i++) {
+
+				SubjectZoneID_X = max(ZoneCenter[0] - i, i - ZoneCenter[1]);
+
+				SubjectZoneID = max(SubjectZoneID_X, SubjectZoneID_Y);
 
 				*ofsAnalysisPath_linkedCellPosition
 					<< std::setw(outwidth) << k * ceilingNum_OneDim[0] * ceilingNum_OneDim[1] + j * ceilingNum_OneDim[0] + i
+					<< std::setw(outwidth) << SubjectZoneID
 					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[0][0] + (i + 0.5)*ceil_Interval
 					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[1][0] + (j + 0.5)*ceil_Interval
 					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[2][0] + (k + 0.5)*ceil_Interval
@@ -605,15 +581,17 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	for (int k = 0; k < ceilingNum_OneDim[2]; k++) {
 		for (int j = 0; j < ceilingNum_OneDim[1]; j++) {
 
-			ZoneID_Y = max(ZoneCenter[0] - j,j - ZoneCenter[1]);
+			SubjectZoneID_Y = max(ZoneCenter[0] - j,j - ZoneCenter[1]);
 
 			for (int i = 0; i < ceilingNum_OneDim[0]; i++) {
 
-				ZoneID_X = max(ZoneCenter[0] - i, i - ZoneCenter[1]);
+				SubjectZoneID_X = max(ZoneCenter[0] - i, i - ZoneCenter[1]);
 
-				ZoneID = max(ZoneID_X, ZoneID_Y);
+				SubjectZoneID = max(SubjectZoneID_X, SubjectZoneID_Y);
 
 				subjectLinkID = k * ceilingNum_OneDim[0]*ceilingNum_OneDim[1] + j * ceilingNum_OneDim[0] + i;
+
+				std::cout <<"cell ID: "<< subjectLinkID << " of total Cell Number: " << ceilingNum << std::endl;
 
 				for (int l = 0; l < linkedCells_StepInfo[subjectLinkID].size(); l++) {
 
@@ -623,20 +601,23 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 					G4ThreeVector subjectPostion = linkedCells_StepInfo[subjectLinkID].at(l)->GetpostPosition();
 
 					double minDist = 1.e32;
+					int minDist_ObjectLinkedID;
 					int minDist_objectEventID;
 					int minDist_objectTrackID;
 					int minDist_objectStepID;
 					double minDist_x;
 					double minDist_y;
 					double minDist_z;
-					int shellNum = 2;
+					int shellNum = 1;
 					bool founded = false;
 
 					while (!founded) {
 
-						for (int kk = max(k - 1, 0); kk < min(k + shellNum, ceilingNum_OneDim[2]); kk++) {
-							for (int jj = max(j - 1, 0); jj < min(j + shellNum, ceilingNum_OneDim[1]); jj++) {
-								for (int ii = max(i - 1, 0); ii < min(i + shellNum, ceilingNum_OneDim[0]); ii++) {
+						for (int kk = max(k - shellNum, 0); kk < min(k + shellNum + 1, ceilingNum_OneDim[2]); kk++) {
+							for (int jj = max(j - shellNum, 0); jj < min(j + shellNum + 1, ceilingNum_OneDim[1]); jj++) {
+
+								for (int ii = max(i - shellNum, 0); ii < min(i + shellNum + 1, ceilingNum_OneDim[0]); ii++) {
+
 									objectLinkID = kk * ceilingNum_OneDim[0] * ceilingNum_OneDim[1] + jj * ceilingNum_OneDim[0] + ii;
 
 									for (int m = 0; m < linkedCells_StepInfo[objectLinkID].size(); m++) {
@@ -658,9 +639,15 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 												minDist_y = abs(pKADist.getY());
 												minDist_z = abs(pKADist.getZ());
 
+												minDist_ObjectLinkedID = objectLinkID;
+
 												minDist_objectEventID = objectEventID;
 												minDist_objectTrackID = objectTrackID;
 												minDist_objectStepID = objectStepID;
+
+												ObjectZoneID_X = max(ZoneCenter[0] - ii, ii - ZoneCenter[1]);
+												ObjectZoneID_Y = max(ZoneCenter[0] - jj, jj - ZoneCenter[1]);
+												ObjectZoneID = max(ObjectZoneID_X, ObjectZoneID_Y);
 
 												founded = true;
 											}
@@ -674,15 +661,18 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 							}
 						}
 
-						shellNum = shellNum*2;
+						shellNum = shellNum+1;
 					}
 
 
 					*ofsAnalysisPath_DistanceXYZ
-						<< std::setw(outwidth) << ZoneID
+						<< std::setw(outwidth) << SubjectZoneID
+						<< std::setw(outwidth) << subjectLinkID
 						<< std::setw(outwidth) << subjectEventID
 						<< std::setw(outwidth) << subjectTrackID
 						<< std::setw(outwidth) << subjectStepID
+						<< std::setw(outwidth) << ObjectZoneID
+						<< std::setw(outwidth) << minDist_ObjectLinkedID
 						<< std::setw(outwidth) << minDist_objectEventID
 						<< std::setw(outwidth) << minDist_objectTrackID
 						<< std::setw(outwidth) << minDist_objectStepID
@@ -692,113 +682,6 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 						<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << minDist << std::endl;
 				}
 
-			}
-		}
-	}
-
-
-
-	for (int zoneID = 0; zoneID < ZoneNum; zoneID++) {
-
-		x_Range[0] = ZoneCenter[0] - zoneID;
-		x_Range[1] = ZoneCenter[1] + zoneID;
-		y_Range[0] = ZoneCenter[0] - zoneID;
-		y_Range[1] = ZoneCenter[1] + zoneID;
-
-		for (int k = 0; k < ceilingNum_OneDim[2]; k++) {
-
-			for (int j = y_Range[0]; j <= y_Range[1]; j++) {
-
-				if (j == y_Range[0] || j == y_Range[1]){
-					xInterval = 1;
-				}
-				else {
-					xInterval = x_Range[1] - x_Range[0];
-				}
-
-				for (int i = x_Range[0]; i <= x_Range[1]; i = i + xInterval) {
-
-					subjectLinkID = k * ceilingNum_OneDim[0]*ceilingNum_OneDim[1] + j * ceilingNum_OneDim[0] + i;
-
-					for (int l = 0; l < linkedCells_StepInfo[subjectLinkID].size(); l++) {
-
-						int subjectEventID = linkedCells_EventID[subjectLinkID].at(l);
-						int subjectTrackID = linkedCells_TrackID[subjectLinkID].at(l);
-						int subjectStepID = linkedCells_StepInfo[subjectLinkID].at(l)->GetStepID();
-						G4ThreeVector subjectPostion = linkedCells_StepInfo[subjectLinkID].at(l)->GetpostPosition();
-
-						double minDist = 1.e32;
-						int minDist_objectEventID;
-						int minDist_objectTrackID;
-						int minDist_objectStepID;
-						double minDist_x;
-						double minDist_y;
-						double minDist_z;
-
-						for (int kk = 0; kk < ceilingNum_OneDim[2]; kk++) {
-
-							for (int jj = y_Range[0]; jj <= y_Range[1]; jj++) {
-
-								if (jj == y_Range[0] || jj == y_Range[1]) {
-									xInterval = 1;
-								}
-								else {
-									xInterval = x_Range[1] - x_Range[0];
-								}
-
-								for (int ii = x_Range[0]; ii <= x_Range[1]; ii = ii + xInterval) {
-
-									objectLinkID = kk * ceilingNum_OneDim[0]* ceilingNum_OneDim[1] + jj * ceilingNum_OneDim[0] + ii;
-
-									for (int m = 0; m < linkedCells_StepInfo[objectLinkID].size(); m++) {
-
-										int objectEventID = linkedCells_EventID[objectLinkID].at(m);
-										int objectTrackID = linkedCells_TrackID[objectLinkID].at(m);
-										int objectStepID = linkedCells_StepInfo[objectLinkID].at(m)->GetStepID();
-
-										if (subjectEventID != objectEventID || subjectTrackID != objectTrackID || subjectStepID != objectStepID) {
-											objectPostion = linkedCells_StepInfo[objectLinkID].at(m)->GetpostPosition();
-											pKADist = subjectPostion - objectPostion;
-											distance = pKADist.mag();
-
-											if (distance < minDist) {
-
-												minDist = distance;
-
-												minDist_x = abs(pKADist.getX());
-												minDist_y = abs(pKADist.getY());
-												minDist_z = abs(pKADist.getZ());
-
-												minDist_objectEventID = objectEventID;
-												minDist_objectTrackID = objectTrackID;
-												minDist_objectStepID = objectStepID;
-											}
-
-										}
-
-									}
-
-								}
-
-							}
-						}
-
-
-						*ofsAnalysisPath_DistanceXYZ_ZONE
-							<< std::setw(outwidth) << zoneID
-							<< std::setw(outwidth) << subjectEventID
-							<< std::setw(outwidth) << subjectTrackID
-							<< std::setw(outwidth) << subjectStepID
-							<< std::setw(outwidth) << minDist_objectEventID
-							<< std::setw(outwidth) << minDist_objectTrackID
-							<< std::setw(outwidth) << minDist_objectStepID
-							<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << minDist_x
-							<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << minDist_y
-							<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << minDist_z
-							<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << minDist << std::endl;
-					}
-
-				}
 			}
 		}
 	}
