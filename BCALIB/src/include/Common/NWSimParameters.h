@@ -37,7 +37,9 @@ private:
 
 	int EventLoopsNumber;
 
-	double linkCellInterval;
+	double linkCellInterval_xy;
+
+	int linkCellNum_z;
 
 	std::string targetMaterial;
 
@@ -86,12 +88,21 @@ public:
 		return this->EventLoopsNumber;
 	}
 
-	inline void SetLinkCellInterval(const double linkCellInterval) {
-		this->linkCellInterval = linkCellInterval;
+	inline void SetLinkCellInterval_xy(const double linkCellInterval_xy) {
+		this->linkCellInterval_xy = linkCellInterval_xy;
 	}
 
-	inline double GetLinkCellInterval() {
-		return this->linkCellInterval;
+	inline double GetLinkCellInterval_xy() {
+		return this->linkCellInterval_xy;
+	}
+
+
+	inline void SetLinkCellNum_z(const int linkCellNum_z) {
+		this->linkCellNum_z = linkCellNum_z;
+	}
+
+	inline int GetLinkCellNum_z() {
+		return this->linkCellNum_z;
 	}
 
 	inline void SetTargetMaterial(const std::string &targetMaterial) {

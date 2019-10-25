@@ -448,7 +448,7 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	fstream* ofsAnalysisPath_DistanceXYZ,fstream *ofsAnalysisPath_linkedCellPosition){
 	/*Local Vars*/
 	int ceilingNum;
-	double ceil_Interval;
+	double ceil_Interval[3];
 	int ceilingNum_OneDim[3];
 	int ceilIndex[3];
 	double beamCenter[2];
@@ -459,9 +459,9 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	std::map<int, std::vector<TrackInfo>>::iterator it;
 	std::vector<TrackInfo>::iterator iteratorTrackInfo;
 	std::vector<StepInfo>::iterator iteratorStepInfo;
-	std::vector<int>* linkedCells_EventID;
-	std::vector<int>* linkedCells_TrackID;
-	std::vector<StepInfo*>* linkedCells_StepInfo;
+	std::vector<int>* linkedCells_EventID = NULL;
+	std::vector<int>* linkedCells_TrackID = NULL;
+	std::vector<StepInfo*>* linkedCells_StepInfo = NULL;
 	G4ThreeVector objectPostion;
 	G4ThreeVector pKADist;
 	double distance;
@@ -479,18 +479,40 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	int xInterval;
 	/*Body*/
 
-	ceil_Interval = NWGlobal::GetInstance()->GetSimParamters()->GetLinkCellInterval();
+	ceil_Interval[0] = ceil_Interval[1] = NWGlobal::GetInstance()->GetSimParamters()->GetLinkCellInterval_xy();
 
 	NWGlobal::GetInstance()->GetSimParamters()->GetNWBeam()->GetFluxCenter(beamCenter);
 
 	for (int i = 0; i <= 1; i++) {
-		ceilingNum_OneDim[i] = 2*ceil(max(beamCenter[i] - boundary[i][0], boundary[i][1] - beamCenter[i]) / ceil_Interval);
+		ceilingNum_OneDim[i] = 2*ceil(max(beamCenter[i] - boundary[i][0], boundary[i][1] - beamCenter[i]) / ceil_Interval[i]);
 		ceilingNum_OneDim[i] = max(ceilingNum_OneDim[i], 2);
 	}
 
 	ceilingNum_OneDim[0] = ceilingNum_OneDim[1] =  max(ceilingNum_OneDim[0], ceilingNum_OneDim[1]);
 
-	ceilingNum_OneDim[2] = ceil((boundary[2][1] - boundary[2][0]) / ceil_Interval);
+	ceilingNum_OneDim[2] = NWGlobal::GetInstance()->GetSimParamters()->GetLinkCellNum_z();
+	ceil_Interval[2] = ceil((boundary[2][1] - boundary[2][0]) / ceilingNum_OneDim[2]);
+
+	ceilingNum = ceilingNum_OneDim[0] * ceilingNum_OneDim[1] * ceilingNum_OneDim[2];
+
+	if (ceilingNum > MAXCELLNUM) {
+		std::cout << "The cell x y interval and z cell number exceed the memory limit." << std::endl;
+		std::cout << "x cell number : " << ceilingNum_OneDim[0] << std::endl;
+		std::cout << "y cell number : " << ceilingNum_OneDim[1] << std::endl;
+		std::cout << "z cell number : " << ceilingNum_OneDim[2] << std::endl;
+		std::cout << "the max cell number x*y*z : " << MAXCELLNUM << std::endl;
+		system("pause");
+		exit(1);
+	}
+
+	std::cout << "boundary_x " << boundary[0][0] << " " << boundary[0][1] << std::endl;
+	std::cout << "boundary_y " << boundary[1][0] << " " << boundary[1][1] << std::endl;
+	std::cout << "boundary_z " << boundary[2][0] << " " << boundary[2][1] << std::endl;
+
+
+	std::cout << "cellnum_x " << ceilingNum_OneDim[0] << std::endl;
+	std::cout << "cellnum_y " << ceilingNum_OneDim[1] << std::endl;
+	std::cout << "cellnum_z " << ceilingNum_OneDim[2] << std::endl;
 
 
 	/*Zone ID start from 0(Center zone)*/
@@ -500,15 +522,15 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 	/*new boundary*/
 	for (int i = 0; i <= 1; i++ ) {
-		newBoundary[i][0] = beamCenter[i] - ceil_Interval * ZoneNum;
-		newBoundary[i][1] = beamCenter[i] + ceil_Interval * ZoneNum;
+		newBoundary[i][0] = beamCenter[i] - ceil_Interval[i] * ZoneNum;
+		newBoundary[i][1] = beamCenter[i] + ceil_Interval[i] * ZoneNum;
 	}
 	newBoundary[2][0] = boundary[2][0];
 	newBoundary[2][1] = boundary[2][1];
 
 	outwidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
 
-	ceilingNum = ceilingNum_OneDim[0] * ceilingNum_OneDim[1] * ceilingNum_OneDim[2];
+	
 
 	linkedCells_EventID = new std::vector<int>[ceilingNum];
 	linkedCells_TrackID = new std::vector<int>[ceilingNum];
@@ -534,9 +556,9 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 				*ofsAnalysisPath_linkedCellPosition
 					<< std::setw(outwidth) << k * ceilingNum_OneDim[0] * ceilingNum_OneDim[1] + j * ceilingNum_OneDim[0] + i
 					<< std::setw(outwidth) << SubjectZoneID
-					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[0][0] + (i + 0.5)*ceil_Interval
-					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[1][0] + (j + 0.5)*ceil_Interval
-					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[2][0] + (k + 0.5)*ceil_Interval
+					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[0][0] + (i + 0.5)*ceil_Interval[0]
+					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[1][0] + (j + 0.5)*ceil_Interval[1]
+					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[2][0] + (k + 0.5)*ceil_Interval[2]
 					<< std::endl;
 			}
 		}
@@ -559,9 +581,9 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 						break;
 					}
 
-					ceilIndex[0] = min(int((iteratorStepInfo->GetpostPosition().getX() - newBoundary[0][0]) / ceil_Interval), ceilingNum_OneDim[0] - 1);
-					ceilIndex[1] = min(int((iteratorStepInfo->GetpostPosition().getY() - newBoundary[1][0]) / ceil_Interval), ceilingNum_OneDim[1] - 1);
-					ceilIndex[2] = min(int((iteratorStepInfo->GetpostPosition().getZ() - newBoundary[2][0]) / ceil_Interval), ceilingNum_OneDim[2] - 1);
+					ceilIndex[0] = min(int((iteratorStepInfo->GetpostPosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
+					ceilIndex[1] = min(int((iteratorStepInfo->GetpostPosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
+					ceilIndex[2] = min(int((iteratorStepInfo->GetpostPosition().getZ() - newBoundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
 
 					ceilIndex[0] = max(ceilIndex[0], 0);
 					ceilIndex[1] = max(ceilIndex[1], 0);
