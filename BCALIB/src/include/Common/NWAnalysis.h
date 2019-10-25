@@ -1,7 +1,7 @@
 #ifndef NWANALYSIS_H
 #define NWANALYSIS_H
 
-#define MAXCELLNUM 626*625*10
+#define MAXCELLNUM 626*626*20
 
 
 #include "NWInfoStore.h"
