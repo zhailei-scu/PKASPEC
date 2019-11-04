@@ -11,7 +11,9 @@
 #include "NWInfoStore.h"
 #include "../../../../LIB/src/include/MiniUtilities/EXNUMB.h"
 
-void RunTheSimulation() {
+void RunTheSimulation(int EventLoops) {
+
+	NWGlobal::GetInstance()->GetSimParamters()->SetEventLoopsNumber(EventLoops);
 
 	/*Out Path*/
 	NWGlobal::GetInstance()->InitialGlobal(simMode);
@@ -49,7 +51,23 @@ void RunTheSimulation() {
 
 int main(int argc, char* argv[]) {
 
-	RunTheSimulation();
+	int EventLoops;
+	stringstream ss;
+
+	if (argc < 2) {
+		std::cout << "You must special the event loops that you run" << std::endl;
+		system("pause");
+		exit(1);
+	}
+
+	ss << argv[1];
+
+	ss >> EventLoops;
+
+	std::cout << "The event loops is: " << EventLoops <<std::endl;
+
+
+	RunTheSimulation(EventLoops);
 
 	return 0;
 }

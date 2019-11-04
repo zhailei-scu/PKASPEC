@@ -82,8 +82,6 @@ void NWSimParameters::SetDefulatValue() {
 
 	this->flushFrequence = 100;
 
-	this->EventLoopsNumber = 100000;
-
 	this->linkCellInterval_xy = 10 * mm;
 
 	this->linkCellNum_z = 10;
@@ -95,7 +93,7 @@ void NWSimParameters::SetDefulatValue() {
 	//beam
 	this->beam.SetTurnOnMode(BeamMode(Area_Random));
 
-	this->beam.SetGunEnergy(1);
+	this->beam.SetGunEnergy(14.4);
 
 	this->beam.SetGunParticleName(G4String("neutron"));
 
