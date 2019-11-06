@@ -39,6 +39,9 @@ NWSteppingAction_MatrixAtoms::~NWSteppingAction_MatrixAtoms() {
 
 void NWSteppingAction_MatrixAtoms::UserSteppingAction(const G4Step* stepping) {
 
+	stepping->GetSecondaryInCurrentStep();
+
+
 	int OutWidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
 
 	double PreEng;
