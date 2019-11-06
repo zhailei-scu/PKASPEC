@@ -3,7 +3,6 @@
 
 #include "G4UserSteppingAction.hh"
 #include <string>
-#include "NWInfoStore.h"
 
 using namespace std;
 
@@ -30,8 +29,6 @@ public:
 private:
 
 	int targetAtomNumber;
-
-	EventInfo eventInfo;
 
 public:
 	inline void SetTargetAtomNumber(int AtomNumber) {

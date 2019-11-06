@@ -1,18 +1,17 @@
-#include "NWSteppingAction.h"
+#include "NWSteppingAction_InletEst.h"
 #include "G4SteppingManager.hh"
 #include "G4Step.hh"
 #include "NWGlobal.h"
-#include "NWInfoStore.h"
 
 using namespace std;
 
 
-NWSteppingAction::NWSteppingAction() {
+NWSteppingAction_InletEst::NWSteppingAction_InletEst() {
 
 }
 
 /*Copy constructor*/
-NWSteppingAction::NWSteppingAction(const NWSteppingAction &r) {
+NWSteppingAction_InletEst::NWSteppingAction_InletEst(const NWSteppingAction_InletEst &r) {
 	if (NULL != &r) {
 
 		this->targetTrackID = r.targetTrackID;
@@ -22,7 +21,7 @@ NWSteppingAction::NWSteppingAction(const NWSteppingAction &r) {
 
 
 /*reload the operator = */
-NWSteppingAction NWSteppingAction::operator=(const NWSteppingAction &r) {
+NWSteppingAction_InletEst NWSteppingAction_InletEst::operator=(const NWSteppingAction_InletEst &r) {
 	if (NULL != &r) {
 
 		this->targetTrackID = r.targetTrackID;
@@ -33,11 +32,11 @@ NWSteppingAction NWSteppingAction::operator=(const NWSteppingAction &r) {
 }
 
 
-NWSteppingAction::~NWSteppingAction() {
+NWSteppingAction_InletEst::~NWSteppingAction_InletEst() {
 
 }
 
-void NWSteppingAction::UserSteppingAction(const G4Step* stepping) {
+void NWSteppingAction_InletEst::UserSteppingAction(const G4Step* stepping) {
 
 	int OutWidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
 
@@ -256,6 +255,6 @@ void NWSteppingAction::UserSteppingAction(const G4Step* stepping) {
 }
 
 
-void NWSteppingAction::SetTargetTrackID(int targetTrackID) {
+void NWSteppingAction_InletEst::SetTargetTrackID(int targetTrackID) {
 	this->targetTrackID = targetTrackID;
 }

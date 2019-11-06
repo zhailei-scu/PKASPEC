@@ -8,7 +8,6 @@
 #include "NWGlobal.h"
 #include "NWSimParameters.h"
 #include <sstream>
-#include "NWInfoStore.h"
 #include "../../../../LIB/src/include/MiniUtilities/EXNUMB.h"
 
 void RunTheSimulation(int EventLoops) {

@@ -2,7 +2,6 @@
 #include "G4SteppingManager.hh"
 #include "G4Step.hh"
 #include "NWGlobal.h"
-#include "NWInfoStore.h"
 
 using namespace std;
 
@@ -15,7 +14,6 @@ NWSteppingAction_MatrixAtoms::NWSteppingAction_MatrixAtoms() {
 NWSteppingAction_MatrixAtoms::NWSteppingAction_MatrixAtoms(const NWSteppingAction_MatrixAtoms &r) {
 	if (NULL != &r) {
 		this->targetAtomNumber = r.targetAtomNumber;
-		this->eventInfo = r.eventInfo;
 	}
 
 }
@@ -25,7 +23,6 @@ NWSteppingAction_MatrixAtoms::NWSteppingAction_MatrixAtoms(const NWSteppingActio
 NWSteppingAction_MatrixAtoms NWSteppingAction_MatrixAtoms::operator=(const NWSteppingAction_MatrixAtoms &r) {
 	if (NULL != &r) {
 		this->targetAtomNumber = r.targetAtomNumber;
-		this->eventInfo = r.eventInfo;
 	}
 
 
@@ -38,8 +35,6 @@ NWSteppingAction_MatrixAtoms::~NWSteppingAction_MatrixAtoms() {
 }
 
 void NWSteppingAction_MatrixAtoms::UserSteppingAction(const G4Step* stepping) {
-
-	stepping->GetSecondaryInCurrentStep();
 
 
 	int OutWidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();

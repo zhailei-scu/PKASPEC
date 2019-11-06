@@ -3,7 +3,6 @@
 
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "G4ParticleGun.hh"
-#include "NWInfoStore.h"
 
 class NWPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
 public:

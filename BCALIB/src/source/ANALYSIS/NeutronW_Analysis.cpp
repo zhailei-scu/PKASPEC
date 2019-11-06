@@ -1,6 +1,5 @@
 #include <iostream>
 #include "NWGlobal.h"
-#include "NWInfoStore.h"
 #include "NWAnalysis.h"
 #include "NWSimParameters.h"
 #include <sstream>
