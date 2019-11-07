@@ -9,6 +9,15 @@
 extern std::string simMode;
 extern std::string analysisMode;
 
+enum ConcentReaction {
+	InletToLastEst,				//record inlet particle till last elastic to matrix atom
+	InletToFirstInEst,				//record inlet particle till first inelastic to matrix atom
+	InletEstAndInEstTillEnd,    //track inlet particle had elastice and inelastic to matrix atom till really end of this particle
+								//(for QSGP_BIC_HP model neutron,inelastic, captured or nfission or decay or out boundary would 
+								//end the track, but here, we still track the neturon occured inelastic reaction)
+	MatrixAtom				    //consider all reaction to matrix atom
+};
+
 
 /*Singleton class*/
 class NWSimParameters {
@@ -28,6 +37,9 @@ public:
 
 
 private:
+
+	ConcentReaction theConcentReaction;
+
 	std::string OutPath;
 
 	int OutWidth = 20;
@@ -55,6 +67,15 @@ public:
 	void SetDefulatValue();
 
 public:
+
+	inline void SetTheConcentReaction(ConcentReaction way) {
+		this->theConcentReaction = way;
+	}
+
+	inline ConcentReaction GetTheConcentReaction(){
+		return this->theConcentReaction;
+	}
+
 
 	inline void SetOutPath(const std::string &OutPath) {
 		this->OutPath = OutPath;

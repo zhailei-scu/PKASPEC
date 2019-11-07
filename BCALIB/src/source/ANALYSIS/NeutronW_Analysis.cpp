@@ -18,9 +18,6 @@ void AnalysisTheResult(int argc, char* argv[]) {
 
 	NWGlobal::GetInstance()->InitialGlobal(analysisMode);
 
-	/*Here, we only care about hadElastic process*/
-	NWAnalysis::GetInstance()->targetProcessName = std::string("hadElastic");
-
 	NWInfoStore::GetInstance()->ReadEventsInfo(originalDataFilePath);
 
 	std::cout << "Read done..." << std::endl;

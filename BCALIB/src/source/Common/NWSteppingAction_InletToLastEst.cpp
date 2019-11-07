@@ -1,17 +1,17 @@
-#include "NWSteppingAction_InletEst.h"
 #include "G4SteppingManager.hh"
 #include "G4Step.hh"
 #include "NWGlobal.h"
+#include "NWSteppingAction_InletToLastEst.h"
 
 using namespace std;
 
 
-NWSteppingAction_InletEst::NWSteppingAction_InletEst() {
+NWSteppingAction_InletToLastEst::NWSteppingAction_InletToLastEst() {
 
 }
 
 /*Copy constructor*/
-NWSteppingAction_InletEst::NWSteppingAction_InletEst(const NWSteppingAction_InletEst &r) {
+NWSteppingAction_InletToLastEst::NWSteppingAction_InletToLastEst(const NWSteppingAction_InletToLastEst &r) {
 	if (NULL != &r) {
 
 		this->targetTrackID = r.targetTrackID;
@@ -21,7 +21,7 @@ NWSteppingAction_InletEst::NWSteppingAction_InletEst(const NWSteppingAction_Inle
 
 
 /*reload the operator = */
-NWSteppingAction_InletEst NWSteppingAction_InletEst::operator=(const NWSteppingAction_InletEst &r) {
+NWSteppingAction_InletToLastEst NWSteppingAction_InletToLastEst::operator=(const NWSteppingAction_InletToLastEst &r) {
 	if (NULL != &r) {
 
 		this->targetTrackID = r.targetTrackID;
@@ -32,11 +32,11 @@ NWSteppingAction_InletEst NWSteppingAction_InletEst::operator=(const NWSteppingA
 }
 
 
-NWSteppingAction_InletEst::~NWSteppingAction_InletEst() {
+NWSteppingAction_InletToLastEst::~NWSteppingAction_InletToLastEst() {
 
 }
 
-void NWSteppingAction_InletEst::UserSteppingAction(const G4Step* stepping) {
+void NWSteppingAction_InletToLastEst::UserSteppingAction(const G4Step* stepping) {
 
 	int OutWidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
 
@@ -255,6 +255,6 @@ void NWSteppingAction_InletEst::UserSteppingAction(const G4Step* stepping) {
 }
 
 
-void NWSteppingAction_InletEst::SetTargetTrackID(int targetTrackID) {
+void NWSteppingAction_InletToLastEst::SetTargetTrackID(int targetTrackID) {
 	this->targetTrackID = targetTrackID;
 }

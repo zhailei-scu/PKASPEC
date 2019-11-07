@@ -71,6 +71,7 @@ void NWGlobal::InitialGlobal(const std::string& mode) {
 			<< std::setw(OutWidth) << "PostPos_y(mm)"
 			<< std::setw(OutWidth) << "PostPos_z(mm)"
 			<< std::setw(OutWidth) << "ProcessName"
+			<< std::setw(OutWidth) << "ParticleName"
 			<< std::setw(OutWidth) << "TrackStatus"
 			<< std::endl;
 	}

@@ -65,7 +65,6 @@ int main(int argc, char* argv[]) {
 
 	std::cout << "The event loops is: " << EventLoops <<std::endl;
 
-
 	RunTheSimulation(EventLoops);
 
 	return 0;

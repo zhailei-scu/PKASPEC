@@ -8,6 +8,8 @@ std::string simMode = std::string("sim");
 std::string analysisMode = std::string("analysis");
 
 
+
+
 NWSimParameters::NWSimParameters() {
 	this->Clean();
 }
@@ -22,6 +24,8 @@ NWSimParameters::NWSimParameters(const NWSimParameters &r) {
 }
 
 NWSimParameters& NWSimParameters::operator=(const NWSimParameters & r) {
+
+	this->theConcentReaction = r.theConcentReaction;
 
 	this->OutPath = r.OutPath;
 
@@ -43,6 +47,9 @@ NWSimParameters& NWSimParameters::operator=(const NWSimParameters & r) {
 }
 
 void NWSimParameters::Clean() {
+
+
+	this->theConcentReaction = ConcentReaction(InletToLastEst);
 
 	this->OutPath.clear();
 	this->OutPath.swap(std::string(""));
@@ -72,6 +79,9 @@ void NWSimParameters::ReadParametersFromFile(const char* filePath) {
 }
 
 void NWSimParameters::SetDefulatValue() {
+
+	this->theConcentReaction = ConcentReaction(InletEstAndInEstTillEnd);
+
 	double FluxRange[2][2];
 
 	this->OutPath.clear();
@@ -93,7 +103,7 @@ void NWSimParameters::SetDefulatValue() {
 	//beam
 	this->beam.SetTurnOnMode(BeamMode(Area_Random));
 
-	this->beam.SetGunEnergy(14.4);
+	this->beam.SetGunEnergy(1);
 
 	this->beam.SetGunParticleName(G4String("neutron"));
 
