@@ -77,7 +77,7 @@ void NWSteppingAction_InletEstAndInEstTillEnd::UserSteppingAction(const G4Step* 
 			if (ParentID > 0) {
 
 				if (1 == ParentID) { // which means the this secondary particle are caused by the non-disappered inlet particle
-					DoIt = true;     //for QSGP_BIC_HP model of neutron, which means this secondary particle are caused by neutron Elastic or InElastic 
+					DoIt = true;     //for QSGP_BIC_HP model of neutron, which means this secondary particle are caused by neutron Elastic or non-Elastic 
 					//stepping->GetTrack()->GetCreatorProcess();
 
 				}

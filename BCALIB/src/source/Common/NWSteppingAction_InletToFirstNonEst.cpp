@@ -1,4 +1,4 @@
-#include "NWSteppingAction_InletToFirstInEst.h"
+#include "NWSteppingAction_InletToFirstNonEst.h"
 #include "G4SteppingManager.hh"
 #include "G4Step.hh"
 #include "NWGlobal.h"
@@ -7,12 +7,12 @@ using namespace std;
 
 
 
-NWSteppingAction_InletToFirstInEst::NWSteppingAction_InletToFirstInEst() {
+NWSteppingAction_InletToFirstNonEst::NWSteppingAction_InletToFirstNonEst() {
 	this->theOneEvent.clean();
 }
 
 /*Copy constructor*/
-NWSteppingAction_InletToFirstInEst::NWSteppingAction_InletToFirstInEst(const NWSteppingAction_InletToFirstInEst &r) {
+NWSteppingAction_InletToFirstNonEst::NWSteppingAction_InletToFirstNonEst(const NWSteppingAction_InletToFirstNonEst &r) {
 	if (NULL != &r) {
 		this->targetAtomNumber = r.targetAtomNumber;
 
@@ -24,7 +24,7 @@ NWSteppingAction_InletToFirstInEst::NWSteppingAction_InletToFirstInEst(const NWS
 
 
 /*reload the operator = */
-NWSteppingAction_InletToFirstInEst NWSteppingAction_InletToFirstInEst::operator=(const NWSteppingAction_InletToFirstInEst &r) {
+NWSteppingAction_InletToFirstNonEst NWSteppingAction_InletToFirstNonEst::operator=(const NWSteppingAction_InletToFirstNonEst &r) {
 	if (NULL != &r) {
 		this->targetAtomNumber = r.targetAtomNumber;
 
@@ -37,11 +37,11 @@ NWSteppingAction_InletToFirstInEst NWSteppingAction_InletToFirstInEst::operator=
 }
 
 
-NWSteppingAction_InletToFirstInEst::~NWSteppingAction_InletToFirstInEst() {
+NWSteppingAction_InletToFirstNonEst::~NWSteppingAction_InletToFirstNonEst() {
 	this->theOneEvent.clean();
 }
 
-void NWSteppingAction_InletToFirstInEst::UserSteppingAction(const G4Step* stepping) {
+void NWSteppingAction_InletToFirstNonEst::UserSteppingAction(const G4Step* stepping) {
 
 
 	int OutWidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
@@ -75,7 +75,7 @@ void NWSteppingAction_InletToFirstInEst::UserSteppingAction(const G4Step* steppi
 			ParentID = stepping->GetTrack()->GetParentID();
 
 			if (1 == ParentID) { // which means the this secondary particle are caused by the non-disappered inlet particle
-				DoIt = true;     //for QSGP_BIC_HP model of neutron, which means this secondary particle are caused by neutron Elastic or InElastic 
+				DoIt = true;     //for QSGP_BIC_HP model of neutron, which means this secondary particle are caused by neutron Elastic or Non-Elastic 
 
 			}
 

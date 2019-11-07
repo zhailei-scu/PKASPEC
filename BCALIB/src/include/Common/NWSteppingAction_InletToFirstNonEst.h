@@ -1,26 +1,26 @@
-#ifndef NWSTEPPINGACTION_INLETTOFIRSTINEST_H
-#define NWSTEPPINGACTION_INLETTOFIRSTINEST_H
+#ifndef NWSTEPPINGACTION_INLETTOFIRSTNONEST_H
+#define NWSTEPPINGACTION_INLETTOFIRSTNONEST_H
 
 #include "G4UserSteppingAction.hh"
 #include "NWRunInfoStore.h"
 
 using namespace std;
 
-class NWSteppingAction_InletToFirstInEst : public G4UserSteppingAction {
+class NWSteppingAction_InletToFirstNonEst : public G4UserSteppingAction {
 
 public:
 	/*Default constructor*/
-	NWSteppingAction_InletToFirstInEst();
+	NWSteppingAction_InletToFirstNonEst();
 
 
 	/*Destructor*/
-	~NWSteppingAction_InletToFirstInEst();
+	~NWSteppingAction_InletToFirstNonEst();
 
 	/*Copy constructor*/
-	NWSteppingAction_InletToFirstInEst(const NWSteppingAction_InletToFirstInEst& r);
+	NWSteppingAction_InletToFirstNonEst(const NWSteppingAction_InletToFirstNonEst& r);
 
 	/*reload the operator =*/
-	NWSteppingAction_InletToFirstInEst operator = (const NWSteppingAction_InletToFirstInEst &r);
+	NWSteppingAction_InletToFirstNonEst operator = (const NWSteppingAction_InletToFirstNonEst &r);
 
 public:
 	/*override*/

@@ -80,7 +80,7 @@ void NWSimParameters::ReadParametersFromFile(const char* filePath) {
 
 void NWSimParameters::SetDefulatValue() {
 
-	this->theConcentReaction = ConcentReaction(InletEstAndInEstTillEnd);
+	this->theConcentReaction = ConcentReaction(InletToFirstNonEst);
 
 	double FluxRange[2][2];
 

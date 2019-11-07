@@ -1,7 +1,7 @@
 #include "NWActionInitialization.h"
 #include "NWPrimaryGeneratorAction.h"
 #include "NWSteppingAction_InletToLastEst.h"
-#include "NWSteppingAction_InletToFirstInEst.h"
+#include "NWSteppingAction_InletToFirstNonEst.h"
 #include "NWSteppingAction_InletEstAndInEstTillEnd.h"
 #include "NWSteppingAction_MatrixAtoms.h"
 #include "NWGlobal.h"
@@ -30,9 +30,9 @@ void NWActionInitialization::Build() const{
 		}
 		break;
 
-		case ConcentReaction(InletToFirstInEst):
+		case ConcentReaction(InletToFirstNonEst):
 		{
-			NWSteppingAction_InletToFirstInEst *theNWSteppingAction = new NWSteppingAction_InletToFirstInEst();
+			NWSteppingAction_InletToFirstNonEst *theNWSteppingAction = new NWSteppingAction_InletToFirstNonEst();
 			theNWSteppingAction->SetTargetAtomNumber(40);
 
 			SetUserAction(theNWSteppingAction);
