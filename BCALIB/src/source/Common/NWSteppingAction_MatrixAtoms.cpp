@@ -87,6 +87,7 @@ void NWSteppingAction_MatrixAtoms::UserSteppingAction(const G4Step* stepping) {
 						<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << postPosition.getY()
 						<< std::setw(OutWidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << postPosition.getZ()
 						<< std::setw(OutWidth) << fpSteppingManager->GetfCurrentProcess()->GetProcessName()
+						<< std::setw(OutWidth) << particle->GetParticleName()
 						<< std::setw(OutWidth) << stepping->GetTrack()->GetTrackStatus()
 						<< endl;
 

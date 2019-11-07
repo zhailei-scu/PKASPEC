@@ -74,52 +74,8 @@ void NWSteppingAction_InletToFirstInEst::UserSteppingAction(const G4Step* steppi
 
 			ParentID = stepping->GetTrack()->GetParentID();
 
-			if (ParentID > 0) {
-
-				if (1 == ParentID) { // which means the this secondary particle are caused by the non-disappered inlet particle
-					DoIt = true;     //for QSGP_BIC_HP model of neutron, which means this secondary particle are caused by neutron hadElastic 
-					//stepping->GetTrack()->GetCreatorProcess();
-
-				}
-				else {
-
-					InletParticleName = theOneEvent.Tracks.find(1)->second.GetParticleName();
-
-					FirstAncestor = ParentID;
-
-					while (ParentID > 0) {
-
-						DoIt = true;
-
-						if (0 != InletParticleName.compare(theOneEvent.Tracks.find(ParentID)->second.GetParticleName())) {
-							DoIt = false;
-							break;
-						}
-
-						if (0 != std::string("neutronInelastic").compare(theOneEvent.Tracks.find(ParentID)->second.GetEndProcessName())) {
-							DoIt = false;
-							break;
-						}
-
-						FirstAncestor = ParentID;
-
-						ParentID = theOneEvent.Tracks.find(ParentID)->second.GetParentTrackID();
-					}
-
-					if (true == DoIt && 1 != FirstAncestor) {
-						std::cout << "It is impossible that on track's first ancestor is not track 1" << std::endl;
-						std::cout << FirstAncestor << std::endl;
-						std::cout << NWGlobal::GetInstance()->CurrentEventID << std::endl;
-						std::cout << stepping->GetTrack()->GetTrackID() << std::endl;
-						std::cout << stepping->GetTrack()->GetCurrentStepNumber() << std::endl;
-						std::cout << particle->GetParticleName() << std::endl;
-						std::cout << stepping->GetTrack()->GetParentID() << std::endl;
-						system("pause");
-						exit(1);
-					}
-
-
-				}
+			if (1 == ParentID) { // which means the this secondary particle are caused by the non-disappered inlet particle
+				DoIt = true;     //for QSGP_BIC_HP model of neutron, which means this secondary particle are caused by neutron Elastic or InElastic 
 
 			}
 
@@ -172,56 +128,6 @@ void NWSteppingAction_InletToFirstInEst::UserSteppingAction(const G4Step* steppi
 
 
 		}
-	}
-
-
-	/*Store Data*/
-	if (NWGlobal::GetInstance()->CurrentEventID != theOneEvent.EventID) {
-		theOneEvent.clean();
-		theOneEvent.EventID = NWGlobal::GetInstance()->CurrentEventID;
-	}
-
-	if (theOneEvent.Tracks.count(stepping->GetTrack()->GetTrackID()) <= 0) {
-		theTrack.SetCurrentTrackID(stepping->GetTrack()->GetTrackID());
-
-		theTrack.SetParentTrackID(stepping->GetTrack()->GetParentID());
-
-		theTrack.SetParticleName(particle->GetParticleName());
-
-		theTrack.SetEndProcessName(fpSteppingManager->GetfCurrentProcess()->GetProcessName());
-
-		theOneEvent.Tracks.insert(std::map<int, OneTrack>::value_type(stepping->GetTrack()->GetTrackID(), theTrack));
-	}
-	else {
-		it = theOneEvent.Tracks.find(stepping->GetTrack()->GetTrackID());
-
-		if (it->second.GetCurrentTrackID() != stepping->GetTrack()->GetTrackID()) {
-			std::cout << "The recorded track id is not match." << std::endl;
-			std::cout << it->second.GetCurrentTrackID() << std::endl;
-			std::cout << stepping->GetTrack()->GetTrackID() << std::endl;
-			system("pause");
-			exit(1);
-		}
-
-		if (it->second.GetParentTrackID() != stepping->GetTrack()->GetParentID()) {
-			std::cout << "The recorded track id is not match." << std::endl;
-			std::cout << it->second.GetParentTrackID() << std::endl;
-			std::cout << stepping->GetTrack()->GetParentID() << std::endl;
-			system("pause");
-			exit(1);
-		}
-
-
-		if (0 != particle->GetParticleName().compare(it->second.GetParticleName())) {
-			std::cout << "The recorded particle id is not match." << std::endl;
-			std::cout << particle->GetParticleName() << std::endl;
-			std::cout << it->second.GetParticleName() << std::endl;
-			system("pause");
-			exit(1);
-		}
-
-		it->second.SetEndProcessName(fpSteppingManager->GetfCurrentProcess()->GetProcessName());
-
 	}
 
 

@@ -298,10 +298,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 							break;
 						}
 
-					}else if (ConcentReaction(InletToFirstInEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
-						if (0 == iteratorStepInfo->GetProcessName().compare(std::string("Transportation"))) {
-							break;
-						}
 					}
 
 					index++;
@@ -589,10 +585,6 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 					if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()){
 						if (0 != iteratorStepInfo->GetProcessName().compare(std::string("hadElastic"))) {
-							break;
-						}
-					}else if (ConcentReaction(InletToFirstInEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
-						if (0 == iteratorStepInfo->GetProcessName().compare(std::string("Transportation"))) {
 							break;
 						}
 					}
