@@ -479,11 +479,7 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	int ObjectZoneID;
 	int ObjectZoneID_X;
 	int ObjectZoneID_Y;
-	int x_Range[2];
-	int y_Range[2];
-	int xInterval;
 	int theSize;
-
 	int subjectEventID;
 	int subjectTrackID;
 	int subjectStepID;
@@ -634,7 +630,7 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 				std::cout <<"cell ID: "<< subjectLinkID << " of total Cell Number: " << ceilingNum << std::endl;
 
-				for (int l = 0; l < linkedCells_StepInfo[subjectLinkID].size(); l++) {
+				for (size_t l = 0; l < linkedCells_StepInfo[subjectLinkID].size(); l++) {
 
 					subjectEventID = linkedCells_EventID[subjectLinkID].at(l);
 					subjectTrackID = linkedCells_TrackID[subjectLinkID].at(l);
@@ -648,6 +644,9 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 					minDist_objectEventID = -1;
 					minDist_objectTrackID = -1;
 					minDist_objectStepID = -1;
+					minDist_ObjectLinkedID = -1;
+
+					ObjectZoneID = -1;
 
 					while (!founded) {
 
@@ -658,7 +657,7 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 									objectLinkID = kk * ceilingNum_OneDim[0] * ceilingNum_OneDim[1] + jj * ceilingNum_OneDim[0] + ii;
 
-									for (int m = 0; m < linkedCells_StepInfo[objectLinkID].size(); m++) {
+									for (size_t m = 0; m < linkedCells_StepInfo[objectLinkID].size(); m++) {
 
 										int objectEventID = linkedCells_EventID[objectLinkID].at(m);
 										int objectTrackID = linkedCells_TrackID[objectLinkID].at(m);
