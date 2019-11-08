@@ -73,7 +73,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	double vectorMultiple;
 	double magOriginDirection;
 	double magvectorToOrigin;
-	int ceilingNum_OneDim;
 	double boundary[3][2];
 	//---Body---
 
@@ -83,8 +82,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	boundary[0][1] = -1.e32;
 	boundary[1][1] = -1.e32;
 	boundary[2][1] = -1.e32;
-
-	ceilingNum_OneDim = 10;
 
 	outwidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
 
