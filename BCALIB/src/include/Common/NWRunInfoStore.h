@@ -29,8 +29,8 @@ private:
 	std::string ParticleName;
 
 public:
-	inline void SetParentTrackID(int ParentTrackID) {
-		this->ParentTrackID = ParentTrackID;
+	inline void SetParentTrackID(int theParentTrackID) {
+		this->ParentTrackID = theParentTrackID;
 	}
 
 	inline int GetParentTrackID() {
@@ -38,8 +38,8 @@ public:
 	}
 
 
-	inline void SetCurrentTrackID(int CurrentTrackID) {
-		this->CurrentTrackID = CurrentTrackID;
+	inline void SetCurrentTrackID(int theCurrentTrackID) {
+		this->CurrentTrackID = theCurrentTrackID;
 	}
 
 	inline int GetCurrentTrackID() {
@@ -47,16 +47,16 @@ public:
 	}
 
 
-	inline void SetEndProcessName(std::string EndProcessName) {
-		this->EndProcessName = EndProcessName;
+	inline void SetEndProcessName(std::string theEndProcessName) {
+		this->EndProcessName = theEndProcessName;
 	}
 
 	inline std::string GetEndProcessName() {
 		return	this->EndProcessName;
 	}
 
-	inline void SetParticleName(std::string ParticleName) {
-		this->ParticleName = ParticleName;
+	inline void SetParticleName(std::string theParticleName) {
+		this->ParticleName = theParticleName;
 	}
 
 	inline std::string GetParticleName() {

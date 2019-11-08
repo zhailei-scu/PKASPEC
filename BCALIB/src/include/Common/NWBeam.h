@@ -38,8 +38,8 @@ public:
 
 	G4ThreeVector CalOriginPositionXY(int CurrentEventsIndex, int TotalEventsLoopNum, double ZPos)const;
 
-	inline void SetTurnOnMode(BeamMode mode) {
-		this->turnOnMode = mode;
+	inline void SetTurnOnMode(BeamMode theMode) {
+		this->turnOnMode = theMode;
 	}
 
 	inline BeamMode GetTurnOnMode() const{
@@ -47,34 +47,34 @@ public:
 	}
 
 
-	inline void SetGunEnergy(const double & gunEnergy) {
-		this->gunEnergy = gunEnergy;
+	inline void SetGunEnergy(const double & theGunEnergy) {
+		this->gunEnergy = theGunEnergy;
 	}
 
 	inline const double GetGunEnergy() const{
 		return this->gunEnergy;
 	}
 
-	inline void SetGunParticleName(const std::string &gunParticleName) {
-		this->gunParticleName = gunParticleName;
+	inline void SetGunParticleName(const std::string &theGunParticleName) {
+		this->gunParticleName = theGunParticleName;
 	}
 
 	inline const std::string * GetGunParticleName() const {
 		return &this->gunParticleName;
 	}
 
-	inline void SetGunParticleStartDirection(const G4ThreeVector &gunParticleStartDirection) {
-		this->gunParticleStartDirection = gunParticleStartDirection;
+	inline void SetGunParticleStartDirection(const G4ThreeVector &theGunParticleStartDirection) {
+		this->gunParticleStartDirection = theGunParticleStartDirection;
 	}
 
 	inline const G4ThreeVector * GetGunParticleStartDirection() const{
 		return &this->gunParticleStartDirection;
 	}
 
-	inline void SetFluxRange(double FluxRange[2][2]) {
+	inline void SetFluxRange(double theFluxRange[2][2]) {
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 2; j++) {
-				this->FluxRange[i][j] = FluxRange[i][j];
+				this->FluxRange[i][j] = theFluxRange[i][j];
 			}
 		}
 	}

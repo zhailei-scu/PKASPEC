@@ -77,40 +77,40 @@ public:
 	}
 
 
-	inline void SetOutPath(const std::string &OutPath) {
-		this->OutPath = OutPath;
+	inline void SetOutPath(const std::string &theOutPath) {
+		this->OutPath = theOutPath;
 	}
 
 	inline const std::string * GetOutPath() const{
 		return &this->OutPath;
 	}
 
-	inline void SetOutWidth(const int & OutWidth) {
-		this->OutWidth = OutWidth;
+	inline void SetOutWidth(const int & theOutWidth) {
+		this->OutWidth = theOutWidth;
 	}
 
 	inline const int GetOutWidth() const{
 		return this->OutWidth;
 	}
 
-	inline void SetFlushFrequence(const int & flushFrequence) {
-		this->flushFrequence = flushFrequence;
+	inline void SetFlushFrequence(const int & theFlushFrequence) {
+		this->flushFrequence = theFlushFrequence;
 	}
 
 	inline const int GetFlushFrequence() const{
 		return this->flushFrequence;
 	}
 
-	inline void SetEventLoopsNumber(const int & EventLoopsNumber) {
-		this->EventLoopsNumber = EventLoopsNumber;
+	inline void SetEventLoopsNumber(const int & theEventLoopsNumber) {
+		this->EventLoopsNumber = theEventLoopsNumber;
 	}
 
 	inline const int GetEventLoopsNumber() const{
 		return this->EventLoopsNumber;
 	}
 
-	inline void SetLinkCellInterval_xy(const double linkCellInterval_xy) {
-		this->linkCellInterval_xy = linkCellInterval_xy;
+	inline void SetLinkCellInterval_xy(const double theLinkCellInterval_xy) {
+		this->linkCellInterval_xy = theLinkCellInterval_xy;
 	}
 
 	inline double GetLinkCellInterval_xy() {
@@ -118,24 +118,24 @@ public:
 	}
 
 
-	inline void SetLinkCellNum_z(const int linkCellNum_z) {
-		this->linkCellNum_z = linkCellNum_z;
+	inline void SetLinkCellNum_z(const int theLinkCellNum_z) {
+		this->linkCellNum_z = theLinkCellNum_z;
 	}
 
 	inline int GetLinkCellNum_z() {
 		return this->linkCellNum_z;
 	}
 
-	inline void SetTargetMaterial(const std::string &targetMaterial) {
-		this->targetMaterial = targetMaterial;
+	inline void SetTargetMaterial(const std::string &theTargetMaterial) {
+		this->targetMaterial = theTargetMaterial;
 	}
 
 	inline const std::string * GetTargetMaterial() const{
 		return &this->targetMaterial;
 	}
 
-	inline void SetBeam(const NWBeam & beam) {
-		this->beam = beam;
+	inline void SetBeam(const NWBeam & theBeam) {
+		this->beam = theBeam;
 	}
 
 	inline NWBeam * GetNWBeam(){

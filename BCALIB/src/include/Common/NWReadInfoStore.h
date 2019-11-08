@@ -42,64 +42,64 @@ public:
 		return this->stepID;
 	}
 
-	inline void SetpreEng(double preEng) {
-		this->preEng = preEng;
+	inline void SetpreEng(double thePreEng) {
+		this->preEng = thePreEng;
 	}
 
 	inline double GetpreEng() const {
 		return this->preEng;
 	}
 
-	inline void SetpostEng(double postEng) {
-		this->postEng = postEng;
+	inline void SetpostEng(double thePostEng) {
+		this->postEng = thePostEng;
 	}
 
 	inline double GetpostEng() const {
 		return this->postEng;
 	}
 
-	inline void SetDeltaEng(double deltaEng) {
-		this->deltaEng = deltaEng;
+	inline void SetDeltaEng(double theDeltaEng) {
+		this->deltaEng = theDeltaEng;
 	}
 
 	inline double GetDeltaEng() const {
 		return this->deltaEng;
 	}
 
-	inline void SetDeltaTime(double deltaTime) {
-		this->deltaTime = deltaTime;
+	inline void SetDeltaTime(double theDeltaTime) {
+		this->deltaTime = theDeltaTime;
 	}
 
 	inline double GetDeltaTime() const {
 		return this->deltaTime;
 	}
 
-	inline void SetOriginDirection(G4ThreeVector originDirection) {
-		this->originDirection = originDirection;
+	inline void SetOriginDirection(G4ThreeVector theOriginDirection) {
+		this->originDirection = theOriginDirection;
 	}
 
 	inline G4ThreeVector GetOriginDirection() const {
 		return this->originDirection;
 	}
 
-	inline void SetOriginPosition(G4ThreeVector originPosition) {
-		this->originPosition = originPosition;
+	inline void SetOriginPosition(G4ThreeVector theOriginPosition) {
+		this->originPosition = theOriginPosition;
 	}
 
 	inline G4ThreeVector GetOriginPosition() const {
 		return this->originPosition;
 	}
 
-	inline void SetprePosition(G4ThreeVector prePosition) {
-		this->prePosition = prePosition;
+	inline void SetprePosition(G4ThreeVector thePrePosition) {
+		this->prePosition = thePrePosition;
 	}
 
 	inline G4ThreeVector GetprePosition() const {
 		return this->prePosition;
 	}
 
-	inline void SetpostPosition(G4ThreeVector postPosition) {
-		this->postPosition = postPosition;
+	inline void SetpostPosition(G4ThreeVector thePostPosition) {
+		this->postPosition = thePostPosition;
 	}
 
 	inline G4ThreeVector GetpostPosition() const {
@@ -107,8 +107,8 @@ public:
 	}
 
 
-	inline void SetProcessName(std::string processName) {
-		this->processName = processName;
+	inline void SetProcessName(std::string theProcessName) {
+		this->processName = theProcessName;
 	}
 
 	inline std::string GetProcessName() const {
