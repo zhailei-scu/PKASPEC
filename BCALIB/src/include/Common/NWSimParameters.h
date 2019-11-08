@@ -89,7 +89,7 @@ public:
 		this->OutWidth = theOutWidth;
 	}
 
-	inline const int GetOutWidth() const{
+	inline int GetOutWidth() const{
 		return this->OutWidth;
 	}
 
@@ -97,7 +97,7 @@ public:
 		this->flushFrequence = theFlushFrequence;
 	}
 
-	inline const int GetFlushFrequence() const{
+	inline int GetFlushFrequence() const{
 		return this->flushFrequence;
 	}
 
@@ -105,7 +105,7 @@ public:
 		this->EventLoopsNumber = theEventLoopsNumber;
 	}
 
-	inline const int GetEventLoopsNumber() const{
+	inline int GetEventLoopsNumber() const{
 		return this->EventLoopsNumber;
 	}
 

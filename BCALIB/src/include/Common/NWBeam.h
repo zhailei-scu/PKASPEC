@@ -51,7 +51,7 @@ public:
 		this->gunEnergy = theGunEnergy;
 	}
 
-	inline const double GetGunEnergy() const{
+	inline double GetGunEnergy() const{
 		return this->gunEnergy;
 	}
 
