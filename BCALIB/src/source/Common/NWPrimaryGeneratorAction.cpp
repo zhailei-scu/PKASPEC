@@ -109,13 +109,15 @@ void NWPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
 	}
 	G4Box* fWorldVolumBox = dynamic_cast<G4Box*>(fWorldLogicalBox->GetSolid());
 
+	/*
 	G4double X_High = fWorldVolumBox->GetXHalfLength();
 	G4double X_Low = fTargetVolumBox->GetXHalfLength();
 	G4double Y_High = fWorldVolumBox->GetYHalfLength();
 	G4double Y_Low = fTargetVolumBox->GetYHalfLength();
+	*/
 	G4double Z_High = fWorldVolumBox->GetZHalfLength();
 	G4double Z_Low = fTargetVolumBox->GetZHalfLength();
-
+	
 	//G4double X0 = 0.5*(X_High + X_Low);
 	//G4double Y0 = 0.5*(Y_High + Y_Low);
 	//G4double Z0 = 0.5*(Z_High + Z_Low);

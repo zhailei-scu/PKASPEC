@@ -45,14 +45,11 @@ void NWSteppingAction_MatrixAtoms::UserSteppingAction(const G4Step* stepping) {
 	G4ThreeVector prePosition;
 	G4ThreeVector postPosition;
 
-	int dumpCountTrackInfo = 0;
-	int dumpCountStepInfo = 0;
-
-	int trackIndex = -1;
+	//int trackIndex = -1;
 
 	const G4ParticleDefinition *particle = stepping->GetTrack()->GetParticleDefinition();
 
-	const G4DynamicParticle *theDynamicParticle = stepping->GetTrack()->GetDynamicParticle();
+	//const G4DynamicParticle *theDynamicParticle = stepping->GetTrack()->GetDynamicParticle();
 
 	if (particle->GetAtomicNumber() == this->targetAtomNumber) {
 

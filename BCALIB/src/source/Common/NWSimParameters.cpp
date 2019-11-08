@@ -71,7 +71,7 @@ void NWSimParameters::Clean() {
 }
 
 
-void NWSimParameters::ReadParametersFromFile(const char* filePath) {
+void NWSimParameters::ReadParametersFromFile(const char*) {
 
 
 

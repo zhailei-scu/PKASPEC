@@ -51,8 +51,6 @@ void NWSteppingAction_InletEstAndInEstTillEnd::UserSteppingAction(const G4Step* 
 	G4ThreeVector prePosition;
 	G4ThreeVector postPosition;
 	bool DoIt;
-	int dumpCountTrackInfo = 0;
-	int dumpCountStepInfo = 0;
 	int ParentID;
 	int GrandParentID;
 	int FirstAncestor;

@@ -46,11 +46,6 @@ void NWSteppingAction_InletToLastEst::UserSteppingAction(const G4Step* stepping)
 	G4ThreeVector prePosition;
 	G4ThreeVector postPosition;
 
-	int dumpCountTrackInfo = 0;
-	int dumpCountStepInfo = 0;
-
-	int trackIndex = -1;
-
 	const G4ParticleDefinition *particle = stepping->GetTrack()->GetParticleDefinition();
 
 	const G4DynamicParticle *theDynamicParticle =  stepping->GetTrack()->GetDynamicParticle();
@@ -61,7 +56,7 @@ void NWSteppingAction_InletToLastEst::UserSteppingAction(const G4Step* stepping)
 
 	int PostStepLoops = fpSteppingManager->GetMAXofPostStepLoops();
 
-	for (size_t np = 0; np < PostStepLoops; np++) {
+	for (int np = 0; np < PostStepLoops; np++) {
 		//
 		// Note: DoItVector has inverse order against GetPhysIntVector
 		//       and SelectedPostStepDoItVector.
@@ -256,6 +251,6 @@ void NWSteppingAction_InletToLastEst::UserSteppingAction(const G4Step* stepping)
 }
 
 
-void NWSteppingAction_InletToLastEst::SetTargetTrackID(int targetTrackID) {
-	this->targetTrackID = targetTrackID;
+void NWSteppingAction_InletToLastEst::SetTargetTrackID(int theTargetTrackID) {
+	this->targetTrackID = theTargetTrackID;
 }

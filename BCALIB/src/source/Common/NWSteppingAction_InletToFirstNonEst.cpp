@@ -52,10 +52,7 @@ void NWSteppingAction_InletToFirstNonEst::UserSteppingAction(const G4Step* stepp
 	G4ThreeVector prePosition;
 	G4ThreeVector postPosition;
 	bool DoIt;
-	int dumpCountTrackInfo = 0;
-	int dumpCountStepInfo = 0;
 	int ParentID;
-	int FirstAncestor;
 	std::string InletParticleName;
 	OneTrack theTrack;
 	std::map<int, OneTrack>::iterator it;

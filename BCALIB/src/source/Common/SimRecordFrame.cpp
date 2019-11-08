@@ -40,8 +40,7 @@ void SimRecordFrame::releaseInstance() {
 }
 
 
-void SimRecordFrame::writeOneRecord(const char* _log) {
-
+void SimRecordFrame::writeOneRecord(const char*) {
 }
 
 

@@ -3,8 +3,8 @@
 
 using namespace std;
 
-StepInfo::StepInfo(int stepID) {
-	this->stepID = stepID;
+StepInfo::StepInfo(int theStepID) {
+	this->stepID = theStepID;
 }
 
 
@@ -83,8 +83,8 @@ std::string StepInfo::ConvertToProcessName(const QGSP_BIC_HP_Process processID) 
 }
 
 
-TrackInfo::TrackInfo(int trackID) {
-	this->trackID = trackID;
+TrackInfo::TrackInfo(int theTrackID) {
+	this->trackID = theTrackID;
 	this->stepsInfo.clear();
 	std::vector<StepInfo>().swap(this->stepsInfo);
 }
@@ -102,8 +102,8 @@ EventInfo::EventInfo() {
 	std::vector<TrackInfo>().swap(this->tracksInfo);
 }
 
-EventInfo::EventInfo(int EventID) {
-	this->EventID = EventID;
+EventInfo::EventInfo(int theEventID) {
+	this->EventID = theEventID;
 	this->tracksInfo.clear();
 	std::vector<TrackInfo>().swap(this->tracksInfo);
 }

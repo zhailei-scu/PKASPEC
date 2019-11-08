@@ -483,6 +483,21 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	int y_Range[2];
 	int xInterval;
 	int theSize;
+
+	int subjectEventID;
+	int subjectTrackID;
+	int subjectStepID;
+	G4ThreeVector subjectPostion;
+	double minDist;
+	int minDist_ObjectLinkedID;
+	int minDist_objectEventID;
+	int minDist_objectTrackID;
+	int minDist_objectStepID;
+	double minDist_x;
+	double minDist_y;
+	double minDist_z;
+	int shellNum;
+	bool founded;
 	/*Body*/
 
 	ceil_Interval[0] = ceil_Interval[1] = NWGlobal::GetInstance()->GetSimParamters()->GetLinkCellInterval_xy();
@@ -621,21 +636,18 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 				for (int l = 0; l < linkedCells_StepInfo[subjectLinkID].size(); l++) {
 
-					int subjectEventID = linkedCells_EventID[subjectLinkID].at(l);
-					int subjectTrackID = linkedCells_TrackID[subjectLinkID].at(l);
-					int subjectStepID = linkedCells_StepInfo[subjectLinkID].at(l)->GetStepID();
-					G4ThreeVector subjectPostion = linkedCells_StepInfo[subjectLinkID].at(l)->GetpostPosition();
+					subjectEventID = linkedCells_EventID[subjectLinkID].at(l);
+					subjectTrackID = linkedCells_TrackID[subjectLinkID].at(l);
+					subjectStepID = linkedCells_StepInfo[subjectLinkID].at(l)->GetStepID();
+					subjectPostion = linkedCells_StepInfo[subjectLinkID].at(l)->GetpostPosition();
 
-					double minDist = 1.e32;
-					int minDist_ObjectLinkedID;
-					int minDist_objectEventID;
-					int minDist_objectTrackID;
-					int minDist_objectStepID;
-					double minDist_x;
-					double minDist_y;
-					double minDist_z;
-					int shellNum = 1;
-					bool founded = false;
+					minDist = 1.e32;
+					shellNum = 1;
+					founded = false;
+
+					minDist_objectEventID = -1;
+					minDist_objectTrackID = -1;
+					minDist_objectStepID = -1;
 
 					while (!founded) {
 
