@@ -1,6 +1,6 @@
 #ifndef SIMRECORDFRAME_H
 #define SIMRECORDFRAME_H
-#include <windows.h>
+//#include <windows.h>
 
 
 /*This class is used to record the simulation events, is a singleton*/
@@ -37,7 +37,7 @@ public:
 private:
 
 
-	HANDLE mutex;
+	//HANDLE mutex;
 
 
 };

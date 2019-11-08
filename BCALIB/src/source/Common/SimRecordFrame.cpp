@@ -8,19 +8,26 @@ SimRecordFrame* SimRecordFrame::simRecordFrameInstance = new SimRecordFrame();
 SimRecordFrame::SimRecordFrame() {
 	this->simRecordFrameInstance = NULL;
 
+	/*
 	this->mutex = CreateMutex(NULL, FALSE, NULL);
 
 	ReleaseMutex(this->mutex);
+
+	*/
 }
 
 
 SimRecordFrame::~SimRecordFrame() {
+
+	/*
 	WaitForSingleObject(SimRecordFrame::simRecordFrameInstance->mutex,INFINITE);
 
 
 	ReleaseMutex(this->mutex);
 	CloseHandle(this->mutex);
 	this->mutex = NULL;
+
+	*/
 }
 
 
