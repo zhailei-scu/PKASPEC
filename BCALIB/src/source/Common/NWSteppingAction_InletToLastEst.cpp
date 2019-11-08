@@ -48,7 +48,7 @@ void NWSteppingAction_InletToLastEst::UserSteppingAction(const G4Step* stepping)
 
 	const G4ParticleDefinition *particle = stepping->GetTrack()->GetParticleDefinition();
 
-	const G4DynamicParticle *theDynamicParticle =  stepping->GetTrack()->GetDynamicParticle();
+	//const G4DynamicParticle *theDynamicParticle =  stepping->GetTrack()->GetDynamicParticle();
 
 	size_t PSDIPIDTriggered = fpSteppingManager->GetfPostStepDoItProcTriggered();
 
@@ -61,7 +61,7 @@ void NWSteppingAction_InletToLastEst::UserSteppingAction(const G4Step* stepping)
 		// Note: DoItVector has inverse order against GetPhysIntVector
 		//       and SelectedPostStepDoItVector.
 		//
-		G4int Cond = (*fpSteppingManager->GetfSelectedPostStepDoItVector())[PostStepLoops - np - 1];
+		unsigned int Cond = (*fpSteppingManager->GetfSelectedPostStepDoItVector())[PostStepLoops - np - 1];
 
 		if (Cond != InActivated) {
 			if (((Cond == NotForced) && (fpSteppingManager->GetfStepStatus() == fPostStepDoItProc)) ||  //Here, we only care about the non-transportation or touch-boundary processes

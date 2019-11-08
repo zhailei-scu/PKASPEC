@@ -18,7 +18,6 @@ NWGeometry::~NWGeometry() {
 }
 
 G4VPhysicalVolume* NWGeometry::Construct() {
-	G4VPhysicalVolume* targetBoxPhysicVolume;
 
 
 	G4double targetBox_x = 10000 * cm;
@@ -61,7 +60,7 @@ G4VPhysicalVolume* NWGeometry::Construct() {
 
 	G4Box* targetBoxShape = new G4Box("targetBoxShape", 0.5*targetBox_x, 0.5*targetBox_y, 0.5*targetBox_z);
 	G4LogicalVolume* targetBoxLogicalVolume = new G4LogicalVolume(targetBoxShape, targetMaterial, "targetBoxLogical");
-	targetBoxPhysicVolume =	new G4PVPlacement(0,                          //the rotation 
+	new G4PVPlacement(0,                          //the rotation 
 																 G4ThreeVector(0, 0, 0),     //the central position
 																 targetBoxLogicalVolume,
 																 "targetBoxPhysical",

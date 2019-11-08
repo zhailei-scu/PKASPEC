@@ -56,11 +56,10 @@ void NWSteppingAction_InletToFirstNonEst::UserSteppingAction(const G4Step* stepp
 	std::string InletParticleName;
 	OneTrack theTrack;
 	std::map<int, OneTrack>::iterator it;
-	int trackIndex = -1;
 
 	const G4ParticleDefinition *particle = stepping->GetTrack()->GetParticleDefinition();
 
-	const G4DynamicParticle *theDynamicParticle = stepping->GetTrack()->GetDynamicParticle();
+	//const G4DynamicParticle *theDynamicParticle = stepping->GetTrack()->GetDynamicParticle();
 
 
 	DoIt = false;
