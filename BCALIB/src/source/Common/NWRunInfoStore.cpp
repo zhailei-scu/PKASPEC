@@ -55,7 +55,7 @@ OneEvent::~OneEvent() {
 OneEvent::OneEvent(const OneEvent & r) {
 	this->EventID = r.EventID;
 
-	this->Tracks.swap(std::map<int, OneTrack>());
+	std::map<int, OneTrack>().swap(this->Tracks);
 
 	for (std::map<int, OneTrack>::iterator it = this->Tracks.begin(); it != this->Tracks.end(); it++) {
 
@@ -67,7 +67,7 @@ OneEvent::OneEvent(const OneEvent & r) {
 OneEvent& OneEvent::operator = (const OneEvent &r) {
 	this->EventID = r.EventID;
 
-	this->Tracks.swap(std::map<int, OneTrack>());
+	std::map<int, OneTrack>().swap(this->Tracks);
 
 	for (std::map<int, OneTrack>::iterator it = this->Tracks.begin(); it != this->Tracks.end(); it++) {
 
@@ -81,5 +81,5 @@ OneEvent& OneEvent::operator = (const OneEvent &r) {
 void OneEvent::clean() {
 	this->EventID = -1;
 
-	this->Tracks.swap(std::map<int, OneTrack>());
+	std::map<int, OneTrack>().swap(this->Tracks);
 }

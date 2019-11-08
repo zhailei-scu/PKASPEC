@@ -18,7 +18,7 @@ StepInfo::~StepInfo() {
 	this->deltaEng = 0.0;
 	this->deltaTime = 0.0;
 	this->processName.clear();
-	this->processName.swap(std::string());
+	std::string().swap(this->processName);
 }
 
 QGSP_BIC_HP_Process StepInfo::ConvertToProcessID(std::string processName) {
@@ -122,13 +122,13 @@ NWInfoStore* NWInfoStore::nWInfoStoreInstance = new NWInfoStore();
 
 NWInfoStore::NWInfoStore() {
 	this->EventsInfo.clear();
-	EventsInfo.swap(std::map<int, std::vector<TrackInfo>>());
+	std::map<int, std::vector<TrackInfo>>().swap(EventsInfo);
 	this->nWInfoStoreInstance = NULL;
 }
 
 
 NWInfoStore::~NWInfoStore() {
-	EventsInfo.swap(std::map<int, std::vector<TrackInfo>>());
+	std::map<int, std::vector<TrackInfo>>().swap(EventsInfo);
 }
 
 NWInfoStore* NWInfoStore::GetInstance() {
@@ -184,7 +184,7 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 		}
 
 		processname.clear();
-		processname.swap(std::string());
+		std::string().swap(processname);
 
 		ss >> EventID
 			>> TrackID

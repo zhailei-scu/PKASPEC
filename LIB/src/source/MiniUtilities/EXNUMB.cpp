@@ -13,7 +13,7 @@ void extract_numb(const std::string & str, std::vector<std::string>& result) {
 
 	result.clear();
 
-	result.swap(std::vector<std::string>());
+	std::vector<std::string>().swap(result);
 
 	size = str.size();
 
@@ -37,7 +37,7 @@ void extract_numb(const std::string & str, std::vector<std::string>& result) {
 			if (0 != flag) {
 
 				tempStr.clear();
-				tempStr.swap(std::string());
+				std::string().swap(tempStr);
 
 				for (int j = tempLenght; j > 0; j--) {
 					tempStr.push_back(str[i - j]);

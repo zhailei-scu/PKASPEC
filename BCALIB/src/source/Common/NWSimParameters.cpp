@@ -52,7 +52,7 @@ void NWSimParameters::Clean() {
 	this->theConcentReaction = ConcentReaction(InletToLastEst);
 
 	this->OutPath.clear();
-	this->OutPath.swap(std::string(""));
+	std::string().swap(this->OutPath);
 
 	this->OutWidth = 20;
 
@@ -65,7 +65,7 @@ void NWSimParameters::Clean() {
 	this->linkCellNum_z = 10;
 
 	this->targetMaterial.clear();
-	this->targetMaterial.swap(std::string(""));
+	std::string().swap(this->targetMaterial);
 
 	this->beam.Clean();
 }
@@ -80,12 +80,12 @@ void NWSimParameters::ReadParametersFromFile(const char* filePath) {
 
 void NWSimParameters::SetDefulatValue() {
 
-	this->theConcentReaction = ConcentReaction(InletToFirstNonEst);
+	this->theConcentReaction = ConcentReaction(InletEstAndInEstTillEnd);
 
 	double FluxRange[2][2];
 
 	this->OutPath.clear();
-	this->OutPath.swap(std::string(""));
+	std::string().swap(this->OutPath);
 	this->OutPath = std::string("");
 
 	this->OutWidth = 20;
@@ -97,7 +97,7 @@ void NWSimParameters::SetDefulatValue() {
 	this->linkCellNum_z = 10;
 
 	this->targetMaterial.clear();
-	this->targetMaterial.swap(std::string(""));
+	std::string().swap(this->targetMaterial);
 	this->targetMaterial = std::string("G4_Zr");
 
 	//beam

@@ -47,7 +47,7 @@ void NWBeam::Clean() {
 	this->gunEnergy = 0.e0;
 
 	this->gunParticleName.clear();
-	this->gunParticleName.swap(std::string(""));
+	std::string().swap(this->gunParticleName);
 
 	this->gunParticleStartDirection = G4ThreeVector(0, 0, -1);
 

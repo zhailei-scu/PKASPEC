@@ -543,9 +543,9 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	linkedCells_StepInfo = new std::vector<StepInfo*>[ceilingNum];
 
 	for (int i = 0; i < ceilingNum; i++) {
-		linkedCells_EventID[i].swap(std::vector<int>());
-		linkedCells_TrackID[i].swap(std::vector<int>());
-		linkedCells_StepInfo[i].swap(std::vector<StepInfo*>());
+		std::vector<int>().swap(linkedCells_EventID[i]);
+		std::vector<int>().swap(linkedCells_TrackID[i]);
+		std::vector<StepInfo*>().swap(linkedCells_StepInfo[i]);
 	}
 
 
