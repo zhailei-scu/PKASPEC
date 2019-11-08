@@ -464,7 +464,6 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	int objectLinkID;
 	std::map<int, std::vector<TrackInfo>>::iterator it;
 	std::vector<TrackInfo>::iterator iteratorTrackInfo;
-	std::vector<StepInfo>::iterator iteratorStepInfo;
 	std::vector<int>* linkedCells_EventID = NULL;
 	std::vector<int>* linkedCells_TrackID = NULL;
 	std::vector<StepInfo*>* linkedCells_StepInfo = NULL;
@@ -483,6 +482,7 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	int x_Range[2];
 	int y_Range[2];
 	int xInterval;
+	int theSize;
 	/*Body*/
 
 	ceil_Interval[0] = ceil_Interval[1] = NWGlobal::GetInstance()->GetSimParamters()->GetLinkCellInterval_xy();
@@ -577,31 +577,27 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 		for (; iteratorTrackInfo != it->second.end(); iteratorTrackInfo++) {
 
-			iteratorStepInfo = iteratorTrackInfo->GetStepsInfo()->begin();
+			theSize = iteratorTrackInfo->GetStepsInfo()->size();
 
-			if (iteratorTrackInfo->GetStepsInfo()->size() > 0) {
-
-				for (; iteratorStepInfo != iteratorTrackInfo->GetStepsInfo()->end(); iteratorStepInfo++) {
-
-					if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()){
-						if (0 != iteratorStepInfo->GetProcessName().compare(std::string("hadElastic"))) {
-							break;
-						}
+			for (int index = 0; index < theSize; index++) {
+				if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+					if (0 != iteratorTrackInfo->GetStepsInfo()->at(index).GetProcessName().compare(std::string("hadElastic"))) {
+						break;
 					}
-
-					ceilIndex[0] = min(int((iteratorStepInfo->GetpostPosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
-					ceilIndex[1] = min(int((iteratorStepInfo->GetpostPosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
-					ceilIndex[2] = min(int((iteratorStepInfo->GetpostPosition().getZ() - newBoundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
-
-					ceilIndex[0] = max(ceilIndex[0], 0);
-					ceilIndex[1] = max(ceilIndex[1], 0);
-					ceilIndex[2] = max(ceilIndex[2], 0);
-
-					linkID = ceilIndex[2]* ceilingNum_OneDim[0]*ceilingNum_OneDim[1] + ceilIndex[1]* ceilingNum_OneDim[0] + ceilIndex[0];
-					linkedCells_EventID[linkID].push_back(it->first);
-					linkedCells_TrackID[linkID].push_back(iteratorTrackInfo->GetTrackID());
-					linkedCells_StepInfo[linkID].push_back(iteratorStepInfo._Ptr);
 				}
+
+				ceilIndex[0] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
+				ceilIndex[1] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
+				ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getZ() - newBoundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
+
+				ceilIndex[0] = max(ceilIndex[0], 0);
+				ceilIndex[1] = max(ceilIndex[1], 0);
+				ceilIndex[2] = max(ceilIndex[2], 0);
+
+				linkID = ceilIndex[2] * ceilingNum_OneDim[0] * ceilingNum_OneDim[1] + ceilIndex[1] * ceilingNum_OneDim[0] + ceilIndex[0];
+				linkedCells_EventID[linkID].push_back(it->first);
+				linkedCells_TrackID[linkID].push_back(iteratorTrackInfo->GetTrackID());
+				linkedCells_StepInfo[linkID].push_back(&iteratorTrackInfo->GetStepsInfo()->at(index));
 			}
 
 		}

@@ -9,6 +9,7 @@
 #include "NWSimParameters.h"
 #include <sstream>
 #include "../../../../LIB/src/include/MiniUtilities/EXNUMB.h"
+#include "NWRunInfoStore.h"
 
 void RunTheSimulation(int EventLoops) {
 
@@ -64,6 +65,43 @@ int main(int argc, char* argv[]) {
 	ss >> EventLoops;
 
 	std::cout << "The event loops is: " << EventLoops <<std::endl;
+
+
+
+
+
+	std::vector<OneTrack> theVector;
+
+	OneTrack temp;
+
+	temp.SetCurrentTrackID(10);
+
+	theVector.push_back(temp);
+
+	temp.SetCurrentTrackID(20);
+
+	theVector.push_back(temp);
+
+
+	OneTrack *ptr = &theVector.at(0);
+
+	ptr->SetCurrentTrackID(5);
+
+	std::cout << theVector.at(0).GetCurrentTrackID()<<std::endl;
+
+
+
+
+	theVector.at(0).SetCurrentTrackID(6);
+
+
+	OneTrack temp2 = theVector.at(0);
+
+	std::cout << temp2.GetCurrentTrackID() << std::endl;
+
+
+
+	system("pause");
 
 	RunTheSimulation(EventLoops);
 
