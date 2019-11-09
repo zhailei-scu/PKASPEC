@@ -329,9 +329,6 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 						distance = pKADist.mag();
 
-
-						std::cout << "distance " << distance << std::endl;
-
 						ofsOrignalDistance << std::setiosflags(std::ios::scientific) << std::setprecision(7) << distance << std::endl;
 
 						prePKAPos = postPKAPos;
