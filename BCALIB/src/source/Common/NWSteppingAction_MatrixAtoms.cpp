@@ -11,14 +11,14 @@ NWSteppingAction_MatrixAtoms::NWSteppingAction_MatrixAtoms() {
 }
 
 /*Copy constructor*/
-NWSteppingAction_MatrixAtoms::NWSteppingAction_MatrixAtoms(const NWSteppingAction_MatrixAtoms &r) {
+NWSteppingAction_MatrixAtoms::NWSteppingAction_MatrixAtoms(const NWSteppingAction_MatrixAtoms &) {
 
 
 }
 
 
 /*reload the operator = */
-NWSteppingAction_MatrixAtoms NWSteppingAction_MatrixAtoms::operator=(const NWSteppingAction_MatrixAtoms &r) {
+NWSteppingAction_MatrixAtoms NWSteppingAction_MatrixAtoms::operator=(const NWSteppingAction_MatrixAtoms &) {
 
 	return *this;
 }

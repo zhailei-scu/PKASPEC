@@ -543,6 +543,10 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 	ceilingNum = ceilingNum_OneDim[0] * ceilingNum_OneDim[1] * ceilingNum_OneDim[2];
 
+	for (int i = 0; i < 3; i++) {
+		ceilIndex[i] = 0;
+	}
+
 	if (ceilingNum > MAXCELLNUM) {
 		std::cout << "The cell x y interval and z cell number exceed the memory limit." << std::endl;
 		std::cout << "x cell number : " << ceilingNum_OneDim[0] << std::endl;

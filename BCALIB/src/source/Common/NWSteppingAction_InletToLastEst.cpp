@@ -11,13 +11,13 @@ NWSteppingAction_InletToLastEst::NWSteppingAction_InletToLastEst() {
 }
 
 /*Copy constructor*/
-NWSteppingAction_InletToLastEst::NWSteppingAction_InletToLastEst(const NWSteppingAction_InletToLastEst &r) {
+NWSteppingAction_InletToLastEst::NWSteppingAction_InletToLastEst(const NWSteppingAction_InletToLastEst &) {
 	
 }
 
 
 /*reload the operator = */
-NWSteppingAction_InletToLastEst NWSteppingAction_InletToLastEst::operator=(const NWSteppingAction_InletToLastEst &r) {
+NWSteppingAction_InletToLastEst NWSteppingAction_InletToLastEst::operator=(const NWSteppingAction_InletToLastEst &) {
 
 	return *this;
 }
