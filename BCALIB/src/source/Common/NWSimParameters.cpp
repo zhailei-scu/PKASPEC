@@ -39,6 +39,8 @@ NWSimParameters& NWSimParameters::operator=(const NWSimParameters & r) {
 
 	this->linkCellNum_z = r.linkCellNum_z;
 
+	this->targetAtomNumber = r.targetAtomNumber;
+
 	this->targetMaterial = r.targetMaterial;
 
 	this->beam = r.beam;
