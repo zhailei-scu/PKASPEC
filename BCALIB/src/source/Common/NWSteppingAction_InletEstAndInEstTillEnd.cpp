@@ -13,7 +13,6 @@ NWSteppingAction_InletEstAndInEstTillEnd::NWSteppingAction_InletEstAndInEstTillE
 /*Copy constructor*/
 NWSteppingAction_InletEstAndInEstTillEnd::NWSteppingAction_InletEstAndInEstTillEnd(const NWSteppingAction_InletEstAndInEstTillEnd &r) {
 	if (NULL != &r) {
-		this->targetAtomNumber = r.targetAtomNumber;
 
 		/*The operation = had been overrided*/
 		this->theOneEvent = r.theOneEvent;
@@ -25,7 +24,6 @@ NWSteppingAction_InletEstAndInEstTillEnd::NWSteppingAction_InletEstAndInEstTillE
 /*reload the operator = */
 NWSteppingAction_InletEstAndInEstTillEnd NWSteppingAction_InletEstAndInEstTillEnd::operator=(const NWSteppingAction_InletEstAndInEstTillEnd &r) {
 	if (NULL != &r) {
-		this->targetAtomNumber = r.targetAtomNumber;
 
 		/*The operation = had been overrided*/
 		this->theOneEvent = r.theOneEvent;
@@ -65,7 +63,7 @@ void NWSteppingAction_InletEstAndInEstTillEnd::UserSteppingAction(const G4Step* 
 
 	DoIt = false;
 
-	if (particle->GetAtomicNumber() == this->targetAtomNumber) {
+	if (particle->GetAtomicNumber() == NWGlobal::GetInstance()->GetSimParamters()->GetTargetAtomNumber()) {
 
 		if (1 == stepping->GetTrack()->GetCurrentStepNumber()) {
 

@@ -55,6 +55,8 @@ private:
 
 	std::string targetMaterial;
 
+	int targetAtomNumber;
+
 private:
 	NWBeam beam;
 
@@ -133,6 +135,15 @@ public:
 	inline const std::string * GetTargetMaterial() const{
 		return &this->targetMaterial;
 	}
+
+	inline void SetTargetAtomNumber(const int theTargetAtomNumber) {
+		this->targetAtomNumber = theTargetAtomNumber;
+	}
+
+	inline int GetTargetAtomNumber() {
+		return this->targetAtomNumber;
+	}
+	
 
 	inline void SetBeam(const NWBeam & theBeam) {
 		this->beam = theBeam;

@@ -27,12 +27,6 @@ public:
 	/*override*/
 	void UserSteppingAction(const G4Step*);
 
-	void SetTargetTrackID(int targetTrackID);
-
-private:
-
-	int targetTrackID;
-
 };
 
 

@@ -29,14 +29,7 @@ public:
 
 private:
 
-	int targetAtomNumber;
-
 	OneEvent theOneEvent;
-
-public:
-	inline void SetTargetAtomNumber(int AtomNumber) {
-		this->targetAtomNumber = AtomNumber;
-	}
 };
 
 

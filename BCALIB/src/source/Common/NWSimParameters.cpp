@@ -67,6 +67,8 @@ void NWSimParameters::Clean() {
 	this->targetMaterial.clear();
 	std::string().swap(this->targetMaterial);
 
+	this->targetAtomNumber = 0;
+
 	this->beam.Clean();
 }
 
@@ -98,7 +100,9 @@ void NWSimParameters::SetDefulatValue() {
 
 	this->targetMaterial.clear();
 	std::string().swap(this->targetMaterial);
-	this->targetMaterial = std::string("G4_Zr");
+	this->targetMaterial = std::string("G4_W");
+
+	this->targetAtomNumber = 74;
 
 	//beam
 	this->beam.SetTurnOnMode(BeamMode(Area_Random));
@@ -123,6 +127,8 @@ void NWSimParameters::PrintParameters() {
 	std::cout << "The event loops number is: " << this->EventLoopsNumber << std::endl;
 
 	std::cout << "The target material is: " << this->targetMaterial.c_str() << std::endl;
+
+	std::cout << "The target atom number is: " << this->targetAtomNumber << std::endl;
 
 	std::cout << "The out path is : " << OutPath.c_str() << std::endl;
 

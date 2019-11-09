@@ -24,8 +24,6 @@ void NWActionInitialization::Build() const{
 		{
 			NWSteppingAction_InletToLastEst *theNWSteppingAction = new NWSteppingAction_InletToLastEst();
 
-			theNWSteppingAction->SetTargetTrackID(1);
-
 			SetUserAction(theNWSteppingAction);
 		}
 		break;
@@ -33,7 +31,6 @@ void NWActionInitialization::Build() const{
 		case ConcentReaction(InletToFirstNonEst):
 		{
 			NWSteppingAction_InletToFirstNonEst *theNWSteppingAction = new NWSteppingAction_InletToFirstNonEst();
-			theNWSteppingAction->SetTargetAtomNumber(40);
 
 			SetUserAction(theNWSteppingAction);
 		}
@@ -43,7 +40,6 @@ void NWActionInitialization::Build() const{
 		case ConcentReaction(InletEstAndInEstTillEnd):
 		{
 			NWSteppingAction_InletEstAndInEstTillEnd *theNWSteppingAction = new NWSteppingAction_InletEstAndInEstTillEnd();
-			theNWSteppingAction->SetTargetAtomNumber(40);
 
 			SetUserAction(theNWSteppingAction);
 		}
@@ -52,7 +48,6 @@ void NWActionInitialization::Build() const{
 		case ConcentReaction(MatrixAtom):
 		{
 			NWSteppingAction_MatrixAtoms *theNWSteppingAction = new NWSteppingAction_MatrixAtoms();
-			theNWSteppingAction->SetTargetAtomNumber(40);
 
 			SetUserAction(theNWSteppingAction);
 		}

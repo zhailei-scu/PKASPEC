@@ -14,7 +14,6 @@ NWSteppingAction_InletToFirstNonEst::NWSteppingAction_InletToFirstNonEst() {
 /*Copy constructor*/
 NWSteppingAction_InletToFirstNonEst::NWSteppingAction_InletToFirstNonEst(const NWSteppingAction_InletToFirstNonEst &r) {
 	if (NULL != &r) {
-		this->targetAtomNumber = r.targetAtomNumber;
 
 		/*The operation = had been overrided*/
 		this->theOneEvent = r.theOneEvent;
@@ -26,7 +25,6 @@ NWSteppingAction_InletToFirstNonEst::NWSteppingAction_InletToFirstNonEst(const N
 /*reload the operator = */
 NWSteppingAction_InletToFirstNonEst NWSteppingAction_InletToFirstNonEst::operator=(const NWSteppingAction_InletToFirstNonEst &r) {
 	if (NULL != &r) {
-		this->targetAtomNumber = r.targetAtomNumber;
 
 		/*The operation = had been overrided*/
 		this->theOneEvent = r.theOneEvent;
@@ -64,7 +62,7 @@ void NWSteppingAction_InletToFirstNonEst::UserSteppingAction(const G4Step* stepp
 
 	DoIt = false;
 
-	if (particle->GetAtomicNumber() == this->targetAtomNumber) {
+	if (particle->GetAtomicNumber() == NWGlobal::GetInstance()->GetSimParamters()->GetTargetAtomNumber()) {
 
 		if (1 == stepping->GetTrack()->GetCurrentStepNumber()) {
 

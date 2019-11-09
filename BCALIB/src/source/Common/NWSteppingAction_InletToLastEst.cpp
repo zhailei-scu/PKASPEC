@@ -12,21 +12,12 @@ NWSteppingAction_InletToLastEst::NWSteppingAction_InletToLastEst() {
 
 /*Copy constructor*/
 NWSteppingAction_InletToLastEst::NWSteppingAction_InletToLastEst(const NWSteppingAction_InletToLastEst &r) {
-	if (NULL != &r) {
-
-		this->targetTrackID = r.targetTrackID;
-	}
 	
 }
 
 
 /*reload the operator = */
 NWSteppingAction_InletToLastEst NWSteppingAction_InletToLastEst::operator=(const NWSteppingAction_InletToLastEst &r) {
-	if (NULL != &r) {
-
-		this->targetTrackID = r.targetTrackID;
-	}
-
 
 	return *this;
 }
@@ -71,7 +62,7 @@ void NWSteppingAction_InletToLastEst::UserSteppingAction(const G4Step* stepping)
 				((Cond == StronglyForced))
 				) {
 
-				if (this->targetTrackID == stepping->GetTrack()->GetTrackID()) {
+				if (1 == stepping->GetTrack()->GetTrackID()) {
 
 					name = ((*fpSteppingManager->GetfPostStepDoItVector())[np])->GetProcessName();
 
@@ -248,9 +239,4 @@ void NWSteppingAction_InletToLastEst::UserSteppingAction(const G4Step* stepping)
 		}
 	}
 	
-}
-
-
-void NWSteppingAction_InletToLastEst::SetTargetTrackID(int theTargetTrackID) {
-	this->targetTrackID = theTargetTrackID;
 }

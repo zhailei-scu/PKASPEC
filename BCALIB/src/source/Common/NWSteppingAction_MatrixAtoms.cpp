@@ -12,19 +12,13 @@ NWSteppingAction_MatrixAtoms::NWSteppingAction_MatrixAtoms() {
 
 /*Copy constructor*/
 NWSteppingAction_MatrixAtoms::NWSteppingAction_MatrixAtoms(const NWSteppingAction_MatrixAtoms &r) {
-	if (NULL != &r) {
-		this->targetAtomNumber = r.targetAtomNumber;
-	}
+
 
 }
 
 
 /*reload the operator = */
 NWSteppingAction_MatrixAtoms NWSteppingAction_MatrixAtoms::operator=(const NWSteppingAction_MatrixAtoms &r) {
-	if (NULL != &r) {
-		this->targetAtomNumber = r.targetAtomNumber;
-	}
-
 
 	return *this;
 }
@@ -51,7 +45,7 @@ void NWSteppingAction_MatrixAtoms::UserSteppingAction(const G4Step* stepping) {
 
 	//const G4DynamicParticle *theDynamicParticle = stepping->GetTrack()->GetDynamicParticle();
 
-	if (particle->GetAtomicNumber() == this->targetAtomNumber) {
+	if (particle->GetAtomicNumber() ==  NWGlobal::GetInstance()->GetSimParamters()->GetTargetAtomNumber()) {
 
 		if (1 == stepping->GetTrack()->GetCurrentStepNumber()) {
 

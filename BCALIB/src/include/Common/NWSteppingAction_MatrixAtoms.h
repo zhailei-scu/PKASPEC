@@ -25,15 +25,6 @@ public:
 public:
 	/*override*/
 	void UserSteppingAction(const G4Step*);
-
-private:
-
-	int targetAtomNumber;
-
-public:
-	inline void SetTargetAtomNumber(int AtomNumber) {
-		this->targetAtomNumber = AtomNumber;
-	}
 };
 
 
