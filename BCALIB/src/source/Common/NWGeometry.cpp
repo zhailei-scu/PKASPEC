@@ -51,6 +51,8 @@ G4VPhysicalVolume* NWGeometry::Construct() {
 	//G4double w_molemass = 183.84*g / mole;
 	//G4Material* targetMaterial = new G4Material("ITER_W",74,w_molemass, w_density);
 	G4Material *targetMaterial = nist->FindOrBuildMaterial(NWGlobal::GetInstance()->GetSimParamters()->GetTargetMaterial()->c_str());
+	G4cout << targetMaterial << G4endl;
+
 
 	if (!targetMaterial) {
 		std::cout << "The target materials is not defined in nist database: " << NWGlobal::GetInstance()->GetSimParamters()->GetTargetMaterial()->c_str();

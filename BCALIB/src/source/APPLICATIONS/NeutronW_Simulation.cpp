@@ -5,6 +5,7 @@
 #include "NWActionInitialization.h"
 #include "G4VModularPhysicsList.hh"
 #include "QGSP_BIC_HP.hh"
+#include "FTFP_BERT.hh"
 #include "NWGlobal.h"
 #include "NWSimParameters.h"
 #include <sstream>
