@@ -1,4 +1,5 @@
 #include "NWActionInitialization.h"
+#include "NWTrackingAction.h"
 #include "NWPrimaryGeneratorAction.h"
 #include "NWSteppingAction_InletToLastEst.h"
 #include "NWSteppingAction_InletToFirstNonEst.h"
@@ -18,6 +19,8 @@ NWActionInitialization::~NWActionInitialization() {
 
 void NWActionInitialization::Build() const{
 	SetUserAction(new NWPrimaryGeneratorAction());
+
+	//SetUserAction(new NWTrackingAction());
 
 	switch (NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
 		case ConcentReaction(InletToLastEst):

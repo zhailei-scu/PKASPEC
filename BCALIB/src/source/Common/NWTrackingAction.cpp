@@ -11,7 +11,7 @@ NWTrackingAction::~NWTrackingAction() {
 }
 
 
-void NWTrackingAction::PreUserTrackingAction(const G4Track*) {
+void NWTrackingAction::PreUserTrackingAction(const G4Track* track) {
 
 }
 

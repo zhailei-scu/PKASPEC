@@ -37,6 +37,8 @@ public:
 
 	std::fstream ofsSimRecord;
 
+	std::fstream ofs_Iso;
+
 public:
 	void PrintInfo();
 

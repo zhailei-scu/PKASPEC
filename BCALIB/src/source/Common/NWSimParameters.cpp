@@ -109,7 +109,7 @@ void NWSimParameters::SetDefulatValue() {
 	//beam
 	this->beam.SetTurnOnMode(BeamMode(Area_Random));
 
-	this->beam.SetGunEnergy(1);
+	this->beam.SetGunEnergy(15);
 
 	this->beam.SetGunParticleName(G4String("neutron"));
 
