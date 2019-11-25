@@ -13,11 +13,11 @@ NWPrimaryGeneratorAction::NWPrimaryGeneratorAction() {
 	this->particleGun = new G4ParticleGun();
 
 	/*Here, we get the particle define from the registered physical model*/
-	this->particleDef = G4ParticleTable::GetParticleTable()->FindParticle(NWGlobal::GetInstance()->GetSimParamters()->GetNWBeam()->GetGunParticleName()->c_str());
+	this->particleDef = G4ParticleTable::GetParticleTable()->FindParticle(NWGlobal::GetInstance()->GetSimParamters().GetNWBeam().GetGunParticleName()->c_str());
 
 	if (NULL == particleDef) {
 		G4ExceptionDescription msg;
-		msg << "The particle : " << NWGlobal::GetInstance()->GetSimParamters()->GetNWBeam()->GetGunParticleName()->c_str() << "cannot be finded!";
+		msg << "The particle : " << NWGlobal::GetInstance()->GetSimParamters().GetNWBeam().GetGunParticleName()->c_str() << "cannot be finded!";
 		G4Exception("NWPrimaryGeneratorAction::GeneratePrimaries", "Code01", FatalException, msg);
 
 		system("pause");
@@ -79,12 +79,12 @@ NWPrimaryGeneratorAction::~NWPrimaryGeneratorAction() {
 
 void NWPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
 
-	NWGlobal::GetInstance()->particleOriginDirection = *NWGlobal::GetInstance()->GetSimParamters()->GetNWBeam()->GetGunParticleStartDirection();
+	NWGlobal::GetInstance()->particleOriginDirection = *NWGlobal::GetInstance()->GetSimParamters().GetNWBeam().GetGunParticleStartDirection();
 	
 	/*Set the particle gun for this event*/
 	particleGun->SetNumberOfParticles(G4int(1));
 	particleGun->SetParticleMomentumDirection(NWGlobal::GetInstance()->particleOriginDirection);
-	particleGun->SetParticleEnergy(NWGlobal::GetInstance()->GetSimParamters()->GetNWBeam()->GetGunEnergy()*MeV);
+	particleGun->SetParticleEnergy(NWGlobal::GetInstance()->GetSimParamters().GetNWBeam().GetGunEnergy()*MeV);
 
 	//G4Box* fTargetBox = (G4Box*)(G4LogicalVolumeStore::GetInstance()->GetVolume("targetBoxLogical")->GetSolid());
 	G4LogicalVolume* fTargetLogicalBox = G4LogicalVolumeStore::GetInstance()->GetVolume("targetBoxLogical");
@@ -125,8 +125,8 @@ void NWPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
 	G4double Z0 = 0.5*(Z_High + Z_Low);
 
 	NWGlobal::GetInstance()->particleOriginPos 
-		= NWGlobal::GetInstance()->GetSimParamters()->GetNWBeam()->CalOriginPositionXY(anEvent->GetEventID(),
-																					   NWGlobal::GetInstance()->GetSimParamters()->GetEventLoopsNumber(),
+		= NWGlobal::GetInstance()->GetSimParamters().GetNWBeam().CalOriginPositionXY(anEvent->GetEventID(),
+																					   NWGlobal::GetInstance()->GetSimParamters().GetEventLoopsNumber(),
 																					   Z0);
 
 	particleGun->SetParticlePosition(NWGlobal::GetInstance()->particleOriginPos);

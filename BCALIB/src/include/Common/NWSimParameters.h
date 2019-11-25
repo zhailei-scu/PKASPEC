@@ -5,6 +5,7 @@
 #include <fstream>
 #include "G4ThreeVector.hh"
 #include "NWBeam.h"
+#include "NWMaterials.h"
 
 extern std::string simMode;
 extern std::string analysisMode;
@@ -15,7 +16,9 @@ enum ConcentReaction {
 	InletEstAndInEstTillEnd,    //track inlet particle had elastice and inelastic to matrix atom till really end of this particle
 								//(for QSGP_BIC_HP model neutron,inelastic, captured or nfission or decay or out boundary would 
 								//end the track, but here, we still track the neturon occured inelastic reaction)
-	MatrixAtom				    //consider all reaction to matrix atom
+	MatrixAtom,				    //consider all reaction to matrix atom
+
+	Iso                        // Record the isotope
 };
 
 
@@ -53,11 +56,9 @@ private:
 
 	int linkCellNum_z;
 
-	std::string targetMaterial;
-
-	int targetAtomNumber;
-
 private:
+	NWMaterial targetMaterial;
+
 	NWBeam beam;
 
 public:
@@ -74,7 +75,7 @@ public:
 		this->theConcentReaction = way;
 	}
 
-	inline ConcentReaction GetTheConcentReaction(){
+	inline ConcentReaction GetTheConcentReaction() const{
 		return this->theConcentReaction;
 	}
 
@@ -115,7 +116,7 @@ public:
 		this->linkCellInterval_xy = theLinkCellInterval_xy;
 	}
 
-	inline double GetLinkCellInterval_xy() {
+	inline double GetLinkCellInterval_xy() const{
 		return this->linkCellInterval_xy;
 	}
 
@@ -124,24 +125,17 @@ public:
 		this->linkCellNum_z = theLinkCellNum_z;
 	}
 
-	inline int GetLinkCellNum_z() {
+	inline int GetLinkCellNum_z() const{
 		return this->linkCellNum_z;
 	}
 
-	inline void SetTargetMaterial(const std::string &theTargetMaterial) {
-		this->targetMaterial = theTargetMaterial;
+
+	inline void SetTargetMaterial(const NWMaterial & theMaterial) {
+		this->targetMaterial = theMaterial;
 	}
 
-	inline const std::string * GetTargetMaterial() const{
-		return &this->targetMaterial;
-	}
-
-	inline void SetTargetAtomNumber(const int theTargetAtomNumber) {
-		this->targetAtomNumber = theTargetAtomNumber;
-	}
-
-	inline int GetTargetAtomNumber() {
-		return this->targetAtomNumber;
+	inline NWMaterial const & GetTargetMaterial() const {
+		return this->targetMaterial;
 	}
 	
 
@@ -149,8 +143,8 @@ public:
 		this->beam = theBeam;
 	}
 
-	inline NWBeam * GetNWBeam(){
-		return &this->beam;
+	inline const NWBeam & GetNWBeam() const{
+		return this->beam;
 	}
 
 };

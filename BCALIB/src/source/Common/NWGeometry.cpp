@@ -47,18 +47,38 @@ G4VPhysicalVolume* NWGeometry::Construct() {
 
 
 	/*The target volum zone*/
-	//G4double w_density = 19.3*g / cm3;
-	//G4double w_molemass = 183.84*g / mole;
-	//G4Material* targetMaterial = new G4Material("ITER_W",74,w_molemass, w_density);
-	G4Material *targetMaterial = nist->FindOrBuildMaterial(NWGlobal::GetInstance()->GetSimParamters()->GetTargetMaterial()->c_str());
-	G4cout << targetMaterial << G4endl;
+	G4Material *targetMaterial = NULL;
+	switch (NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetTheModel())
+	{
+		case(MaterialModel(G4Default)):
+		{
+			targetMaterial = nist->FindOrBuildMaterial(NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetMaterialName().c_str());
+		}
+		break;
 
+		case(MaterialModel(UserDef)):
+		{
+			targetMaterial = new G4Material(NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetMaterialName().c_str(),
+											NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetAtomNumber(), 
+											NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetMoleMass(),
+											NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetDensity());
+		}
+		break;
+
+		default:
+		{
+			std::cout << "Unknown material model: "<< NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetTheModel() <<std::endl;
+		}
+		break;
+	}
 
 	if (!targetMaterial) {
-		std::cout << "The target materials is not defined in nist database: " << NWGlobal::GetInstance()->GetSimParamters()->GetTargetMaterial()->c_str();
+		std::cout << "The target materials is not defined in nist database: " << NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetMaterialName() << std::endl;;
 		system("pause");
 		exit(1);
 	}
+
+	G4cout << targetMaterial << G4endl;
 
 	G4Box* targetBoxShape = new G4Box("targetBoxShape", 0.5*targetBox_x, 0.5*targetBox_y, 0.5*targetBox_z);
 	G4LogicalVolume* targetBoxLogicalVolume = new G4LogicalVolume(targetBoxShape, targetMaterial, "targetBoxLogical");

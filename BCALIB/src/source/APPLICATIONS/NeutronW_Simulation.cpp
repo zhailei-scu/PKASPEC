@@ -13,7 +13,7 @@
 
 void RunTheSimulation(int EventLoops) {
 
-	NWGlobal::GetInstance()->GetSimParamters()->SetEventLoopsNumber(EventLoops);
+	NWGlobal::GetInstance()->SetEventLoops(EventLoops);
 
 	/*Out Path*/
 	NWGlobal::GetInstance()->InitialGlobal(simMode);
@@ -38,7 +38,7 @@ void RunTheSimulation(int EventLoops) {
 
 	runManager->Initialize();
 
-	runManager->BeamOn(NWGlobal::GetInstance()->GetSimParamters()->GetEventLoopsNumber());
+	runManager->BeamOn(NWGlobal::GetInstance()->GetEventLoops());
 
 	//if (myGeometry) delete myGeometry;
 

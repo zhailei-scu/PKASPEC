@@ -41,7 +41,7 @@ NWSteppingAction_InletEstAndInEstTillEnd::~NWSteppingAction_InletEstAndInEstTill
 void NWSteppingAction_InletEstAndInEstTillEnd::UserSteppingAction(const G4Step* stepping) {
 
 
-	int OutWidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
+	int OutWidth = NWGlobal::GetInstance()->GetSimParamters().GetOutWidth();
 
 	double PreEng;
 	double PostEng;
@@ -63,7 +63,7 @@ void NWSteppingAction_InletEstAndInEstTillEnd::UserSteppingAction(const G4Step* 
 
 	DoIt = false;
 
-	if (particle->GetAtomicNumber() == NWGlobal::GetInstance()->GetSimParamters()->GetTargetAtomNumber()) {
+	if (particle->GetAtomicNumber() == NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetAtomNumber()) {
 
 		if (1 == stepping->GetTrack()->GetCurrentStepNumber()) {
 
@@ -125,7 +125,7 @@ void NWSteppingAction_InletEstAndInEstTillEnd::UserSteppingAction(const G4Step* 
 			if (true == DoIt) {
 
 				if (NULL != stepping->GetPreStepPoint()->GetMaterial()) {
-					if (0 == stepping->GetPreStepPoint()->GetMaterial()->GetName().compare(NWGlobal::GetInstance()->GetSimParamters()->GetTargetMaterial()->c_str())) {
+					if (0 == stepping->GetPreStepPoint()->GetMaterial()->GetName().compare(NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetMaterialName().c_str())) {
 
 						PreEng = stepping->GetPreStepPoint()->GetKineticEnergy();
 						PostEng = stepping->GetPostStepPoint()->GetKineticEnergy();
@@ -159,7 +159,7 @@ void NWSteppingAction_InletEstAndInEstTillEnd::UserSteppingAction(const G4Step* 
 
 						NWGlobal::GetInstance()->flushRecord++;
 
-						if (0 == NWGlobal::GetInstance()->flushRecord%NWGlobal::GetInstance()->GetSimParamters()->GetFlushFrequence()) {
+						if (0 == NWGlobal::GetInstance()->flushRecord%NWGlobal::GetInstance()->GetSimParamters().GetFlushFrequence()) {
 							NWGlobal::GetInstance()->ofsSimRecord.flush();
 						}
 

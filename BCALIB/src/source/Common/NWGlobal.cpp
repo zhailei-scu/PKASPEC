@@ -12,7 +12,9 @@ NWGlobal::NWGlobal() {
 }
 
 NWGlobal::~NWGlobal() {
-	this->ofsSimRecord.close();
+
+	if(ofsSimRecord.is_open()) this->ofsSimRecord.close();
+	if(ofs_Iso.is_open()) this->ofs_Iso.close();
 }
 
 void NWGlobal::relaseInstance() {
@@ -37,88 +39,97 @@ void NWGlobal::InitialGlobal(const std::string& mode) {
 
 	this->simParamters.SetDefulatValue();
 
+	OutWidth = this->simParamters.GetOutWidth();
+
 	if (0 == mode.compare(simMode)) {
-		if (this->simParamters.GetOutPath()->length() > 0) {
-			ss << this->simParamters.GetOutPath()->c_str() << "\\" << "OutPutResult.txt";
-		}
-		else {
-			ss << "OutPutResult.txt";
-		}
 
-		ss >> outFile;
+		if (this->simParamters.GetTheConcentReaction() == ConcentReaction(InletToLastEst) ||
+			this->simParamters.GetTheConcentReaction() == ConcentReaction(InletToFirstNonEst) ||
+			this->simParamters.GetTheConcentReaction() == ConcentReaction(InletEstAndInEstTillEnd) ||
+			this->simParamters.GetTheConcentReaction() == ConcentReaction(MatrixAtom)) {
 
-		ofsSimRecord.open(outFile, std::ios::out | std::ios::ate);
+			if (this->simParamters.GetOutPath()->length() > 0) {
+				ss << this->simParamters.GetOutPath()->c_str() << "\\" << "OutPutResult.txt";
+			}
+			else {
+				ss << "OutPutResult.txt";
+			}
 
-		OutWidth = this->simParamters.GetOutWidth();
+			ss >> outFile;
 
-		ofsSimRecord
-			<< std::setw(OutWidth) << "EventID"
-			<< std::setw(OutWidth) << "TrackID"
-			<< std::setw(OutWidth) << "StepID"
-			<< std::setw(OutWidth) << "PreEng(MeV)"
-			<< std::setw(OutWidth) << "PostEng(MeV)"
-			<< std::setw(OutWidth) << "DeltaEng(MeV)"
-			<< std::setw(OutWidth) << "DeltaTime(ns)"
-			<< std::setw(OutWidth) << "OriginDirection_x"
-			<< std::setw(OutWidth) << "OriginDirection_y"
-			<< std::setw(OutWidth) << "OriginDirection_z"
-			<< std::setw(OutWidth) << "OriginPos_x(mm)"
-			<< std::setw(OutWidth) << "OriginPos_y(mm)"
-			<< std::setw(OutWidth) << "OriginPos_z(mm)"
-			<< std::setw(OutWidth) << "PrePos_x(mm)"
-			<< std::setw(OutWidth) << "PrePos_y(mm)"
-			<< std::setw(OutWidth) << "PrePos_z(mm)"
-			<< std::setw(OutWidth) << "PostPos_x(mm)"
-			<< std::setw(OutWidth) << "PostPos_y(mm)"
-			<< std::setw(OutWidth) << "PostPos_z(mm)"
-			<< std::setw(OutWidth) << "ProcessName"
-			<< std::setw(OutWidth) << "ParticleName"
-			<< std::setw(OutWidth) << "TrackStatus"
-			<< std::endl;
+			ofsSimRecord.open(outFile, std::ios::out | std::ios::ate);
 
+			ofsSimRecord
+				<< std::setw(OutWidth) << "EventID"
+				<< std::setw(OutWidth) << "TrackID"
+				<< std::setw(OutWidth) << "StepID"
+				<< std::setw(OutWidth) << "PreEng(MeV)"
+				<< std::setw(OutWidth) << "PostEng(MeV)"
+				<< std::setw(OutWidth) << "DeltaEng(MeV)"
+				<< std::setw(OutWidth) << "DeltaTime(ns)"
+				<< std::setw(OutWidth) << "OriginDirection_x"
+				<< std::setw(OutWidth) << "OriginDirection_y"
+				<< std::setw(OutWidth) << "OriginDirection_z"
+				<< std::setw(OutWidth) << "OriginPos_x(mm)"
+				<< std::setw(OutWidth) << "OriginPos_y(mm)"
+				<< std::setw(OutWidth) << "OriginPos_z(mm)"
+				<< std::setw(OutWidth) << "PrePos_x(mm)"
+				<< std::setw(OutWidth) << "PrePos_y(mm)"
+				<< std::setw(OutWidth) << "PrePos_z(mm)"
+				<< std::setw(OutWidth) << "PostPos_x(mm)"
+				<< std::setw(OutWidth) << "PostPos_y(mm)"
+				<< std::setw(OutWidth) << "PostPos_z(mm)"
+				<< std::setw(OutWidth) << "ProcessName"
+				<< std::setw(OutWidth) << "ParticleName"
+				<< std::setw(OutWidth) << "TrackStatus"
+				<< std::endl;
 
-
-		ss.clear();
-		ss.str("");
-
-		if (this->simParamters.GetOutPath()->length() > 0) {
-			ss << this->simParamters.GetOutPath()->c_str() << "\\" << "OutIso.txt";
-		}
-		else {
-			ss << "OutIso.txt";
 		}
 
-		ss >> outFile;
+		if (this->simParamters.GetTheConcentReaction() == ConcentReaction(Iso)) {
 
-		ofs_Iso.open(outFile,std::ios::out | std::ios::ate);
+			ss.clear();
+			ss.str("");
+
+			if (this->simParamters.GetOutPath()->length() > 0) {
+				ss << this->simParamters.GetOutPath()->c_str() << "\\" << "OutIso.txt";
+			}
+			else {
+				ss << "OutIso.txt";
+			}
+
+			ss >> outFile_Iso;
+
+			ofs_Iso.open(outFile_Iso, std::ios::out | std::ios::ate);
 
 
-		ofs_Iso
-			<< std::setw(OutWidth) << "EventID"
-			<< std::setw(OutWidth) << "TrackID"
-			<< std::setw(OutWidth) << "StepID"
-			<< std::setw(OutWidth) << "PreEng(MeV)"
-			<< std::setw(OutWidth) << "PostEng(MeV)"
-			<< std::setw(OutWidth) << "DeltaEng(MeV)"
-			<< std::setw(OutWidth) << "DeltaTime(ns)"
-			<< std::setw(OutWidth) << "OriginDirection_x"
-			<< std::setw(OutWidth) << "OriginDirection_y"
-			<< std::setw(OutWidth) << "OriginDirection_z"
-			<< std::setw(OutWidth) << "OriginPos_x(mm)"
-			<< std::setw(OutWidth) << "OriginPos_y(mm)"
-			<< std::setw(OutWidth) << "OriginPos_z(mm)"
-			<< std::setw(OutWidth) << "PrePos_x(mm)"
-			<< std::setw(OutWidth) << "PrePos_y(mm)"
-			<< std::setw(OutWidth) << "PrePos_z(mm)"
-			<< std::setw(OutWidth) << "PostPos_x(mm)"
-			<< std::setw(OutWidth) << "PostPos_y(mm)"
-			<< std::setw(OutWidth) << "PostPos_z(mm)"
-			<< std::setw(OutWidth) << "ProcessName"
-			<< std::setw(OutWidth) << "ParticleName"
-			<< std::setw(OutWidth) << "ParticleZ"
-			<< std::setw(OutWidth) << "TrackStatus"
-			<< std::endl;
 
+			ofs_Iso
+				<< std::setw(OutWidth) << "EventID"
+				<< std::setw(OutWidth) << "TrackID"
+				<< std::setw(OutWidth) << "StepID"
+				<< std::setw(OutWidth) << "PreEng(MeV)"
+				<< std::setw(OutWidth) << "PostEng(MeV)"
+				<< std::setw(OutWidth) << "DeltaEng(MeV)"
+				<< std::setw(OutWidth) << "DeltaTime(ns)"
+				<< std::setw(OutWidth) << "OriginDirection_x"
+				<< std::setw(OutWidth) << "OriginDirection_y"
+				<< std::setw(OutWidth) << "OriginDirection_z"
+				<< std::setw(OutWidth) << "OriginPos_x(mm)"
+				<< std::setw(OutWidth) << "OriginPos_y(mm)"
+				<< std::setw(OutWidth) << "OriginPos_z(mm)"
+				<< std::setw(OutWidth) << "PrePos_x(mm)"
+				<< std::setw(OutWidth) << "PrePos_y(mm)"
+				<< std::setw(OutWidth) << "PrePos_z(mm)"
+				<< std::setw(OutWidth) << "PostPos_x(mm)"
+				<< std::setw(OutWidth) << "PostPos_y(mm)"
+				<< std::setw(OutWidth) << "PostPos_z(mm)"
+				<< std::setw(OutWidth) << "ProcessName"
+				<< std::setw(OutWidth) << "ParticleName"
+				<< std::setw(OutWidth) << "ParticleZ"
+				<< std::setw(OutWidth) << "TrackStatus"
+				<< std::endl;
+		}
 
 
 	}
@@ -130,8 +141,8 @@ void NWGlobal::PrintInfo(){
 	this->simParamters.PrintParameters();
 }
 
-NWSimParameters * NWGlobal::GetSimParamters() {
-	return &this->simParamters;
+NWSimParameters const & NWGlobal::GetSimParamters() const{
+	return this->simParamters;
 }
 
 

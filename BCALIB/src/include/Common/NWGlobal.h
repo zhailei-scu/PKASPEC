@@ -26,7 +26,10 @@ public:
 private:
 	NWSimParameters simParamters;
 
+	int EventLoops;
+
 public:
+
 	int CurrentEventID;
 
 	G4ThreeVector particleOriginPos;
@@ -44,7 +47,7 @@ public:
 
 	void InitialGlobal(const std::string& mode);
 
-	NWSimParameters * GetSimParamters();
+	NWSimParameters const & GetSimParamters() const;
 
 public:
 	class NWGlobalGarbo {
@@ -54,6 +57,15 @@ public:
 	};
 
 	static NWGlobalGarbo nWGlobalGarbo;
+
+public:
+	inline void SetEventLoops(int theEventLoops) {
+		this->EventLoops = theEventLoops;
+	}
+
+	inline int GetEventLoops() {
+		return this->EventLoops;
+	}
 };
 
 

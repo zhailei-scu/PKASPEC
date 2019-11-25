@@ -83,7 +83,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	boundary[1][1] = -1.e32;
 	boundary[2][1] = -1.e32;
 
-	outwidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
+	outwidth = NWGlobal::GetInstance()->GetSimParamters().GetOutWidth();
 
 	binEnds_PowerInterval = new double[PowerInterval_BinNum];
 
@@ -94,13 +94,13 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 
 
-	if(NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->length() >0){
+	if(NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->length() >0){
 
 		ss.clear();
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_OriginDistance.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "DistanceResult_OriginDistance.txt";
 
 		ss >> OrignalDistancePath;
 
@@ -109,7 +109,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_EqualInterval.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_EqualInterval.txt";
 
 		ss >> AnalysisPath_EqualInterval;
 
@@ -118,7 +118,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_PowerInterval.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_PowerInterval.txt";
 
 		ss >> AnalysisPath_PowerInterval;
 
@@ -127,7 +127,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_EndReason.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_EndReason.txt";
 
 		ss >> AnalysisPath_EndReason;
 
@@ -136,7 +136,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_DeviateAxesDistance.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_DeviateAxesDistance.txt";
 
 		ss >> AnalysisPath_DeviateAxesDistance;
 
@@ -145,7 +145,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_DistanceXYZ.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_DistanceXYZ.txt";
 
 		ss >> AnalysisPath_DistanceXYZ;
 
@@ -154,7 +154,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters()->GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_linkedCellPosition.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "DistanceResult_Analysis_linkedCellPosition.txt";
 
 		ss >> AnalysisPath_linkedCellPosition;
 
@@ -284,7 +284,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 				for (; iteratorStepInfo != iteratorTrackInfo->GetStepsInfo()->end(); iteratorStepInfo++) {
 
-					if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+					if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
 						if (0 != iteratorStepInfo->GetProcessName().compare(std::string("hadElastic"))) {
 
@@ -301,13 +301,14 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 					if (index <= 1) {
 
-						if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+						if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 							prePKAPos = iteratorStepInfo->GetpostPosition();
 							postPKAPos = iteratorStepInfo->GetpostPosition();
 
-						}else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction() ||
-								 ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction() || 
-							     ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+						}else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+								 ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() || 
+							     ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+							     ConcentReaction(Iso) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
 							prePKAPos = iteratorStepInfo->GetprePosition();
 							postPKAPos = iteratorStepInfo->GetprePosition();
@@ -315,12 +316,13 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 					}
 					else {
 
-						if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+						if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 							postPKAPos = iteratorStepInfo->GetpostPosition();
 
-						}else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction() ||
-							ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction() ||
-							ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+						}else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+							ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+							ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() || 
+							ConcentReaction(Iso) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
 							postPKAPos = iteratorStepInfo->GetprePosition();
 						}
@@ -339,7 +341,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 						minDistance = std::min(minDistance, distance);
 					}
 
-					if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+					if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 						vectorToOrigin = iteratorStepInfo->GetpostPosition() - iteratorStepInfo->GetOriginPosition();
 
 						boundary[0][0] = min(iteratorStepInfo->GetpostPosition().getX(), boundary[0][0]);
@@ -349,9 +351,10 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 						boundary[1][1] = max(iteratorStepInfo->GetpostPosition().getY(), boundary[1][1]);
 						boundary[2][1] = max(iteratorStepInfo->GetpostPosition().getZ(), boundary[2][1]);
 
-					}else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction() ||
-						ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction() ||
-						ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+					}else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+						ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+						ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() || 
+						ConcentReaction(Iso) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
 						vectorToOrigin = iteratorStepInfo->GetprePosition() - iteratorStepInfo->GetOriginPosition();
 
@@ -527,9 +530,9 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	bool founded;
 	/*Body*/
 
-	ceil_Interval[0] = ceil_Interval[1] = NWGlobal::GetInstance()->GetSimParamters()->GetLinkCellInterval_xy();
+	ceil_Interval[0] = ceil_Interval[1] = NWGlobal::GetInstance()->GetSimParamters().GetLinkCellInterval_xy();
 
-	NWGlobal::GetInstance()->GetSimParamters()->GetNWBeam()->GetFluxCenter(beamCenter);
+	NWGlobal::GetInstance()->GetSimParamters().GetNWBeam().GetFluxCenter(beamCenter);
 
 	for (int i = 0; i <= 1; i++) {
 		ceilingNum_OneDim[i] = 2*ceil(max(beamCenter[i] - boundary[i][0], boundary[i][1] - beamCenter[i]) / ceil_Interval[i]);
@@ -538,7 +541,7 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 	ceilingNum_OneDim[0] = ceilingNum_OneDim[1] =  max(ceilingNum_OneDim[0], ceilingNum_OneDim[1]);
 
-	ceilingNum_OneDim[2] = NWGlobal::GetInstance()->GetSimParamters()->GetLinkCellNum_z();
+	ceilingNum_OneDim[2] = NWGlobal::GetInstance()->GetSimParamters().GetLinkCellNum_z();
 	ceil_Interval[2] = ceil((boundary[2][1] - boundary[2][0]) / ceilingNum_OneDim[2]);
 
 	ceilingNum = ceilingNum_OneDim[0] * ceilingNum_OneDim[1] * ceilingNum_OneDim[2];
@@ -580,7 +583,7 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	newBoundary[2][0] = boundary[2][0];
 	newBoundary[2][1] = boundary[2][1];
 
-	outwidth = NWGlobal::GetInstance()->GetSimParamters()->GetOutWidth();
+	outwidth = NWGlobal::GetInstance()->GetSimParamters().GetOutWidth();
 
 	
 
@@ -626,21 +629,22 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 			theSize = iteratorTrackInfo->GetStepsInfo()->size();
 
 			for (int index = 0; index < theSize; index++) {
-				if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+				if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 					if (0 != iteratorTrackInfo->GetStepsInfo()->at(index).GetProcessName().compare(std::string("hadElastic"))) {
 						break;
 					}
 				}
 
-				if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+				if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
 					ceilIndex[0] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
 					ceilIndex[1] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
 					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getZ() - newBoundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
 
-				}else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction() ||
-					ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction() ||
-					ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+				}else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+					ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+					ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+					ConcentReaction(Iso) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
 					ceilIndex[0] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
 					ceilIndex[1] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
@@ -682,12 +686,13 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 					subjectEventID = linkedCells_EventID[subjectLinkID].at(l);
 					subjectTrackID = linkedCells_TrackID[subjectLinkID].at(l);
 					subjectStepID = linkedCells_StepInfo[subjectLinkID].at(l)->GetStepID();
-					if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+					if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 						subjectPostion = linkedCells_StepInfo[subjectLinkID].at(l)->GetpostPosition();
 					}
-					else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction() ||
-						ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction() ||
-						ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+					else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+						ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+						ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+						ConcentReaction(Iso) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
 						subjectPostion = linkedCells_StepInfo[subjectLinkID].at(l)->GetprePosition();
 					}
@@ -720,12 +725,13 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 										if (subjectEventID != objectEventID || subjectTrackID != objectTrackID || subjectStepID != objectStepID) {
 
-											if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+											if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 												objectPostion = linkedCells_StepInfo[objectLinkID].at(m)->GetpostPosition();
 											}
-											else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction() ||
-												ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction() ||
-												ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+											else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+												ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+												ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+												ConcentReaction(Iso) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
 												objectPostion = linkedCells_StepInfo[objectLinkID].at(m)->GetprePosition();
 											}

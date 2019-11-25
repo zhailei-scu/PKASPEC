@@ -39,11 +39,11 @@ NWSimParameters& NWSimParameters::operator=(const NWSimParameters & r) {
 
 	this->linkCellNum_z = r.linkCellNum_z;
 
-	this->targetAtomNumber = r.targetAtomNumber;
-
 	this->targetMaterial = r.targetMaterial;
 
 	this->beam = r.beam;
+
+	this->targetMaterial = r.targetMaterial;
 
 	return *this;
 }
@@ -66,12 +66,9 @@ void NWSimParameters::Clean() {
 
 	this->linkCellNum_z = 10;
 
-	this->targetMaterial.clear();
-	std::string().swap(this->targetMaterial);
-
-	this->targetAtomNumber = 0;
-
 	this->beam.Clean();
+
+	this->targetMaterial.Clean();
 }
 
 
@@ -84,7 +81,7 @@ void NWSimParameters::ReadParametersFromFile(const char*) {
 
 void NWSimParameters::SetDefulatValue() {
 
-	this->theConcentReaction = ConcentReaction(InletEstAndInEstTillEnd);
+	this->theConcentReaction = ConcentReaction(Iso);
 
 	double FluxRange[2][2];
 
@@ -100,12 +97,6 @@ void NWSimParameters::SetDefulatValue() {
 
 	this->linkCellNum_z = 10;
 
-	this->targetMaterial.clear();
-	std::string().swap(this->targetMaterial);
-	this->targetMaterial = std::string("G4_W");
-
-	this->targetAtomNumber = 74;
-
 	//beam
 	this->beam.SetTurnOnMode(BeamMode(Area_Random));
 
@@ -120,6 +111,9 @@ void NWSimParameters::SetDefulatValue() {
 	FluxRange[1][0] = -10 * mm;  //y0
 	FluxRange[1][1] = 10 * mm;  //y1
 	this->beam.SetFluxRange(FluxRange);
+
+	//Material
+	this->targetMaterial.ConstructMaterial(MaterialType(User_W));
 }
 
 void NWSimParameters::PrintParameters() {
@@ -128,9 +122,9 @@ void NWSimParameters::PrintParameters() {
 
 	std::cout << "The event loops number is: " << this->EventLoopsNumber << std::endl;
 
-	std::cout << "The target material is: " << this->targetMaterial.c_str() << std::endl;
+	std::cout << "The target material is: " << this->targetMaterial.GetMaterialName().c_str() << std::endl;
 
-	std::cout << "The target atom number is: " << this->targetAtomNumber << std::endl;
+	std::cout << "The target atom number is: " << this->targetMaterial.GetAtomNumber() << std::endl;
 
 	std::cout << "The out path is : " << OutPath.c_str() << std::endl;
 

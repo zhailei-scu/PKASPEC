@@ -5,6 +5,7 @@
 #include "NWSteppingAction_InletToFirstNonEst.h"
 #include "NWSteppingAction_InletEstAndInEstTillEnd.h"
 #include "NWSteppingAction_MatrixAtoms.h"
+#include "NWSteppingAction_Iso.h"
 #include "NWGlobal.h"
 
 NWActionInitialization::NWActionInitialization() {
@@ -22,7 +23,7 @@ void NWActionInitialization::Build() const{
 
 	//SetUserAction(new NWTrackingAction());
 
-	switch (NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction()) {
+	switch (NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 		case ConcentReaction(InletToLastEst):
 		{
 			NWSteppingAction_InletToLastEst *theNWSteppingAction = new NWSteppingAction_InletToLastEst();
@@ -56,9 +57,17 @@ void NWActionInitialization::Build() const{
 		}
 		break;
 
+		case ConcentReaction(Iso):
+		{
+			NWSteppingAction_Iso *theNWSteppingAction = new NWSteppingAction_Iso();
+
+			SetUserAction(theNWSteppingAction);
+		}
+		break;
+
 		default:
 		{
-			std::cout << "Unknown record way: " << NWGlobal::GetInstance()->GetSimParamters()->GetTheConcentReaction() << std::endl;
+			std::cout << "Unknown record way: " << NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() << std::endl;
 			system("pause");
 			exit(1);
 		}

@@ -79,7 +79,7 @@ public:
 		}
 	}
 
-	inline void GetFluxRange( double (*ptr)[2]){
+	inline void GetFluxRange( double (*ptr)[2]) const{
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 2; j++) {
 				ptr[i][j] = this->FluxRange[i][j];
