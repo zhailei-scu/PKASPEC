@@ -31,6 +31,7 @@ private:
 	std::string name;
 
 	int atomNumber;
+	int baryonNumber;
 
 	double moleMass;
 	double density;  
@@ -63,6 +64,15 @@ public:
 
 	inline void SetAtomNumber(int theNumber) {
 		this->atomNumber = theNumber;
+	}
+
+	inline int GetBaryonNumber() const {
+		return this->baryonNumber;
+	}
+
+
+	inline void SetBaryonNumber(int theBaryonNumber) {
+		this->baryonNumber = theBaryonNumber;
 	}
 
 	inline double GetMoleMass() const {

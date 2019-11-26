@@ -56,12 +56,30 @@ G4VPhysicalVolume* NWGeometry::Construct() {
 		}
 		break;
 
+
 		case(MaterialModel(UserDef)):
 		{
+			G4Isotope *theIso = new G4Isotope(NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetMaterialName().c_str(),
+											  NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetAtomNumber(),
+											  NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetBaryonNumber(),
+											  NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetMoleMass());
+
+			G4Element *elemSingle = new G4Element(NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetMaterialName().c_str(),
+												  NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetMaterialName().c_str(),
+												  1);
+			elemSingle->AddIsotope(theIso, 100 * perCent);
+
+			targetMaterial = new G4Material(NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetMaterialName().c_str(),
+											NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetDensity(),
+											1);
+			targetMaterial->AddElement(elemSingle, 1);
+
+			/*
 			targetMaterial = new G4Material(NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetMaterialName().c_str(),
 											NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetAtomNumber(), 
 											NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetMoleMass(),
 											NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetDensity());
+			*/
 		}
 		break;
 

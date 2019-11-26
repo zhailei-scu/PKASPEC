@@ -35,6 +35,9 @@ private:
 	G4ThreeVector prePosition;
 	G4ThreeVector postPosition;
 	std::string processName;
+	std::string particleName;
+	int AtomNum;
+	int BaryonNum;
 
 public:
 
@@ -114,6 +117,32 @@ public:
 	inline std::string GetProcessName() const {
 		return this->processName;
 	}
+
+
+	inline void SetParticleName(std::string theParticleName) {
+		this->particleName = theParticleName;
+	}
+
+	inline std::string GetParticleName() const {
+		return this->particleName;
+	}
+
+	inline int GetAtomNum() {
+		return this->AtomNum;
+	}
+
+	inline void SetAtomNum(int theAtomNum) {
+		this->AtomNum = theAtomNum;
+	}
+
+	inline int GetBaryonNum() {
+		return this->BaryonNum;
+	}
+
+	inline void SetBaryonNum(int theBaryonNum) {
+		this->BaryonNum = theBaryonNum;
+	}
+
 
 	static QGSP_BIC_HP_Process ConvertToProcessID(std::string processName);
 

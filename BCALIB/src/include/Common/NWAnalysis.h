@@ -22,7 +22,8 @@ public:
 	void AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedData);
 
 	void Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData,double boundary[][2], 
-		std::fstream* ofsAnalysisPath_DistanceXYZ, std::fstream *ofsAnalysisPath_linkedCellPosition);
+		std::fstream* ofsAnalysisPath_DistanceXYZ, std::fstream *ofsAnalysisPath_linkedCellPosition,
+		std::fstream* ofsAnalysisPath_ZoneCount, std::fstream* ofsAnalysisPath_CeilCount);
 
 public:
 	class NWAnalysisGarbo {

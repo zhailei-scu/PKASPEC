@@ -1,4 +1,5 @@
 #include "NWReadInfoStore.h"
+#include "NWGlobal.h"
 #include <fstream>
 
 using namespace std;
@@ -162,7 +163,8 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 	std::stringstream ss;
 	std::string tempBuf;
 	int trackStatus;
-
+	int AtomNumber;
+	int BaryonNum;
 	int trackIndex;
 	int dumpCountTrackInfo;
 
@@ -186,21 +188,41 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 		processname.clear();
 		std::string().swap(processname);
 
-		ss >> EventID
-			>> TrackID
-			>> StepID
-			>> preEng
-			>> postEng
-			>> deltaEng
-			>> deltaTime
-			>> originVector_x >> originVector_y >> originVector_z
-			>> originstep_x >> originstep_y >> originstep_z
-			>> prestep_x >> prestep_y >> prestep_z
-			>> poststep_x >> poststep_y >> poststep_z
-			>> processname
-			>> particleName
-			>> trackStatus;
+		if (ConcentReaction(Iso) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
+			ss >> EventID
+				>> TrackID
+				>> StepID
+				>> preEng
+				>> postEng
+				>> deltaEng
+				>> deltaTime
+				>> originVector_x >> originVector_y >> originVector_z
+				>> originstep_x >> originstep_y >> originstep_z
+				>> prestep_x >> prestep_y >> prestep_z
+				>> poststep_x >> poststep_y >> poststep_z
+				>> processname
+				>> particleName
+				>> AtomNumber
+				>> BaryonNum
+				>> trackStatus;
+		}
+		else {
+			ss >> EventID
+				>> TrackID
+				>> StepID
+				>> preEng
+				>> postEng
+				>> deltaEng
+				>> deltaTime
+				>> originVector_x >> originVector_y >> originVector_z
+				>> originstep_x >> originstep_y >> originstep_z
+				>> prestep_x >> prestep_y >> prestep_z
+				>> poststep_x >> poststep_y >> poststep_z
+				>> processname
+				>> particleName
+				>> trackStatus;
+		}
 
 		std::cout << EventID << std::endl;
 
@@ -262,6 +284,9 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 		tempStepInfo.SetprePosition(G4ThreeVector(prestep_x, prestep_y, prestep_z));
 		tempStepInfo.SetpostPosition(G4ThreeVector(poststep_x, poststep_y, poststep_z));
 		tempStepInfo.SetProcessName(processname);
+		tempStepInfo.SetParticleName(particleName);
+		tempStepInfo.SetAtomNum(AtomNumber);
+		tempStepInfo.SetBaryonNum(BaryonNum);
 
 		tempTrackInfo->GetStepsInfo()->push_back(tempStepInfo);
 	}

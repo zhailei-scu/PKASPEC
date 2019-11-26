@@ -37,6 +37,8 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	std::fstream ofsAnalysis_DeviateAxesDistance;
 	std::fstream ofsAnalysisPath_DistanceXYZ;
 	std::fstream ofsAnalysisPath_linkedCellPosition;
+	std::fstream ofsAnalysisPath_ZoneCount;
+	std::fstream ofsAnalysisPath_CeilXYCount;
 	std::string OrignalDistancePath;
 	std::string AnalysisPath_EqualInterval;
 	std::string AnalysisPath_PowerInterval;
@@ -44,6 +46,8 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	std::string AnalysisPath_DeviateAxesDistance;
 	std::string AnalysisPath_DistanceXYZ;
 	std::string AnalysisPath_linkedCellPosition;
+	std::string AnalysisPath_ZoneCount;
+	std::string AnalysisPath_CeilXYCount;
 	std::vector<double> theDistance;
 	double maxDistance = -1.0;
 	double minDistance = 1E32;
@@ -158,6 +162,25 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 		ss >> AnalysisPath_linkedCellPosition;
 
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "ZoneCount.txt";
+
+		ss >> AnalysisPath_ZoneCount;
+
+
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "CeilCount.txt";
+
+		ss >> AnalysisPath_CeilXYCount;
+
 	}
 	else {
 		ss.clear();
@@ -221,6 +244,26 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 		ss << "DistanceResult_Analysis_linkedCellPosition.txt";
 
 		ss >> AnalysisPath_linkedCellPosition;
+
+
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << "ZoneCount.txt";
+
+		ss >> AnalysisPath_ZoneCount;
+
+
+		ss.clear();
+
+		ss.str("");
+
+		ss << "CeilCount.txt";
+
+		ss >> AnalysisPath_CeilXYCount;
+
 	}
 
 	ofsOrignalDistance.open(OrignalDistancePath, std::ios::out | std::ios::ate);
@@ -267,6 +310,23 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 		<< std::setw(outwidth) << "cent_x(mm)"
 		<< std::setw(outwidth) << "cent_y(mm)"
 		<< std::setw(outwidth) << "cent_z(mm)" << std::endl;
+
+
+	ofsAnalysisPath_ZoneCount.open(AnalysisPath_ZoneCount,std::ios::out | std::ios::ate);
+
+	ofsAnalysisPath_ZoneCount
+		<< std::setw(outwidth) << "ZoneID"
+		<< std::setw(outwidth) << "Count" << std::endl;
+
+
+
+	ofsAnalysisPath_CeilXYCount.open(AnalysisPath_CeilXYCount, std::ios::out | std::ios::ate);
+
+	ofsAnalysisPath_CeilXYCount
+		<< std::setw(outwidth) << "CeilXYID"
+		<< std::setw(outwidth) << "ZoneX"
+		<< std::setw(outwidth) << "ZoneY"
+		<< std::setw(outwidth) << "Count" << std::endl;
 
 
 	it = storedData->begin();
@@ -459,7 +519,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 			<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score_PowerInterval[i] << std::endl;
 	}
 
-	Cal_MinDist_LinkedCell(storedData,boundary, &ofsAnalysisPath_DistanceXYZ,&ofsAnalysisPath_linkedCellPosition);
+	Cal_MinDist_LinkedCell(storedData,boundary, &ofsAnalysisPath_DistanceXYZ,&ofsAnalysisPath_linkedCellPosition,&ofsAnalysisPath_ZoneCount,&ofsAnalysisPath_CeilXYCount);
 
 
 	ofsAnalysis_EqualInterval.close();
@@ -476,6 +536,10 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 	ofsAnalysisPath_linkedCellPosition.close();
 
+	ofsAnalysisPath_ZoneCount.close();
+
+	ofsAnalysisPath_CeilXYCount.close();
+
 	if (NULL != binEnds) delete[] binEnds;
 	if (NULL != score) delete[] score;
 
@@ -485,14 +549,14 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 
 void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData,double boundary[][2],
-	fstream* ofsAnalysisPath_DistanceXYZ,fstream *ofsAnalysisPath_linkedCellPosition){
+	fstream* ofsAnalysisPath_DistanceXYZ,fstream *ofsAnalysisPath_linkedCellPosition,
+	fstream* ofsAnalysisPath_ZoneCount,fstream* ofsAnalysisPath_CeilCount){
 	/*Local Vars*/
 	int ceilingNum;
 	double ceil_Interval[3];
 	int ceilingNum_OneDim[3];
 	int ceilIndex[3];
 	double beamCenter[2];
-	double newBoundary[3][2];
 	int linkID;
 	int subjectLinkID;
 	int objectLinkID;
@@ -501,6 +565,7 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	std::vector<int>* linkedCells_EventID = NULL;
 	std::vector<int>* linkedCells_TrackID = NULL;
 	std::vector<StepInfo*>* linkedCells_StepInfo = NULL;
+	int** ceilXYCount;
 	G4ThreeVector objectPostion;
 	G4ThreeVector pKADist;
 	double distance;
@@ -528,6 +593,10 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	double minDist_z;
 	int shellNum;
 	bool founded;
+	int iInterval;
+	int ZoneCount;
+	int corr_i;
+	int corr_j;
 	/*Body*/
 
 	ceil_Interval[0] = ceil_Interval[1] = NWGlobal::GetInstance()->GetSimParamters().GetLinkCellInterval_xy();
@@ -535,8 +604,8 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	NWGlobal::GetInstance()->GetSimParamters().GetNWBeam().GetFluxCenter(beamCenter);
 
 	for (int i = 0; i <= 1; i++) {
-		ceilingNum_OneDim[i] = 2*ceil(max(beamCenter[i] - boundary[i][0], boundary[i][1] - beamCenter[i]) / ceil_Interval[i]);
-		ceilingNum_OneDim[i] = max(ceilingNum_OneDim[i], 2);
+		ceilingNum_OneDim[i] = 2*ceil(max(beamCenter[i] - boundary[i][0], boundary[i][1] - beamCenter[i]) / ceil_Interval[i]) + 1;
+		ceilingNum_OneDim[i] = max(ceilingNum_OneDim[i], 3);
 	}
 
 	ceilingNum_OneDim[0] = ceilingNum_OneDim[1] =  max(ceilingNum_OneDim[0], ceilingNum_OneDim[1]);
@@ -571,17 +640,9 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 
 	/*Zone ID start from 0(Center zone)*/
-	ZoneNum = ceilingNum_OneDim[0] / 2;
-	ZoneCenter[0] = ceilingNum_OneDim[0] / 2 - 1;
-	ZoneCenter[1] = ceilingNum_OneDim[0] / 2;
-
-	/*new boundary*/
-	for (int i = 0; i <= 1; i++ ) {
-		newBoundary[i][0] = beamCenter[i] - ceil_Interval[i] * ZoneNum;
-		newBoundary[i][1] = beamCenter[i] + ceil_Interval[i] * ZoneNum;
-	}
-	newBoundary[2][0] = boundary[2][0];
-	newBoundary[2][1] = boundary[2][1];
+	ZoneNum = ceilingNum_OneDim[0] / 2  + 1;
+	ZoneCenter[0] = ZoneNum - 1;
+	ZoneCenter[1] = ZoneCenter[0];
 
 	outwidth = NWGlobal::GetInstance()->GetSimParamters().GetOutWidth();
 
@@ -590,6 +651,17 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	linkedCells_EventID = new std::vector<int>[ceilingNum];
 	linkedCells_TrackID = new std::vector<int>[ceilingNum];
 	linkedCells_StepInfo = new std::vector<StepInfo*>[ceilingNum];
+
+
+	ceilXYCount = new int*[ceilingNum_OneDim[0]];
+	for (int i = 0; i < ceilingNum_OneDim[0];i++) {
+		ceilXYCount[i] = new int[ceilingNum_OneDim[1]];
+
+		for (int j = 0; j < ceilingNum_OneDim[1]; j++) {
+			ceilXYCount[i][j] = 0;
+		}
+	}
+
 
 	for (int i = 0; i < ceilingNum; i++) {
 		std::vector<int>().swap(linkedCells_EventID[i]);
@@ -600,20 +672,20 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 	for (int k = 0; k < ceilingNum_OneDim[2]; k++) {
 		for (int j = 0; j < ceilingNum_OneDim[1]; j++) {
-			SubjectZoneID_Y = max(ZoneCenter[0] - j, j - ZoneCenter[1]);
+			SubjectZoneID_Y = max(ZoneCenter[1] - j,j - ZoneCenter[1]);
 
 			for (int i = 0; i < ceilingNum_OneDim[0]; i++) {
 
-				SubjectZoneID_X = max(ZoneCenter[0] - i, i - ZoneCenter[1]);
+				SubjectZoneID_X = max(ZoneCenter[0] - i, i - ZoneCenter[0]);
 
 				SubjectZoneID = max(SubjectZoneID_X, SubjectZoneID_Y);
 
 				*ofsAnalysisPath_linkedCellPosition
 					<< std::setw(outwidth) << k * ceilingNum_OneDim[0] * ceilingNum_OneDim[1] + j * ceilingNum_OneDim[0] + i
 					<< std::setw(outwidth) << SubjectZoneID
-					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[0][0] + (i + 0.5)*ceil_Interval[0]
-					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[1][0] + (j + 0.5)*ceil_Interval[1]
-					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[2][0] + (k + 0.5)*ceil_Interval[2]
+					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << (i - ZoneCenter[0])*ceil_Interval[0]
+					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << (j - ZoneCenter[1])*ceil_Interval[1]
+					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << boundary[2][0] + k*ceil_Interval[2]
 					<< std::endl;
 			}
 		}
@@ -637,18 +709,18 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 				if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
-					ceilIndex[0] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
-					ceilIndex[1] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
-					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getZ() - newBoundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
+					ceilIndex[0] = min(int((abs(iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getX() - beamCenter[0])) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
+					ceilIndex[1] = min(int((abs(iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getY() - beamCenter[1])) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
+					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getZ() - boundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
 
 				}else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
 					ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
 					ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
 					ConcentReaction(Iso) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
-					ceilIndex[0] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
-					ceilIndex[1] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
-					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getZ() - newBoundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
+					ceilIndex[0] = min(int(abs((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getX() - beamCenter[0])) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
+					ceilIndex[1] = min(int(abs((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getY() - beamCenter[1])) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
+					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getZ() - boundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
 
 				}
 
@@ -665,23 +737,25 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 		}
 	}
 
+	for (int j = 0; j < ceilingNum_OneDim[1]; j++) {
 
-	for (int k = 0; k < ceilingNum_OneDim[2]; k++) {
-		for (int j = 0; j < ceilingNum_OneDim[1]; j++) {
+		SubjectZoneID_Y = max(ZoneCenter[1] - j,j - ZoneCenter[1]);
 
-			SubjectZoneID_Y = max(ZoneCenter[0] - j,j - ZoneCenter[1]);
+		for (int i = 0; i < ceilingNum_OneDim[0]; i++) {
 
-			for (int i = 0; i < ceilingNum_OneDim[0]; i++) {
+			SubjectZoneID_X = max(ZoneCenter[0] - i, i - ZoneCenter[0]);
 
-				SubjectZoneID_X = max(ZoneCenter[0] - i, i - ZoneCenter[1]);
+			SubjectZoneID = max(SubjectZoneID_X, SubjectZoneID_Y);
 
-				SubjectZoneID = max(SubjectZoneID_X, SubjectZoneID_Y);
+			for (int k = 0; k < ceilingNum_OneDim[2]; k++) {
 
 				subjectLinkID = k * ceilingNum_OneDim[0]*ceilingNum_OneDim[1] + j * ceilingNum_OneDim[0] + i;
 
 				std::cout <<"cell ID: "<< subjectLinkID << " of total Cell Number: " << ceilingNum << std::endl;
 
 				for (size_t l = 0; l < linkedCells_StepInfo[subjectLinkID].size(); l++) {
+
+					ceilXYCount[i][j]++;
 
 					subjectEventID = linkedCells_EventID[subjectLinkID].at(l);
 					subjectTrackID = linkedCells_TrackID[subjectLinkID].at(l);
@@ -753,8 +827,8 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 												minDist_objectTrackID = objectTrackID;
 												minDist_objectStepID = objectStepID;
 
-												ObjectZoneID_X = max(ZoneCenter[0] - ii, ii - ZoneCenter[1]);
-												ObjectZoneID_Y = max(ZoneCenter[0] - jj, jj - ZoneCenter[1]);
+												ObjectZoneID_X = max(ZoneCenter[0] - ii, ii - ZoneCenter[0]);
+												ObjectZoneID_Y = max(ZoneCenter[1] - jj, jj - ZoneCenter[1]);
 												ObjectZoneID = max(ObjectZoneID_X, ObjectZoneID_Y);
 
 												founded = true;
@@ -794,10 +868,55 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 		}
 	}
 
+	for (int ZoneID = 0; ZoneID < ZoneNum; ZoneID++) {
+
+		ZoneCount = 0;
+
+		for (int j = -ZoneID; j <= ZoneID; j = j++) {
+
+			if (j == -ZoneID || j == ZoneID) {
+				iInterval = 1;
+			}
+			else {
+				iInterval = 2 * ZoneID;
+			}
+
+			corr_j = ZoneCenter[1] + j;
+
+
+			for (int i = -ZoneID; i <= ZoneID; i = i + iInterval) {
+
+				corr_i = ZoneCenter[0] + i;
+
+				ZoneCount += ceilXYCount[corr_i][corr_j];
+
+				*ofsAnalysisPath_CeilCount
+					<< std::setw(outwidth)<< corr_j*ceilingNum_OneDim[0] + corr_i
+					<< std::setw(outwidth) << i
+					<< std::setw(outwidth) << j
+					<< std::setw(outwidth) << ceilXYCount[corr_i][corr_j] << std::endl;
+
+			}
+		}
+
+
+		*ofsAnalysisPath_ZoneCount
+			<< std::setw(outwidth) << ZoneID
+			<< std::setw(outwidth) << ZoneCount << std::endl;
+
+	}
+
+
 
 	if (NULL != linkedCells_EventID) delete[] linkedCells_EventID;
 	if (NULL != linkedCells_TrackID) delete[] linkedCells_TrackID;
 	if (NULL != linkedCells_StepInfo) delete[] linkedCells_StepInfo;
+
+	for (int i = 0; i < ceilingNum_OneDim[0]; i++) {
+		delete[] ceilXYCount[i];
+		ceilXYCount[i] = NULL;
+	}
+	delete[] ceilXYCount;
 
 }
 
