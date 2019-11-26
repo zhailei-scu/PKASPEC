@@ -323,6 +323,7 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 	ofsAnalysisPath_CeilXYCount.open(AnalysisPath_CeilXYCount, std::ios::out | std::ios::ate);
 
 	ofsAnalysisPath_CeilXYCount
+		<< std::setw(outwidth) << "ZoneID"
 		<< std::setw(outwidth) << "CeilXYID"
 		<< std::setw(outwidth) << "ZoneX"
 		<< std::setw(outwidth) << "ZoneY"
@@ -556,6 +557,7 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	double ceil_Interval[3];
 	int ceilingNum_OneDim[3];
 	int ceilIndex[3];
+	double newBoundary[3][2];
 	double beamCenter[2];
 	int linkID;
 	int subjectLinkID;
@@ -646,6 +648,13 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 	outwidth = NWGlobal::GetInstance()->GetSimParamters().GetOutWidth();
 
+
+	for (int i = 0; i <= 1; i++) {
+		newBoundary[i][0] = (beamCenter[i] - (ZoneNum + 0.50)*ceil_Interval[i]);
+		newBoundary[i][1] = (beamCenter[i] + (ZoneNum + 0.50)*ceil_Interval[i]);
+	}
+	newBoundary[2][0] = boundary[2][0];
+	newBoundary[2][1] = boundary[2][1];
 	
 
 	linkedCells_EventID = new std::vector<int>[ceilingNum];
@@ -709,18 +718,18 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 				if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
-					ceilIndex[0] = min(int((abs(iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getX() - beamCenter[0])) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
-					ceilIndex[1] = min(int((abs(iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getY() - beamCenter[1])) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
-					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getZ() - boundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
+					ceilIndex[0] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
+					ceilIndex[1] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
+					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getZ() - newBoundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
 
 				}else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
 					ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
 					ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
 					ConcentReaction(Iso) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
-					ceilIndex[0] = min(int(abs((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getX() - beamCenter[0])) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
-					ceilIndex[1] = min(int(abs((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getY() - beamCenter[1])) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
-					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getZ() - boundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
+					ceilIndex[0] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
+					ceilIndex[1] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
+					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getZ() - newBoundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
 
 				}
 
@@ -751,7 +760,10 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 				subjectLinkID = k * ceilingNum_OneDim[0]*ceilingNum_OneDim[1] + j * ceilingNum_OneDim[0] + i;
 
-				std::cout <<"cell ID: "<< subjectLinkID << " of total Cell Number: " << ceilingNum << std::endl;
+
+				if (i == ceilingNum_OneDim[0]  && k == ceilingNum_OneDim[2]) {
+					std::cout << "cell ID: " << subjectLinkID << " of total Cell Number: " << ceilingNum << std::endl;
+				}
 
 				for (size_t l = 0; l < linkedCells_StepInfo[subjectLinkID].size(); l++) {
 
@@ -872,7 +884,7 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 		ZoneCount = 0;
 
-		for (int j = -ZoneID; j <= ZoneID; j = j++) {
+		for (int j = -ZoneID; j <= ZoneID; j = j+1) {
 
 			if (j == -ZoneID || j == ZoneID) {
 				iInterval = 1;
@@ -891,7 +903,8 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 				ZoneCount += ceilXYCount[corr_i][corr_j];
 
 				*ofsAnalysisPath_CeilCount
-					<< std::setw(outwidth)<< corr_j*ceilingNum_OneDim[0] + corr_i
+					<< std::setw(outwidth) << ZoneID
+					<< std::setw(outwidth) << corr_j*ceilingNum_OneDim[0] + corr_i
 					<< std::setw(outwidth) << i
 					<< std::setw(outwidth) << j
 					<< std::setw(outwidth) << ceilXYCount[corr_i][corr_j] << std::endl;

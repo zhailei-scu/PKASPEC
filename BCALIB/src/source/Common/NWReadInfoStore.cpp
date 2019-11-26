@@ -224,7 +224,10 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 				>> trackStatus;
 		}
 
-		std::cout << EventID << std::endl;
+
+		if (0 == EventID % 100) {
+			std::cout << EventID << std::endl;
+		}
 
 		if (0 == NWInfoStore::GetInstance()->GetEventsInfo()->count(EventID)) {
 
