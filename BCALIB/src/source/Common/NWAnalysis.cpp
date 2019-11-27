@@ -640,8 +640,18 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 		std::cout << "y cell number : " << ceilingNum_OneDim[1] << std::endl;
 		std::cout << "z cell number : " << ceilingNum_OneDim[2] << std::endl;
 		std::cout << "the max cell number x*y*z : " << MAXCELLNUM << std::endl;
-		system("pause");
-		exit(1);
+		std::cout << "So we would only consider a little zone" << std::endl;
+		std::cout << "The x bin number in x would be :" << MAXCELLNUM_X << std::endl;
+		std::cout << "The x bin number in y would be :" << MAXCELLNUM_Y << std::endl;
+		std::cout << "The x bin number in z would be :" << MAXCELLNUM_Z << std::endl;
+
+		ceilingNum_OneDim[0] = MAXCELLNUM_X;
+		ceilingNum_OneDim[1] = MAXCELLNUM_Y;
+		ceilingNum_OneDim[2] = MAXCELLNUM_Z;
+
+		ceil_Interval[2] = ceil((boundary[2][1] - boundary[2][0]) / ceilingNum_OneDim[2]);
+
+		ceilingNum = ceilingNum_OneDim[0] * ceilingNum_OneDim[1] * ceilingNum_OneDim[2];
 	}
 
 
@@ -664,6 +674,12 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 	}
 	newBoundary[2][0] = boundary[2][0];
 	newBoundary[2][1] = boundary[2][1];
+
+
+	std::cout << "new_boundary_x " << newBoundary[0][0] << " " << newBoundary[0][1] << std::endl;
+	std::cout << "new_boundary_y " << newBoundary[1][0] << " " << newBoundary[1][1] << std::endl;
+	std::cout << "new_boundary_z " << newBoundary[2][0] << " " << newBoundary[2][1] << std::endl;
+
 	
 
 	linkedCells_EventID = new std::vector<int>[ceilingNum];
@@ -703,7 +719,7 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 					<< std::setw(outwidth) << SubjectZoneID
 					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << (i - ZoneCenter[0])*ceil_Interval[0]
 					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << (j - ZoneCenter[1])*ceil_Interval[1]
-					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << boundary[2][0] + k*ceil_Interval[2]
+					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[2][0] + k*ceil_Interval[2]
 					<< std::endl;
 			}
 		}
@@ -727,6 +743,15 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 				if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
+					if (iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getX() < newBoundary[0][0] || 
+						iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getX() > newBoundary[0][1] || 
+						iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getY() < newBoundary[1][0] ||
+						iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getY() > newBoundary[1][1] ||
+						iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getZ() < newBoundary[2][0] ||
+						iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getZ() > newBoundary[2][1]) {
+						continue;
+					}
+
 					ceilIndex[0] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
 					ceilIndex[1] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
 					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getZ() - newBoundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
@@ -735,6 +760,19 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 					ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
 					ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
 					ConcentReaction(Iso) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
+
+
+					if (iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getX() < newBoundary[0][0] ||
+						iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getX() > newBoundary[0][1] ||
+						iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getY() < newBoundary[1][0] ||
+						iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getY() > newBoundary[1][1] ||
+						iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getZ() < newBoundary[2][0] ||
+						iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getZ() > newBoundary[2][1]) {
+
+						continue;
+					}
+
+
 
 					ceilIndex[0] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
 					ceilIndex[1] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
