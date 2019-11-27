@@ -451,73 +451,80 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 		}
 	}
 
-	std::cout << "minDistance: " << minDistance << std::endl;
-	std::cout << "maxDistance: " << maxDistance << std::endl;
+	if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+		ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+		ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+		ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 
-	minDistance = std::max(minPrecision, minDistance);
+		std::cout << "minDistance: " << minDistance << std::endl;
+		std::cout << "maxDistance: " << maxDistance << std::endl;
 
-	minLog = std::floor(std::log10(minDistance));
-	maxLog = std::ceil(std::log10(maxDistance));
+		minDistance = std::max(minPrecision, minDistance);
 
-	binNum = (maxLog - minLog)*BinNumberEachPower;
+		minLog = std::floor(std::log10(minDistance));
+		maxLog = std::ceil(std::log10(maxDistance));
 
-	binEnds = new double[binNum];
-	score = new double[binNum];
+		binNum = (maxLog - minLog)*BinNumberEachPower;
 
-	for (int i = 0; i < binNum; i++) {
-		double base = pow(10, minLog + i / BinNumberEachPower);
-		binEnds[i] = base + (i % BinNumberEachPower)*base * 9 / BinNumberEachPower;
-		score[i] = 0;
-	}
+		binEnds = new double[binNum];
+		score = new double[binNum];
 
-	for (int i = 0; i < PowerInterval_BinNum; i++) {
-		binEnds_PowerInterval[i] = PowerInterval_Min*std::pow(10, i*PowerInterval_DeltaLength);
-		score_PowerInterval[i] = 0;
-	}
+		for (int i = 0; i < binNum; i++) {
+			double base = pow(10, minLog + i / BinNumberEachPower);
+			binEnds[i] = base + (i % BinNumberEachPower)*base * 9 / BinNumberEachPower;
+			score[i] = 0;
+		}
 
-	for (std::vector<double>::iterator itDistance = theDistance.begin(); itDistance != theDistance.end(); itDistance++) {
+		for (int i = 0; i < PowerInterval_BinNum; i++) {
+			binEnds_PowerInterval[i] = PowerInterval_Min * std::pow(10, i*PowerInterval_DeltaLength);
+			score_PowerInterval[i] = 0;
+		}
 
-		/*
-		int  LogPos = std::floor(std::log10(*itDistance));
+		for (std::vector<double>::iterator itDistance = theDistance.begin(); itDistance != theDistance.end(); itDistance++) {
 
-		int truePos = (LogPos - minLog)*NWGlobal::GetInstance()->BinNumberEachPower
-			+ floor(NWGlobal::GetInstance()->BinNumberEachPower*((*itDistance) / pow(10, LogPos)) / 9);
-		
-		score[truePos]++;
-		*/
+			/*
+			int  LogPos = std::floor(std::log10(*itDistance));
+
+			int truePos = (LogPos - minLog)*NWGlobal::GetInstance()->BinNumberEachPower
+				+ floor(NWGlobal::GetInstance()->BinNumberEachPower*((*itDistance) / pow(10, LogPos)) / 9);
+
+			score[truePos]++;
+			*/
+
+			for (int i = 0; i < binNum; i++) {
+
+				if (*itDistance < binEnds[i]) {
+					score[i]++;
+					break;
+				}
+			}
+
+			if (*itDistance >= PowerInterval_Min && *itDistance <= PowerInterval_Max) {
+				int binPos = std::floor((std::log10(*itDistance) - std::log10(PowerInterval_Min)) / PowerInterval_DeltaLength);
+				score_PowerInterval[binPos]++;
+			}
+
+		}
+
 
 		for (int i = 0; i < binNum; i++) {
 
-			if (*itDistance < binEnds[i]) {
-				score[i]++;
-				break;
-			}
+			score[i] = score[i] / pow(10, std::max(i - 1, 0) / BinNumberEachPower);
+
 		}
 
-		if (*itDistance >= PowerInterval_Min && *itDistance <= PowerInterval_Max) {
-			int binPos = std::floor((std::log10(*itDistance) - std::log10(PowerInterval_Min)) / PowerInterval_DeltaLength);
-			score_PowerInterval[binPos]++;
+
+		for (int i = 0; i < binNum; i++) {
+			ofsAnalysis_EqualInterval << std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << binEnds[i]
+				<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score[i] << std::endl;
 		}
-		
-	}
 
 
-	for (int i = 0; i < binNum; i++) {
+		for (int i = 0; i < PowerInterval_BinNum; i++) {
+			ofsAnalysis_PowerInterval << std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << binEnds_PowerInterval[i]
+				<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score_PowerInterval[i] << std::endl;
+		}
 
-		score[i] = score[i] / pow(10, std::max(i-1,0) / BinNumberEachPower);
-
-	}
-
-
-	for (int i = 0; i < binNum; i++) {
-		ofsAnalysis_EqualInterval << std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << binEnds[i]
-					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score[i] << std::endl;
-	}
-
-
-	for (int i = 0; i < PowerInterval_BinNum; i++) {
-		ofsAnalysis_PowerInterval << std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << binEnds_PowerInterval[i]
-			<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << score_PowerInterval[i] << std::endl;
 	}
 
 	Cal_MinDist_LinkedCell(storedData,boundary, &ofsAnalysisPath_DistanceXYZ,&ofsAnalysisPath_linkedCellPosition,&ofsAnalysisPath_ZoneCount,&ofsAnalysisPath_CeilXYCount);
