@@ -629,6 +629,11 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 		ceilIndex[i] = 0;
 	}
 
+
+	std::cout << "boundary_x " << boundary[0][0] << " " << boundary[0][1] << std::endl;
+	std::cout << "boundary_y " << boundary[1][0] << " " << boundary[1][1] << std::endl;
+	std::cout << "boundary_z " << boundary[2][0] << " " << boundary[2][1] << std::endl;
+
 	if (ceilingNum > MAXCELLNUM) {
 		std::cout << "The cell x y interval and z cell number exceed the memory limit." << std::endl;
 		std::cout << "x cell number : " << ceilingNum_OneDim[0] << std::endl;
@@ -638,10 +643,6 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 		system("pause");
 		exit(1);
 	}
-
-	std::cout << "boundary_x " << boundary[0][0] << " " << boundary[0][1] << std::endl;
-	std::cout << "boundary_y " << boundary[1][0] << " " << boundary[1][1] << std::endl;
-	std::cout << "boundary_z " << boundary[2][0] << " " << boundary[2][1] << std::endl;
 
 
 	std::cout << "cellnum_x " << ceilingNum_OneDim[0] << std::endl;

@@ -93,7 +93,7 @@ void NWSimParameters::SetDefulatValue() {
 
 	this->flushFrequence = 100;
 
-	this->linkCellInterval_xy = 10 * mm;
+	this->linkCellInterval_xy = 20 * mm;
 
 	this->linkCellNum_z = 10;
 
