@@ -95,7 +95,8 @@ void NWAnalysis::AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedDat
 
 	PowerInterval_DeltaLength = (std::log10(PowerInterval_Max) - std::log10(PowerInterval_Min)) / PowerInterval_BinNum;
 
-
+	score = NULL;
+	binEnds = NULL;
 
 
 	if(NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->length() >0){
