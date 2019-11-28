@@ -669,8 +669,8 @@ void NWAnalysis::Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* s
 
 
 	for (int i = 0; i <= 1; i++) {
-		newBoundary[i][0] = (beamCenter[i] - (ZoneNum + 0.50)*ceil_Interval[i]);
-		newBoundary[i][1] = (beamCenter[i] + (ZoneNum + 0.50)*ceil_Interval[i]);
+		newBoundary[i][0] = (beamCenter[i] - (ZoneNum - 1 + 0.50)*ceil_Interval[i]);
+		newBoundary[i][1] = (beamCenter[i] + (ZoneNum - 1 + 0.50)*ceil_Interval[i]);
 	}
 	newBoundary[2][0] = boundary[2][0];
 	newBoundary[2][1] = boundary[2][1];
