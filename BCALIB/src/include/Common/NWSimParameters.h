@@ -56,6 +56,8 @@ private:
 
 	int linkCellNum_z;
 
+	double linkCellInterval_z;
+
 private:
 	NWMaterial targetMaterial;
 
@@ -118,6 +120,15 @@ public:
 
 	inline double GetLinkCellInterval_xy() const{
 		return this->linkCellInterval_xy;
+	}
+
+
+	inline void SetLinkCellInterval_z(const double theLinkCellInterval_z) {
+		this->linkCellInterval_z = theLinkCellInterval_z;
+	}
+
+	inline double GetLinkCellInterval_z() const {
+		return this->linkCellInterval_z;
 	}
 
 

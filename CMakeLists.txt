@@ -50,7 +50,7 @@ set(BCALIBS Common)
 set(BCABINS APPLICATIONS ANALYSIS)
 
 set(APPS NeutronW_Simulation)
-set(ANALYS NeutronW_Analysis)
+set(ANALYS NeutronW_Analysis New_NeutronW_Analysis)
 
 foreach(UTILLIBNAME ${UTILLIBS})
   add_subdirectory(${PROJECT_SOURCE_DIR}/LIB/${UTILLIBNAME})

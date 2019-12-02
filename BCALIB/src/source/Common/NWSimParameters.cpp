@@ -39,6 +39,8 @@ NWSimParameters& NWSimParameters::operator=(const NWSimParameters & r) {
 
 	this->linkCellNum_z = r.linkCellNum_z;
 
+	this->linkCellInterval_z = r.linkCellInterval_z;
+
 	this->targetMaterial = r.targetMaterial;
 
 	this->beam = r.beam;
@@ -62,9 +64,11 @@ void NWSimParameters::Clean() {
 
 	this->EventLoopsNumber = 0;
 
-	this->linkCellInterval_xy = 10 * mm;
+	this->linkCellInterval_xy = 20 * mm;
 
 	this->linkCellNum_z = 10;
+
+	this->linkCellInterval_z = 20 *mm;
 
 	this->beam.Clean();
 
@@ -95,12 +99,14 @@ void NWSimParameters::SetDefulatValue() {
 
 	this->linkCellInterval_xy = 20 * mm;
 
+	this->linkCellInterval_z = 20 * mm;
+
 	this->linkCellNum_z = 10;
 
 	//beam
 	this->beam.SetTurnOnMode(BeamMode(Area_Random));
 
-	this->beam.SetGunEnergy(15);
+	this->beam.SetGunEnergy(14.4);
 
 	this->beam.SetGunParticleName(G4String("neutron"));
 
@@ -113,7 +119,7 @@ void NWSimParameters::SetDefulatValue() {
 	this->beam.SetFluxRange(FluxRange);
 
 	//Material
-	this->targetMaterial.ConstructMaterial(MaterialType(User_W));
+	this->targetMaterial.ConstructMaterial(MaterialType(G4_W));
 }
 
 void NWSimParameters::PrintParameters() {
