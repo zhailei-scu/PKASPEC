@@ -1774,7 +1774,7 @@ void NWAnalysis::New_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>
 			SubjectZoneID = max(SubjectZoneID_X, SubjectZoneID_Y);
 
 			minDist = 1.e32;
-			shellNum = 1;
+			shellNum = 0;
 			founded = false;
 
 			minDist_objectEventID = -1;
