@@ -210,7 +210,7 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 
 	for (int i = 0; i < totalCeilZ; i++) {
 
-		for (int j = 0; j<linkedCells_ShiftPos[i].size(); j++) {
+		for (size_t j = 0; j<linkedCells_ShiftPos[i].size(); j++) {
 			subjectShifPos = linkedCells_ShiftPos[i].at(j);
 			objectShifPos = linkedCells_ShiftPos[ResultCeilZID[index]].at(ResultInnerCeilZID[index]);
 			pKADist = subjectShifPos - objectShifPos;
