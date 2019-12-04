@@ -123,7 +123,7 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 
 		StartID[i] = index;
 
-		for (std::vector<G4ThreeVector>::iterator it = linkedCells_ShiftPos[i].begin; it != linkedCells_ShiftPos[i].end; it++) {
+		for (std::vector<G4ThreeVector>::iterator it = linkedCells_ShiftPos[i].begin(); it != linkedCells_ShiftPos[i].end(); it++) {
 			ShiftPos[index] = *it;
 			CeilZID[index] = i;
 
