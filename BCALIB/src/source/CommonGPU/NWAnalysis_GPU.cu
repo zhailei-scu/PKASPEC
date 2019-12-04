@@ -32,7 +32,7 @@ __global__ void Kernel_Statistic(ThreeVector* Dev_ShiftPos,int *Dev_CeilZID, int
 		subjectShiftPos[2] = Dev_ShiftPos[cid].z;
 
 		while (!founded) {
-			for (int z = std::max(CeilZID - shellNum,0); z < std::min(CeilZID + shellNum+1, totalCeilZ); z++) {
+			for (int z = max(CeilZID - shellNum,0); z < min(CeilZID + shellNum+1, totalCeilZ); z++) {
 
 				for (int kk = Dev_StartID[z]; kk < Dev_StartID[z] + Dev_PKANumEachCeilZ[z]; kk++) {
 
