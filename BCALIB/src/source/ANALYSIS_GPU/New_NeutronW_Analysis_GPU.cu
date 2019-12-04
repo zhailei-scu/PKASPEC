@@ -1,6 +1,6 @@
 #include <iostream>
 #include "NWGlobal.h"
-#include "NWAnalysis_GPU.h"
+#include "NWAnalysis_GPU.cuh"
 #include "NWSimParameters.h"
 #include <sstream>
 

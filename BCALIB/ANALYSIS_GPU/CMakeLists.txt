@@ -5,7 +5,8 @@ find_package(CUDA REQUIRED)
 
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
-set(CUDA_NVCC_FLAGS -gencode arch=compute_35,code=sm_35)
+SET(CMAKE_CXX_FLAGS "-O2 -Wall")
+set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_35,code=sm_35;-std=c++11;-x=cu)
 #set(GENCODE ${GENCODE} -gencode arch=compute_70,code=sm_70)
 #set(GENCODE ${GENCODE} -gencode arch=compute_50,code=sm_50)
 #set(GENCODE ${GENCODE} -gencode arch=compute_35,code=sm_35)
