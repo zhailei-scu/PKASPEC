@@ -227,11 +227,11 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 				<< std::setw(outwidth) << linkedCells_EventID[i].at(j)
 				<< std::setw(outwidth) << linkedCells_TrackID[i].at(j)
 				<< std::setw(outwidth) << linkedCells_StepInfo[i].at(i)->GetStepID()
-				<< std::setw(outwidth) << linkedCells_ZoneID[ResultCeilZID[index]].at[ResultInnerCeilZID[index]]
+				<< std::setw(outwidth) << linkedCells_ZoneID[ResultCeilZID[index]].at(ResultInnerCeilZID[index])
 				<< std::setw(outwidth) << j
-				<< std::setw(outwidth) << linkedCells_EventID[ResultCeilZID[index]].at[ResultInnerCeilZID[index]]
-				<< std::setw(outwidth) << linkedCells_TrackID[ResultCeilZID[index]].at[ResultInnerCeilZID[index]]
-				<< std::setw(outwidth) << linkedCells_StepInfo[ResultCeilZID[index]].at[ResultInnerCeilZID[index]]->GetStepID()
+				<< std::setw(outwidth) << linkedCells_EventID[ResultCeilZID[index]].at(ResultInnerCeilZID[index])
+				<< std::setw(outwidth) << linkedCells_TrackID[ResultCeilZID[index]].at(ResultInnerCeilZID[index])
+				<< std::setw(outwidth) << linkedCells_StepInfo[ResultCeilZID[index]].at(ResultInnerCeilZID[index])->GetStepID()
 				<< std::setw(outwidth) << subjectTruePosition.getX()
 				<< std::setw(outwidth) << subjectTruePosition.getY()
 				<< std::setw(outwidth) << subjectTruePosition.getZ()
