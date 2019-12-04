@@ -3,7 +3,7 @@ project(BCAPKASpec)
 
 find_package(CUDA REQUIRED)
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
+#set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(CUDA_NVCC_FLAGS -gencode arch=compute_35,code=sm_35)
 #set(GENCODE ${GENCODE} -gencode arch=compute_70,code=sm_70)

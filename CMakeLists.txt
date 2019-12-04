@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project(BCAPKASpec)
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
+#set(CMAKE_VERBOSE_MAKEFILE ON)
 
 option(WITH_GEANT4_UIVIS "Build with geant4 UI and vis driver" ON)
 
