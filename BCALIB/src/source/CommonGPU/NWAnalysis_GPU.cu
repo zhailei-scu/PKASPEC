@@ -8,15 +8,14 @@
 #include <iomanip>
 #include <algorithm>
 
-__global__ void Kernel_Statistic(G4ThreeVector* Dev_ShiftPos,int *Dev_CeilZID, int *Dev_StartID,int *Dev_PKANumEachCeilZ,int *Dev_ResultInnerCeilZID, int *Dev_ResultCeilZID, int totalCeilZ,int NPKA) {
+__global__ void Kernel_Statistic(ThreeVector* Dev_ShiftPos,int *Dev_CeilZID, int *Dev_StartID,int *Dev_PKANumEachCeilZ,int *Dev_ResultInnerCeilZID, int *Dev_ResultCeilZID, int totalCeilZ,int NPKA) {
 	int tid = threadIdx.y*blockDim.x + threadIdx.x;
 	int bid = blockIdx.y*gridDim.x + blockIdx.x;
 	int cid = bid * BLOCKSIZE + tid;
 	int shellNum = 0;
 	bool founded = false;
-	G4ThreeVector subjectShiftPos;
-	G4ThreeVector objectShiftPos;
-	G4ThreeVector pKADist;
+	double subjectShiftPos[3];
+	double objectShiftPos[3];
 	double distance;
 	double minDist;
 	int resultInnerCeilZID;
@@ -28,7 +27,9 @@ __global__ void Kernel_Statistic(G4ThreeVector* Dev_ShiftPos,int *Dev_CeilZID, i
 	if (cid < NPKA) {
 		int CeilZID = Dev_CeilZID[cid];
 
-		subjectShiftPos = Dev_ShiftPos[cid];
+		subjectShiftPos[0] = Dev_ShiftPos[cid].x;
+		subjectShiftPos[1] = Dev_ShiftPos[cid].y;
+		subjectShiftPos[2] = Dev_ShiftPos[cid].z;
 
 		while (!founded) {
 			for (int z = std::max(CeilZID - shellNum,0); z < std::min(CeilZID + shellNum+1, totalCeilZ); z++) {
@@ -36,10 +37,15 @@ __global__ void Kernel_Statistic(G4ThreeVector* Dev_ShiftPos,int *Dev_CeilZID, i
 				for (int kk = Dev_StartID[z]; kk < Dev_StartID[z] + Dev_PKANumEachCeilZ[z]; kk++) {
 
 					if (kk != cid) {
-						objectShiftPos = Dev_ShiftPos[kk];
+						objectShiftPos[0] = Dev_ShiftPos[kk].x;
+						objectShiftPos[1] = Dev_ShiftPos[kk].y;
+						objectShiftPos[2] = Dev_ShiftPos[kk].z;
 
-						pKADist = subjectShiftPos - objectShiftPos;
-						distance = pKADist.mag();
+						distance = std::pow(subjectShiftPos[0] - objectShiftPos[0],2) + 
+								   std::pow(subjectShiftPos[1] - objectShiftPos[1], 2)+
+								   std::pow(subjectShiftPos[2] - objectShiftPos[2], 2);
+
+						distance = std::sqrt(distance);
 
 						if (distance < minDist) {
 
@@ -77,8 +83,8 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 					int totalCeilZ, int totalSize,std::fstream* ofsAnalysisPath_DistanceXYZ) {
 
 	/*Local Vars*/
-	G4ThreeVector* ShiftPos;
-	G4ThreeVector* Dev_ShiftPos;
+	ThreeVector* ShiftPos;
+	ThreeVector* Dev_ShiftPos;
 	int *CeilZID;
 	int *Dev_CeilZID;
 	int *ResultInnerCeilZID;
@@ -106,7 +112,7 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 
 	outwidth = NWGlobal::GetInstance()->GetSimParamters().GetOutWidth();
 
-	ShiftPos = new G4ThreeVector[totalSize];
+	ShiftPos = new ThreeVector[totalSize];
 
 	ResultInnerCeilZID = new int[totalSize];
 
@@ -124,7 +130,9 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 		StartID[i] = index;
 
 		for (std::vector<G4ThreeVector>::iterator it = linkedCells_ShiftPos[i].begin(); it != linkedCells_ShiftPos[i].end(); it++) {
-			ShiftPos[index] = *it;
+			ShiftPos[index].x = it->getX();
+			ShiftPos[index].y = it->getY();
+			ShiftPos[index].z = it->getZ();
 			CeilZID[index] = i;
 
 			index++;
@@ -133,7 +141,7 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 		PKANumEachCeilZ[i] = linkedCells_ShiftPos[i].size();
 	}
 
-	cudaStatus = cudaMalloc((void**)&Dev_ShiftPos, sizeof(G4ThreeVector)*totalSize);
+	cudaStatus = cudaMalloc((void**)&Dev_ShiftPos, sizeof(ThreeVector)*totalSize);
 	if (cudaStatus != cudaSuccess) {
 		std::cout << "The memory allocate not right !" << std::endl;
 		system("pause");
@@ -176,7 +184,7 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 		exit(1);
 	}
 
-	cudaStatus = cudaMemcpy(Dev_ShiftPos, ShiftPos, sizeof(G4ThreeVector)*totalSize, cudaMemcpyHostToDevice);
+	cudaStatus = cudaMemcpy(Dev_ShiftPos, ShiftPos, sizeof(ThreeVector)*totalSize, cudaMemcpyHostToDevice);
 
 	cudaStatus = cudaMemcpy(Dev_CeilZID, CeilZID, sizeof(int)*totalSize, cudaMemcpyHostToDevice);
 
@@ -292,9 +300,6 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 	int SubjectZoneID_X;
 	int SubjectZoneID_Y;
 	int theSize;
-	int subjectEventID;
-	int subjectTrackID;
-	int subjectStepID;
 	int iInterval;
 	int ZoneCount;
 	int corr_i;

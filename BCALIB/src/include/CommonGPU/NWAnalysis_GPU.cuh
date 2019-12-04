@@ -6,6 +6,13 @@
 
 #include "NWAnalysis.h"
 
+struct ThreeVector
+{
+	double x;
+	double y;
+	double z;
+};
+
 
 class NWAnalysis_GPU : public NWAnalysis {
 public:
