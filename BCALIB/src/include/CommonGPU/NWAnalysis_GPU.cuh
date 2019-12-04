@@ -2,6 +2,7 @@
 #define NWANALYSIS_GPU_H
 
 #define BLOCKSIZE 512
+#define GRIDDIMX 64;
 
 #include "NWAnalysis.h"
 

@@ -8,26 +8,261 @@
 #include <iomanip>
 #include <algorithm>
 
-/*
-__global__ void Kernel_Statistic(std::vector<int>* Dev_linkedCells_EventID,
-								 std::vector<int>* Dev_linkedCells_TrackID,
-								 std::vector<StepInfo*>* Dev_linkedCells_StepInfo,
-								 std::vector<G4ThreeVector>* Dev_linkedCells_ShiftPos,
-								int NPKA) {
-								*/
-__global__ void Kernel_Statistic();
-__global__ void Kernel_Statistic() {
+__global__ void Kernel_Statistic(G4ThreeVector* Dev_ShiftPos,int *Dev_CeilZID, int *Dev_StartID,int *Dev_PKANumEachCeilZ,int *Dev_ResultInnerCeilZID, int *Dev_ResultCeilZID, int totalCeilZ,int NPKA) {
 	int tid = threadIdx.y*blockDim.x + threadIdx.x;
 	int bid = blockIdx.y*gridDim.x + blockIdx.x;
 	int cid = bid * BLOCKSIZE + tid;
+	int shellNum = 0;
+	bool founded = false;
+	G4ThreeVector subjectShiftPos;
+	G4ThreeVector objectShiftPos;
+	G4ThreeVector pKADist;
+	double distance;
+	double minDist;
+	int resultInnerCeilZID;
+	int resultCeilZID;
+	/*Body*/
+
+	minDist = 1.e32;
+
+	if (cid < NPKA) {
+		int CeilZID = Dev_CeilZID[cid];
+
+		subjectShiftPos = Dev_ShiftPos[cid];
+
+		while (!founded) {
+			for (int z = std::max(CeilZID - shellNum,0); z < std::min(CeilZID + shellNum+1, totalCeilZ); z++) {
+
+				for (int kk = Dev_StartID[z]; kk < Dev_StartID[z] + Dev_PKANumEachCeilZ[z]; kk++) {
+
+					if (kk != cid) {
+						objectShiftPos = Dev_ShiftPos[kk];
+
+						pKADist = subjectShiftPos - objectShiftPos;
+						distance = pKADist.mag();
+
+						if (distance < minDist) {
+
+							minDist = distance;
+
+							founded = true;
+
+							resultInnerCeilZID = kk;
+
+							resultCeilZID = z;
+						}
 
 
+					}
+
+				}
+
+			}
+
+			shellNum++;
+		}
+
+		Dev_ResultInnerCeilZID[cid] = resultInnerCeilZID;
+		Dev_ResultCeilZID[cid] = resultCeilZID;
+	}
 
 
 }
 
-void Dev_Statistic() {
-	//Kernel_Statistic<<<1, 1>>>();
+void Dev_Statistic(std::vector<int>* linkedCells_EventID,
+					std::vector<int>* linkedCells_TrackID,
+					std::vector<int>* linkedCells_ZoneID,
+					std::vector<StepInfo*>* linkedCells_StepInfo,
+					std::vector<G4ThreeVector>* linkedCells_ShiftPos,
+					int totalCeilZ, int totalSize,std::fstream* ofsAnalysisPath_DistanceXYZ) {
+
+	/*Local Vars*/
+	G4ThreeVector* ShiftPos;
+	G4ThreeVector* Dev_ShiftPos;
+	int *CeilZID;
+	int *Dev_CeilZID;
+	int *ResultInnerCeilZID;
+	int *Dev_ResultInnerCeilZID;
+	int *ResultCeilZID;
+	int *Dev_ResultCeilZID;
+	int *StartID;
+	int *Dev_StartID;
+	int *PKANumEachCeilZ;
+	int *Dev_PKANumEachCeilZ;
+	G4ThreeVector subjectTruePosition;
+	G4ThreeVector objectTruePosition;
+	G4ThreeVector subjectShifPos;
+	G4ThreeVector objectShifPos;
+	G4ThreeVector pKADist;
+	cudaError_t cudaStatus;
+	int index;
+	dim3 blocks;
+	dim3 threads;
+	int NB;
+	int NBX;
+	int NBY;
+	int outwidth;
+	/*Body*/
+
+	outwidth = NWGlobal::GetInstance()->GetSimParamters().GetOutWidth();
+
+	ShiftPos = new G4ThreeVector[totalSize];
+
+	ResultInnerCeilZID = new int[totalSize];
+
+	ResultCeilZID = new int[totalSize];
+
+	CeilZID = new int[totalSize];
+
+	StartID = new int[totalCeilZ];
+
+	PKANumEachCeilZ = new int[totalCeilZ];
+	index = 0;
+
+	for (int i = 0; i < totalCeilZ; i++) {
+
+		StartID[i] = index;
+
+		for (std::vector<G4ThreeVector>::iterator it = linkedCells_ShiftPos[i].begin; it != linkedCells_ShiftPos[i].end; it++) {
+			ShiftPos[index] = *it;
+			CeilZID[index] = i;
+
+			index++;
+		}
+
+		PKANumEachCeilZ[i] = linkedCells_ShiftPos[i].size();
+	}
+
+	cudaStatus = cudaMalloc((void**)&Dev_ShiftPos, sizeof(G4ThreeVector)*totalSize);
+	if (cudaStatus != cudaSuccess) {
+		std::cout << "The memory allocate not right !" << std::endl;
+		system("pause");
+		exit(1);
+	}
+
+	cudaStatus = cudaMalloc((void**)&Dev_ResultInnerCeilZID, sizeof(int)*totalSize);
+	if (cudaStatus != cudaSuccess) {
+		std::cout << "The memory allocate not right !" << std::endl;
+		system("pause");
+		exit(1);
+	}
+
+	cudaStatus = cudaMalloc((void**)&Dev_ResultCeilZID, sizeof(int)*totalSize);
+	if (cudaStatus != cudaSuccess) {
+		std::cout << "The memory allocate not right !" << std::endl;
+		system("pause");
+		exit(1);
+	}
+
+	cudaStatus = cudaMalloc((void**)&Dev_CeilZID, sizeof(int)*totalSize);
+	if (cudaStatus != cudaSuccess) {
+		std::cout << "The memory allocate not right !" << std::endl;
+		system("pause");
+		exit(1);
+	}
+
+
+	cudaStatus = cudaMalloc((void**)&Dev_StartID, sizeof(int)*totalCeilZ);
+	if (cudaStatus != cudaSuccess) {
+		std::cout << "The memory allocate not right !" << std::endl;
+		system("pause");
+		exit(1);
+	}
+
+	cudaStatus = cudaMalloc((void**)&Dev_PKANumEachCeilZ, sizeof(int)*totalCeilZ);
+	if (cudaStatus != cudaSuccess) {
+		std::cout << "The memory allocate not right !" << std::endl;
+		system("pause");
+		exit(1);
+	}
+
+	cudaStatus = cudaMemcpy(Dev_ShiftPos, ShiftPos, sizeof(G4ThreeVector)*totalSize, cudaMemcpyHostToDevice);
+
+	cudaStatus = cudaMemcpy(Dev_CeilZID, CeilZID, sizeof(int)*totalSize, cudaMemcpyHostToDevice);
+
+	cudaStatus = cudaMemcpy(Dev_StartID, StartID, sizeof(int)*totalCeilZ, cudaMemcpyHostToDevice);
+
+	cudaStatus = cudaMemcpy(Dev_PKANumEachCeilZ, PKANumEachCeilZ, sizeof(int)*totalCeilZ, cudaMemcpyHostToDevice);
+
+	NB = (totalSize - 1) / BLOCKSIZE + 1;
+
+	NBX = GRIDDIMX;
+	NBY = (NB - 1) / NBX + 1;
+
+	blocks = dim3(NBX, NBY);
+	threads = dim3(BLOCKSIZE, 1);
+
+	Kernel_Statistic<<<blocks, threads >>>(Dev_ShiftPos, Dev_CeilZID, Dev_StartID, Dev_PKANumEachCeilZ,Dev_ResultInnerCeilZID, Dev_ResultCeilZID,totalCeilZ, totalSize);
+
+	cudaStatus = cudaMemcpy(ResultInnerCeilZID, Dev_ResultInnerCeilZID, sizeof(int)*totalSize, cudaMemcpyDeviceToHost);
+	cudaStatus = cudaMemcpy(ResultCeilZID, Dev_ResultCeilZID, sizeof(int)*totalSize, cudaMemcpyDeviceToHost);
+	/*OutPut*/
+
+	index = 0;
+
+	for (int i = 0; i < totalCeilZ; i++) {
+
+		for (int j = 0; j<linkedCells_ShiftPos[i].size(); j++) {
+			subjectShifPos = linkedCells_ShiftPos[i].at(j);
+			objectShifPos = linkedCells_ShiftPos[ResultCeilZID[index]].at(ResultInnerCeilZID[index]);
+			pKADist = subjectShifPos - objectShifPos;
+
+			if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
+				subjectTruePosition = linkedCells_StepInfo[i].at(j)->GetpostPosition();
+				objectTruePosition = linkedCells_StepInfo[ResultCeilZID[index]].at(ResultInnerCeilZID[index])->GetpostPosition();
+			}
+			else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+				ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+				ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+				ConcentReaction(Iso) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
+
+				subjectTruePosition = linkedCells_StepInfo[i].at(j)->GetprePosition();
+				objectTruePosition = linkedCells_StepInfo[ResultCeilZID[index]].at(ResultInnerCeilZID[index])->GetprePosition();
+			}
+
+
+			*ofsAnalysisPath_DistanceXYZ
+				<< std::setw(outwidth) << linkedCells_ZoneID[i].at(j)
+				<< std::setw(outwidth) << i
+				<< std::setw(outwidth) << linkedCells_EventID[i].at(j)
+				<< std::setw(outwidth) << linkedCells_TrackID[i].at(j)
+				<< std::setw(outwidth) << linkedCells_StepInfo[i].at(i)->GetStepID()
+				<< std::setw(outwidth) << linkedCells_ZoneID[ResultCeilZID[index]].at[ResultInnerCeilZID[index]]
+				<< std::setw(outwidth) << j
+				<< std::setw(outwidth) << linkedCells_EventID[ResultCeilZID[index]].at[ResultInnerCeilZID[index]]
+				<< std::setw(outwidth) << linkedCells_TrackID[ResultCeilZID[index]].at[ResultInnerCeilZID[index]]
+				<< std::setw(outwidth) << linkedCells_StepInfo[ResultCeilZID[index]].at[ResultInnerCeilZID[index]]->GetStepID()
+				<< std::setw(outwidth) << subjectTruePosition.getX()
+				<< std::setw(outwidth) << subjectTruePosition.getY()
+				<< std::setw(outwidth) << subjectTruePosition.getZ()
+				<< std::setw(outwidth) << subjectShifPos.getX()
+				<< std::setw(outwidth) << subjectShifPos.getY()
+				<< std::setw(outwidth) << subjectShifPos.getZ()
+				<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << abs(pKADist.getX())
+				<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << abs(pKADist.getY())
+				<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << abs(pKADist.getZ())
+				<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << pKADist.mag() << std::endl;
+
+
+			index++;
+		}
+	}
+
+
+	/*Memory Free*/
+	if (NULL != ShiftPos) delete[] ShiftPos;
+	if (NULL != ShiftPos) delete[] ResultInnerCeilZID;
+	if (NULL != ShiftPos) delete[] ResultCeilZID;
+	if (NULL != ShiftPos) delete[] StartID;
+	if (NULL != ShiftPos) delete[] PKANumEachCeilZ;
+
+	cudaFree(Dev_ShiftPos);
+	cudaFree(Dev_CeilZID);
+	cudaFree(Dev_ResultInnerCeilZID);
+	cudaFree(Dev_ResultCeilZID);
+	cudaFree(Dev_StartID);
+	cudaFree(Dev_PKANumEachCeilZ);
+
 }
 
 
@@ -47,6 +282,7 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 	std::vector<TrackInfo>::iterator iteratorTrackInfo;
 	std::vector<int>* linkedCells_EventID = NULL;
 	std::vector<int>* linkedCells_TrackID = NULL;
+	std::vector<int>* linkedCells_ZoneID = NULL;
 	std::vector<StepInfo*>* linkedCells_StepInfo = NULL;
 	std::vector<G4ThreeVector>* linkedCells_ShiftPos = NULL;
 	int** ceilXYCount;
@@ -84,6 +320,7 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 	int ZoneCount;
 	int corr_i;
 	int corr_j;
+	int totalSize;
 	/*Body*/
 
 	ceil_Interval[0] = ceil_Interval[1] = NWGlobal::GetInstance()->GetSimParamters().GetLinkCellInterval_xy();
@@ -138,6 +375,7 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 
 	linkedCells_EventID = new std::vector<int>[ceilingNum_OneDim[2]];
 	linkedCells_TrackID = new std::vector<int>[ceilingNum_OneDim[2]];
+	linkedCells_ZoneID = new std::vector<int>[ceilingNum_OneDim[2]];
 	linkedCells_StepInfo = new std::vector<StepInfo*>[ceilingNum_OneDim[2]];
 	linkedCells_ShiftPos = new std::vector<G4ThreeVector>[ceilingNum_OneDim[2]];
 
@@ -155,6 +393,7 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 	for (int i = 0; i < ceilingNum_OneDim[2]; i++) {
 		std::vector<int>().swap(linkedCells_EventID[i]);
 		std::vector<int>().swap(linkedCells_TrackID[i]);
+		std::vector<int>().swap(linkedCells_ZoneID[i]);
 		std::vector<StepInfo*>().swap(linkedCells_StepInfo[i]);
 	}
 
@@ -180,6 +419,8 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 		}
 	}
 
+
+	totalSize = 0;
 	it = storedData->begin();
 
 	for (; it != storedData->end(); it++) {
@@ -190,6 +431,9 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 			theSize = iteratorTrackInfo->GetStepsInfo()->size();
 
 			for (int index = 0; index < theSize; index++) {
+
+				totalSize++;
+
 				if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
 					if (0 != iteratorTrackInfo->GetStepsInfo()->at(index).GetProcessName().compare(std::string("hadElastic"))) {
 						break;
@@ -241,6 +485,10 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 				ceilIndex[1] = max(ceilIndex[1], 0);
 				ceilIndex[2] = max(ceilIndex[2], 0);
 
+				SubjectZoneID_X = max(ZoneCenter[0] - ceilIndex[0], ceilIndex[0] - ZoneCenter[0]);
+				SubjectZoneID_Y = max(ZoneCenter[1] - ceilIndex[1], ceilIndex[1] - ZoneCenter[1]);
+				SubjectZoneID = max(SubjectZoneID_X, SubjectZoneID_Y);
+
 
 				ceilXYCount[ceilIndex[0]][ceilIndex[1]] += 1;
 
@@ -248,6 +496,7 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 				shiftPosition[1] = shiftPosition[1] - (ceilIndex[1] - ZoneCenter[1])*ceil_Interval[1];
 
 				linkID = ceilIndex[2];
+				linkedCells_ZoneID[linkID].push_back(SubjectZoneID);
 				linkedCells_EventID[linkID].push_back(it->first);
 				linkedCells_TrackID[linkID].push_back(iteratorTrackInfo->GetTrackID());
 				linkedCells_StepInfo[linkID].push_back(&iteratorTrackInfo->GetStepsInfo()->at(index));
@@ -258,136 +507,12 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 	}
 
 
-	for (int k = 0; k < ceilingNum_OneDim[2]; k++) {
-
-		subjectLinkID = k;
-
-		for (size_t l = 0; l < linkedCells_StepInfo[subjectLinkID].size(); l++) {
-
-			subjectEventID = linkedCells_EventID[subjectLinkID].at(l);
-			subjectTrackID = linkedCells_TrackID[subjectLinkID].at(l);
-			subjectStepID = linkedCells_StepInfo[subjectLinkID].at(l)->GetStepID();
-
-			if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
-				subjectTruePosition = linkedCells_StepInfo[subjectLinkID].at(l)->GetpostPosition();
-			}
-			else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
-				ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
-				ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
-				ConcentReaction(Iso) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
-
-				subjectTruePosition = linkedCells_StepInfo[subjectLinkID].at(l)->GetprePosition();
-			}
-
-			subjectShiftPostion = linkedCells_ShiftPos[subjectLinkID].at(l);
-
-			ceilIndex[0] = min(int((subjectTruePosition.getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
-			ceilIndex[1] = min(int((subjectTruePosition.getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
-
-			SubjectZoneID_X = max(ZoneCenter[0] - ceilIndex[0], ceilIndex[0] - ZoneCenter[0]);
-			SubjectZoneID_Y = max(ZoneCenter[1] - ceilIndex[1], ceilIndex[1] - ZoneCenter[1]);
-			SubjectZoneID = max(SubjectZoneID_X, SubjectZoneID_Y);
-
-			minDist = 1.e32;
-			shellNum = 0;
-			founded = false;
-
-			minDist_objectEventID = -1;
-			minDist_objectTrackID = -1;
-			minDist_objectStepID = -1;
-			minDist_ObjectLinkedID = -1;
-
-			ObjectZoneID = -1;
-
-			while (!founded) {
-
-				for (int kk = max(k - shellNum, 0); kk < min(k + shellNum + 1, ceilingNum_OneDim[2]); kk++) {
-
-					objectLinkID = kk;
-
-					for (size_t m = 0; m < linkedCells_StepInfo[objectLinkID].size(); m++) {
-
-						int objectEventID = linkedCells_EventID[objectLinkID].at(m);
-						int objectTrackID = linkedCells_TrackID[objectLinkID].at(m);
-						int objectStepID = linkedCells_StepInfo[objectLinkID].at(m)->GetStepID();
-
-						if (subjectEventID != objectEventID || subjectTrackID != objectTrackID || subjectStepID != objectStepID) {
-
-							if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
-								objectTruePosition = linkedCells_StepInfo[objectLinkID].at(m)->GetpostPosition();
-							}
-							else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
-								ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
-								ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
-								ConcentReaction(Iso) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
-
-								objectTruePosition = linkedCells_StepInfo[objectLinkID].at(m)->GetprePosition();
-							}
-
-							objectShiftPostion = linkedCells_ShiftPos[objectLinkID].at(m);
-
-							pKADist = subjectShiftPostion - objectShiftPostion;
-							distance = pKADist.mag();
-
-							if (distance < minDist) {
-
-								minDist = distance;
-
-								minDist_x = abs(pKADist.getX());
-								minDist_y = abs(pKADist.getY());
-								minDist_z = abs(pKADist.getZ());
-
-								minDist_ObjectLinkedID = objectLinkID;
-
-								minDist_objectEventID = objectEventID;
-								minDist_objectTrackID = objectTrackID;
-								minDist_objectStepID = objectStepID;
-
-
-								ceilIndex[0] = min(int((objectTruePosition.getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
-								ceilIndex[1] = min(int((objectTruePosition.getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
-
-								ObjectZoneID_X = max(ZoneCenter[0] - ceilIndex[0], ceilIndex[0] - ZoneCenter[0]);
-								ObjectZoneID_Y = max(ZoneCenter[1] - ceilIndex[1], ceilIndex[1] - ZoneCenter[1]);
-								ObjectZoneID = max(ObjectZoneID_X, ObjectZoneID_Y);
-
-								founded = true;
-							}
-
-						}
-
-					}
-
-				}
-
-				shellNum = shellNum + 1;
-			}
-
-
-			*ofsAnalysisPath_DistanceXYZ
-				<< std::setw(outwidth) << SubjectZoneID
-				<< std::setw(outwidth) << subjectLinkID
-				<< std::setw(outwidth) << subjectEventID
-				<< std::setw(outwidth) << subjectTrackID
-				<< std::setw(outwidth) << subjectStepID
-				<< std::setw(outwidth) << ObjectZoneID
-				<< std::setw(outwidth) << minDist_ObjectLinkedID
-				<< std::setw(outwidth) << minDist_objectEventID
-				<< std::setw(outwidth) << minDist_objectTrackID
-				<< std::setw(outwidth) << minDist_objectStepID
-				<< std::setw(outwidth) << subjectTruePosition.getX()
-				<< std::setw(outwidth) << subjectTruePosition.getY()
-				<< std::setw(outwidth) << subjectTruePosition.getZ()
-				<< std::setw(outwidth) << subjectShiftPostion.getX()
-				<< std::setw(outwidth) << subjectShiftPostion.getY()
-				<< std::setw(outwidth) << subjectShiftPostion.getZ()
-				<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << minDist_x
-				<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << minDist_y
-				<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << minDist_z
-				<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << minDist << std::endl;
-		}
-
-	}
+	Dev_Statistic(linkedCells_EventID,
+					linkedCells_TrackID,
+					linkedCells_ZoneID,
+					linkedCells_StepInfo,
+					linkedCells_ShiftPos,
+					ceilingNum_OneDim[2], totalSize,ofsAnalysisPath_DistanceXYZ);
 
 
 	for (int ZoneID = 0; ZoneID < ZoneNum; ZoneID++) {
@@ -433,6 +558,7 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 
 	if (NULL != linkedCells_EventID) delete[] linkedCells_EventID;
 	if (NULL != linkedCells_TrackID) delete[] linkedCells_TrackID;
+	if (NULL != linkedCells_ZoneID) delete[] linkedCells_ZoneID;
 	if (NULL != linkedCells_StepInfo) delete[] linkedCells_StepInfo;
 
 	for (int i = 0; i < ceilingNum_OneDim[0]; i++) {
