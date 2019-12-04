@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project(BCAPKASpec)
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
 option(WITH_GEANT4_UIVIS "Build with geant4 UI and vis driver" ON)
 
 if(WITH_GEANT4_UIVIS)
@@ -46,11 +48,12 @@ endforeach()
 
 
 set(UTILLIBS MiniUtilities)
-set(BCALIBS Common)
-set(BCABINS APPLICATIONS ANALYSIS)
+set(BCALIBS Common CommonGPU)
+set(BCABINS APPLICATIONS ANALYSIS ANALYSIS_GPU)
 
 set(APPS NeutronW_Simulation)
 set(ANALYS NeutronW_Analysis New_NeutronW_Analysis)
+set(ANALYSIS_GPU New_NeutronW_Analysis_GPU)
 
 foreach(UTILLIBNAME ${UTILLIBS})
   add_subdirectory(${PROJECT_SOURCE_DIR}/LIB/${UTILLIBNAME})

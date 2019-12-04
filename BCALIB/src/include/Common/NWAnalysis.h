@@ -11,39 +11,12 @@
 
 
 class NWAnalysis {
-private:
+public:
 	NWAnalysis();
 
-	static NWAnalysis *NWAnalysisInstance;
-public:
 	~NWAnalysis();
 
-	static NWAnalysis* GetInstance();
-
-	static void ReleaseInstance();
-
-	void AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedData);
-
-	void Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData,double boundary[][2], 
-		std::fstream* ofsAnalysisPath_DistanceXYZ, std::fstream *ofsAnalysisPath_linkedCellPosition,
-		std::fstream* ofsAnalysisPath_ZoneCount, std::fstream* ofsAnalysisPath_CeilCount);
-
-
-	void New_AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedData);
-
-	void New_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData, double boundary[][2],
-		std::fstream* ofsAnalysisPath_DistanceXYZ, std::fstream *ofsAnalysisPath_linkedCellPosition,
-		std::fstream* ofsAnalysisPath_ZoneCount, std::fstream* ofsAnalysisPath_CeilCount);
-
-
-public:
-	class NWAnalysisGarbo {
-	public:
-		NWAnalysisGarbo();
-		~NWAnalysisGarbo();
-	};
-
-	static NWAnalysisGarbo NWAnalysisGarboInstance;
+	virtual void AnalysisResult(std::map<int, std::vector<TrackInfo>>* storedData);
 
 public:
 

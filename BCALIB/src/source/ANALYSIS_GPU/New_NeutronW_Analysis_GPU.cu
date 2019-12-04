@@ -1,12 +1,12 @@
 #include <iostream>
 #include "NWGlobal.h"
-#include "NWAnalysis_New.h"
+#include "NWAnalysis_GPU.h"
 #include "NWSimParameters.h"
 #include <sstream>
 
 void AnalysisTheResult(int argc, char* argv[]) {
 
-	NWAnalysis_New analysis;
+	NWAnalysis_GPU analysis;
 
 	if (argc < 2) {
 		std::cout << "The argument number is: " << argc << std::endl;

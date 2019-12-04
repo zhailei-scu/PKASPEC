@@ -6,6 +6,8 @@
 
 void AnalysisTheResult(int argc, char* argv[]) {
 
+	NWAnalysis analysis;
+
 	if (argc < 2) {
 		std::cout << "The argument number is: " << argc << std::endl;
 		std::cout << "You must special the 1) the original file path" << std::endl;
@@ -22,7 +24,7 @@ void AnalysisTheResult(int argc, char* argv[]) {
 
 	std::cout << "Read done..." << std::endl;
 
-	NWAnalysis::GetInstance()->AnalysisResult(NWInfoStore::GetInstance()->GetEventsInfo());
+	analysis.AnalysisResult(NWInfoStore::GetInstance()->GetEventsInfo());
 
 }
 
