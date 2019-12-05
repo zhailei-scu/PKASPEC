@@ -44,8 +44,8 @@ void AnalysisTheResult(int argc, char* argv[]) {
 	ss << argv[3];
 	ss >> numberOfSelectedDevice;
 
-	if ((selectedDeviceStart + numberOfSelectedDevice) < 0 || (selectedDeviceStart + numberOfSelectedDevice) >= deviceCount) {
-		std::cout << "You can only use the device from 0 to "<< numberOfSelectedDevice-1 <<std::endl;
+	if ((selectedDeviceStart + numberOfSelectedDevice) < 0 || (selectedDeviceStart + numberOfSelectedDevice) > deviceCount) {
+		std::cout << "You can only use the device from 0 to "<< deviceCount -1 <<std::endl;
 		getchar();
 		exit(1);
 	}
