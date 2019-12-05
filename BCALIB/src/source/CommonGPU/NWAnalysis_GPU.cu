@@ -19,6 +19,8 @@ __global__ void Kernel_Statistic(ThreeVector* Dev_ShiftPos,int *Dev_CeilZID, int
 	double distance;
 	double minDist;
 	int resultInnerCeilZID;
+	int startIndex;
+	int endIndex;
 	int resultCeilZID;
 	/*Body*/
 
@@ -33,8 +35,10 @@ __global__ void Kernel_Statistic(ThreeVector* Dev_ShiftPos,int *Dev_CeilZID, int
 
 		while (!founded) {
 			for (int z = max(CeilZID - shellNum,0); z < min(CeilZID + shellNum+1, totalCeilZ); z++) {
-
-				for (int kk = Dev_StartID[z]; kk < Dev_StartID[z] + Dev_PKANumEachCeilZ[z]; kk++) {
+				
+				startIndex = Dev_StartID[z];
+				endIndex = startIndex + Dev_PKANumEachCeilZ[z] - 1;
+				for (int kk = startIndex; kk <=endIndex; kk++) {
 
 					if (kk != cid) {
 						objectShiftPos[0] = Dev_ShiftPos[kk].x;
@@ -53,7 +57,7 @@ __global__ void Kernel_Statistic(ThreeVector* Dev_ShiftPos,int *Dev_CeilZID, int
 
 							founded = true;
 
-							resultInnerCeilZID = kk;
+							resultInnerCeilZID = kk - startIndex;
 
 							resultCeilZID = z;
 						}
@@ -211,6 +215,7 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 	for (int i = 0; i < totalCeilZ; i++) {
 
 		for (size_t j = 0; j<linkedCells_ShiftPos[i].size(); j++) {
+
 			subjectShifPos = linkedCells_ShiftPos[i].at(j);
 			objectShifPos = linkedCells_ShiftPos[ResultCeilZID[index]].at(ResultInnerCeilZID[index]);
 			pKADist = subjectShifPos - objectShifPos;
@@ -234,9 +239,9 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 				<< std::setw(outwidth) << i
 				<< std::setw(outwidth) << linkedCells_EventID[i].at(j)
 				<< std::setw(outwidth) << linkedCells_TrackID[i].at(j)
-				<< std::setw(outwidth) << linkedCells_StepInfo[i].at(i)->GetStepID()
+				<< std::setw(outwidth) << linkedCells_StepInfo[i].at(j)->GetStepID()
 				<< std::setw(outwidth) << linkedCells_ZoneID[ResultCeilZID[index]].at(ResultInnerCeilZID[index])
-				<< std::setw(outwidth) << j
+				<< std::setw(outwidth) << ResultCeilZID[index]
 				<< std::setw(outwidth) << linkedCells_EventID[ResultCeilZID[index]].at(ResultInnerCeilZID[index])
 				<< std::setw(outwidth) << linkedCells_TrackID[ResultCeilZID[index]].at(ResultInnerCeilZID[index])
 				<< std::setw(outwidth) << linkedCells_StepInfo[ResultCeilZID[index]].at(ResultInnerCeilZID[index])->GetStepID()
@@ -255,7 +260,6 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 			index++;
 		}
 	}
-
 
 	/*Memory Free*/
 	if (NULL != ShiftPos) delete[] ShiftPos;
@@ -637,7 +641,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "New_DistanceResult_OriginDistance.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "NewGPU_DistanceResult_OriginDistance.txt";
 
 		ss >> OrignalDistancePath;
 
@@ -646,7 +650,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "New_DistanceResult_Analysis_EqualInterval.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "NewGPU_DistanceResult_Analysis_EqualInterval.txt";
 
 		ss >> AnalysisPath_EqualInterval;
 
@@ -655,7 +659,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "New_DistanceResult_Analysis_PowerInterval.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "NewGPU_DistanceResult_Analysis_PowerInterval.txt";
 
 		ss >> AnalysisPath_PowerInterval;
 
@@ -664,7 +668,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "New_DistanceResult_Analysis_EndReason.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "NewGPU_DistanceResult_Analysis_EndReason.txt";
 
 		ss >> AnalysisPath_EndReason;
 
@@ -673,7 +677,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "New_DistanceResult_Analysis_DeviateAxesDistance.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "NewGPU_DistanceResult_Analysis_DeviateAxesDistance.txt";
 
 		ss >> AnalysisPath_DeviateAxesDistance;
 
@@ -682,7 +686,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "New_DistanceResult_Analysis_DistanceXYZ.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "NewGPU_DistanceResult_Analysis_DistanceXYZ.txt";
 
 		ss >> AnalysisPath_DistanceXYZ;
 
@@ -691,7 +695,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "New_DistanceResult_Analysis_linkedCellPosition.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "NewGPU_DistanceResult_Analysis_linkedCellPosition.txt";
 
 		ss >> AnalysisPath_linkedCellPosition;
 
@@ -700,7 +704,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "New_ZoneCount.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "NewGPU_ZoneCount.txt";
 
 		ss >> AnalysisPath_ZoneCount;
 
@@ -710,7 +714,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "New_CeilCount.txt";
+		ss << NWGlobal::GetInstance()->GetSimParamters().GetOutPath()->c_str() << "\\" << "NewGPU_CeilCount.txt";
 
 		ss >> AnalysisPath_CeilXYCount;
 
@@ -720,7 +724,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << "New_DistanceResult_OriginDistance.txt";
+		ss << "NewGPU_DistanceResult_OriginDistance.txt";
 
 		ss >> OrignalDistancePath;
 
@@ -729,7 +733,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << "New_DistanceResult_Analysis_EqualInterval.txt";
+		ss << "NewGPU_DistanceResult_Analysis_EqualInterval.txt";
 
 		ss >> AnalysisPath_EqualInterval;
 
@@ -738,7 +742,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << "New_DistanceResult_Analysis_PowerInterval.txt";
+		ss << "NewGPU_DistanceResult_Analysis_PowerInterval.txt";
 
 		ss >> AnalysisPath_PowerInterval;
 
@@ -747,7 +751,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << "New_DistanceResult_Analysis_EndReason.txt";
+		ss << "NewGPU_DistanceResult_Analysis_EndReason.txt";
 
 		ss >> AnalysisPath_EndReason;
 
@@ -756,7 +760,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << "New_DistanceResult_Analysis_DeviateAxesDistance.txt";
+		ss << "NewGPU_DistanceResult_Analysis_DeviateAxesDistance.txt";
 
 		ss >> AnalysisPath_DeviateAxesDistance;
 
@@ -765,7 +769,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << "New_DistanceResult_Analysis_DistanceXYZ.txt";
+		ss << "NewGPU_DistanceResult_Analysis_DistanceXYZ.txt";
 
 		ss >> AnalysisPath_DistanceXYZ;
 
@@ -774,7 +778,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << "New_DistanceResult_Analysis_linkedCellPosition.txt";
+		ss << "NewGPU_DistanceResult_Analysis_linkedCellPosition.txt";
 
 		ss >> AnalysisPath_linkedCellPosition;
 
@@ -784,7 +788,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << "New_ZoneCount.txt";
+		ss << "NewGPU_ZoneCount.txt";
 
 		ss >> AnalysisPath_ZoneCount;
 
@@ -793,7 +797,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		ss.str("");
 
-		ss << "New_CeilCount.txt";
+		ss << "NewGPU_CeilCount.txt";
 
 		ss >> AnalysisPath_CeilXYCount;
 
