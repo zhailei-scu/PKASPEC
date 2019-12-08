@@ -37,7 +37,9 @@ private:
 	double density;  
 
 public:
-	void ConstructMaterial(MaterialType type);
+	void ConstructSimpleMaterial(MaterialType type);
+
+	//void ConstructComplexMaterial(MaterialType type);
 
 	void Clean();
 public:

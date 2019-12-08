@@ -12,7 +12,7 @@ NWMaterial::~NWMaterial() {
 }
 
 void NWMaterial::Clean() {
-	ConstructMaterial(MaterialType(User_W));
+	ConstructSimpleMaterial(MaterialType(User_W));
 }
 
 NWMaterial::NWMaterial(const NWMaterial & r) {
@@ -44,7 +44,7 @@ NWMaterial NWMaterial::operator = (const NWMaterial & r) {
 }
 
 
-void NWMaterial::ConstructMaterial(MaterialType type) {
+void NWMaterial::ConstructSimpleMaterial(MaterialType type) {
 	switch (type)
 	{
 	case G4_W:

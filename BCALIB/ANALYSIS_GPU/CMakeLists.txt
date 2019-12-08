@@ -22,11 +22,15 @@ foreach(LIBNAME ${BCALIBS})
 	include_directories(${PROJECT_SOURCE_DIR}/../src/include/${LIBNAME})
 endforeach()
 
+foreach(LIBNAME_GPU ${BCALIBS_GPU})
+	include_directories(${PROJECT_SOURCE_DIR}/../src/include/${LIBNAME_GPU})
+endforeach()
+
 include_directories(${PROJECT_SOURCE_DIR}/../src/include/ANALYSIS_GPU)
 
 foreach(ANALYSNAME ${ANALYSIS_GPU})
 	cuda_add_executable(${ANALYSNAME} ${PROJECT_SOURCE_DIR}/../src/source/ANALYSIS_GPU/${ANALYSNAME}.cu)
-	target_link_libraries(${ANALYSNAME} ${UTILLIBS} ${BCALIBS} ${Geant4_LIBRARIES} ${CUDA_cudadevrt_LIBRARY})
+	target_link_libraries(${ANALYSNAME} ${UTILLIBS} ${BCALIBS} ${BCALIBS_GPU} ${Geant4_LIBRARIES} ${CUDA_cudadevrt_LIBRARY})
 
 	install(TARGETS ${ANALYSNAME} RUNTIME DESTINATION bin)
 endforeach()

@@ -48,7 +48,8 @@ endforeach()
 
 
 set(UTILLIBS MiniUtilities)
-set(BCALIBS Common CommonGPU)
+set(BCALIBS Common)
+set(BCALIBS_GPU CommonGPU)
 set(BCABINS APPLICATIONS ANALYSIS ANALYSIS_GPU)
 
 set(APPS NeutronW_Simulation)
@@ -63,6 +64,10 @@ foreach(LIBNAME ${BCALIBS})
   add_subdirectory(${PROJECT_SOURCE_DIR}/BCALIB/${LIBNAME})
 endforeach()
 
+foreach(LIBNAME_GPU ${BCALIBS_GPU})
+  add_subdirectory(${PROJECT_SOURCE_DIR}/BCALIB/${LIBNAME_GPU})
+endforeach()
+
 foreach(BINNAME ${BCABINS})
   add_subdirectory(${PROJECT_SOURCE_DIR}/BCALIB/${BINNAME})
 endforeach()
@@ -72,4 +77,4 @@ message("CMAKE_CURRENT_LIST_FILE is : " ${CMAKE_CURRENT_LIST_FILE})
 message("_geant4_thisdir : " ${_geant4_thisdir})
 message("Geant4_INCLUDE_DIR: " ${Geant4_INCLUDE_DIR})
 
-add_custom_target(BCAPKASpec DEPENDS ${UTILLIBS} ${BCALIBS} ${APPS} ${ANALYS})
+add_custom_target(BCAPKASpec DEPENDS ${UTILLIBS} ${BCALIBS} ${BCALIBS_GPU} ${APPS} ${ANALYS} ${ANALYSIS_GPU})

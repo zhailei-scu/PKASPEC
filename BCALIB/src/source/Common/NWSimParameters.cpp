@@ -119,7 +119,7 @@ void NWSimParameters::SetDefulatValue() {
 	this->beam.SetFluxRange(FluxRange);
 
 	//Material
-	this->targetMaterial.ConstructMaterial(MaterialType(G4_W));
+	this->targetMaterial.ConstructSimpleMaterial(MaterialType(G4_W));
 }
 
 void NWSimParameters::PrintParameters() {
