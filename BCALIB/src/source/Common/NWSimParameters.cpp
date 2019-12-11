@@ -33,6 +33,12 @@ NWSimParameters& NWSimParameters::operator=(const NWSimParameters & r) {
 
 	this->flushFrequence = r.flushFrequence;
 
+	this->halfWorld_x = r.halfWorld_x;
+
+	this->halfWorld_y = r.halfWorld_y;
+
+	this->halfWorld_z = r.halfWorld_z;
+
 	this->EventLoopsNumber = r.EventLoopsNumber;
 
 	this->linkCellInterval_xy = r.linkCellInterval_xy;
@@ -62,6 +68,11 @@ void NWSimParameters::Clean() {
 
 	this->flushFrequence = 100;
 
+
+	this->halfWorld_x = 10000 * cm;
+	this->halfWorld_y = 10000 * cm;
+	this->halfWorld_z = 10000 * cm;
+
 	this->EventLoopsNumber = 0;
 
 	this->linkCellInterval_xy = 20 * mm;
@@ -85,7 +96,6 @@ void NWSimParameters::ReadParametersFromFile(const char*) {
 
 void NWSimParameters::SetDefulatValue() {
 
-	this->theConcentReaction = ConcentReaction(Iso);
 
 	double FluxRange[2][2];
 
@@ -96,6 +106,15 @@ void NWSimParameters::SetDefulatValue() {
 	this->OutWidth = 20;
 
 	this->flushFrequence = 100;
+
+	this->halfWorld_x = 10000 * cm;
+	this->halfWorld_y = 10000 * cm;
+	this->halfWorld_z = 10000 * cm;
+
+
+	//-----Change below----
+
+	this->theConcentReaction = ConcentReaction(Iso);
 
 	this->linkCellInterval_xy = 20 * mm;
 

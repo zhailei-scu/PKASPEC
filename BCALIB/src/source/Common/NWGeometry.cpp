@@ -19,10 +19,9 @@ NWGeometry::~NWGeometry() {
 
 G4VPhysicalVolume* NWGeometry::Construct() {
 
-
-	G4double targetBox_x = 10000 * cm;
-	G4double targetBox_y = 10000 * cm;
-	G4double targetBox_z = 10000 * cm;
+	double halfWorld_x = NWGlobal::GetInstance()->GetSimParamters().GetHalfWorld_x();
+	double halfWorld_y = NWGlobal::GetInstance()->GetSimParamters().GetHalfWorld_y();
+	double halfWorld_z = NWGlobal::GetInstance()->GetSimParamters().GetHalfWorld_z();
 
 	// Option to switch on/off checking of volumes overlaps
 	G4bool checkOverlaps = true;
@@ -34,7 +33,7 @@ G4VPhysicalVolume* NWGeometry::Construct() {
 	G4Material* worldMaterial = new G4Material("world_Vacum",1.0, 1.01*g /mole, universe_mean_density, kStateGas, 0.1*kelvin,1.e-19*kelvin);
 	//G4cout << worldMaterial << G4endl;
 
-	G4Box* worldBoxShape = new G4Box("worldBoxShape", 1.0*targetBox_x, 1.0*targetBox_y, 1.0*targetBox_z);
+	G4Box* worldBoxShape = new G4Box("worldBoxShape", 1.0*halfWorld_x, 1.0*halfWorld_y, 1.0*halfWorld_z);
 	G4LogicalVolume* worldBoxLogicalVolume = new G4LogicalVolume(worldBoxShape, worldMaterial,"worldBoxLogical");
 	G4VPhysicalVolume*  worldBoxPhysicVolume = new G4PVPlacement(0,							//the rotation 
 																 G4ThreeVector(0, 0, 0),	//the central position
@@ -98,7 +97,7 @@ G4VPhysicalVolume* NWGeometry::Construct() {
 
 	G4cout << targetMaterial << G4endl;
 
-	G4Box* targetBoxShape = new G4Box("targetBoxShape", 0.5*targetBox_x, 0.5*targetBox_y, 0.5*targetBox_z);
+	G4Box* targetBoxShape = new G4Box("targetBoxShape", 0.5*halfWorld_x, 0.5*halfWorld_y, 0.5*halfWorld_z);
 	G4LogicalVolume* targetBoxLogicalVolume = new G4LogicalVolume(targetBoxShape, targetMaterial, "targetBoxLogical");
 	new G4PVPlacement(0,                          //the rotation 
 																 G4ThreeVector(0, 0, 0),     //the central position

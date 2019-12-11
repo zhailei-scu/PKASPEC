@@ -352,8 +352,8 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 		newBoundary[i][0] = (beamCenter[i] - (ZoneNum - 1 + 0.50)*ceil_Interval[i]);
 		newBoundary[i][1] = (beamCenter[i] + (ZoneNum - 1 + 0.50)*ceil_Interval[i]);
 	}
-	newBoundary[2][0] = boundary[2][0];
-	newBoundary[2][1] = boundary[2][0] + ceilingNum_OneDim[2] * ceil_Interval[2];
+	newBoundary[2][1] = boundary[2][1];
+	newBoundary[2][0] = boundary[2][1] - ceilingNum_OneDim[2] * ceil_Interval[2];
 
 
 	std::cout << "new_boundary_x " << newBoundary[0][0] << " " << newBoundary[0][1] << std::endl;
@@ -401,7 +401,7 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 					<< std::setw(outwidth) << SubjectZoneID
 					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << (i - ZoneCenter[0])*ceil_Interval[0]
 					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << (j - ZoneCenter[1])*ceil_Interval[1]
-					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[2][0] + k * ceil_Interval[2]
+					<< std::setw(outwidth) << std::setiosflags(std::ios::scientific) << std::setprecision(7) << newBoundary[2][1] - k * ceil_Interval[2]
 					<< std::endl;
 			}
 		}
@@ -441,7 +441,7 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 
 					ceilIndex[0] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
 					ceilIndex[1] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
-					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getZ() - newBoundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
+					ceilIndex[2] = min(int((newBoundary[2][1] - iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getZ()) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
 
 					shiftPosition = iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition();
 
@@ -464,7 +464,7 @@ void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 
 					ceilIndex[0] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
 					ceilIndex[1] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
-					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getZ() - newBoundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
+					ceilIndex[2] = min(int((newBoundary[2][1] - iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getZ()) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
 
 					shiftPosition = iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition();
 				}
@@ -955,7 +955,6 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 						boundary[2][0] = min(iteratorStepInfo->GetpostPosition().getZ(), boundary[2][0]);
 						boundary[0][1] = max(iteratorStepInfo->GetpostPosition().getX(), boundary[0][1]);
 						boundary[1][1] = max(iteratorStepInfo->GetpostPosition().getY(), boundary[1][1]);
-						boundary[2][1] = max(iteratorStepInfo->GetpostPosition().getZ(), boundary[2][1]);
 
 					}
 					else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
@@ -970,7 +969,6 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 						boundary[2][0] = min(iteratorStepInfo->GetprePosition().getZ(), boundary[2][0]);
 						boundary[0][1] = max(iteratorStepInfo->GetprePosition().getX(), boundary[0][1]);
 						boundary[1][1] = max(iteratorStepInfo->GetprePosition().getY(), boundary[1][1]);
-						boundary[2][1] = max(iteratorStepInfo->GetprePosition().getZ(), boundary[2][1]);
 
 					}
 
@@ -996,6 +994,8 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		}
 	}
+
+	boundary[2][1] = 0.5*NWGlobal::GetInstance()->GetSimParamters().GetHalfWorld_z();
 
 	if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
 		ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||

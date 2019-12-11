@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include "G4ThreeVector.hh"
+#include "G4SystemOfUnits.hh"
 #include "NWBeam.h"
 #include "NWMaterials.h"
 
@@ -47,8 +48,13 @@ private:
 
 	int OutWidth = 20;
 
-private:
 	int flushFrequence = 100;
+
+	G4double halfWorld_x = 10000 * cm;
+	G4double halfWorld_y = 10000 * cm;
+	G4double halfWorld_z = 10000 * cm;
+
+private:
 
 	int EventLoopsNumber;
 
@@ -104,6 +110,19 @@ public:
 
 	inline int GetFlushFrequence() const{
 		return this->flushFrequence;
+	}
+
+
+	inline double GetHalfWorld_x() const {
+		return this->halfWorld_x;
+	}
+
+	inline double GetHalfWorld_y() const {
+		return this->halfWorld_y;
+	}
+
+	inline double GetHalfWorld_z() const {
+		return this->halfWorld_z;
 	}
 
 	inline void SetEventLoopsNumber(const int & theEventLoopsNumber) {

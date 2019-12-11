@@ -1,0 +1,52 @@
+&MATERIALSUBCTL
+	!&MODE    0          ! 0 for Geant4 real single element material, 1 for user defined single element single isotope material , 2 for multiple element material
+	!&NAME    G4_W       ! support all Geant4 inner material 
+	!&ATOMNUMBER 74
+	
+	!&MODE    1          ! 0 for Geant4 real single element material, 1 for user defined single element single isotope material , 2 for multiple element material
+	!&NAME    W       	 ! support all Geant4 inner material 
+	!&ATOMNUMBER 74
+	!&BARYONNUMBER 184
+	!&DENSITY 19.3       !(g/cm3)
+	!&MOLEMASS 183.84    !(g/mole)
+	
+	&MODE    2          	 ! 0 for Geant4 real single element material, 1 for user defined single element single isotope material , 2 for multiple element material
+	&NAME    ComplexW       ! support all Geant4 inner material 
+	&MAINELEMENT   #1
+		&NAME W
+		&ATOMNUMBER 74
+		&DENSITY 19.3       !(g/cm3)
+		&FRACTION   0.9
+		
+		&ISOTOPE  #1
+			&BARYONNUMBER 184
+			&MOLEMASS 183.84    !(g/mole)
+			&AUNDANCE   1.0
+		&ENDISOTOPE
+	&ENDELEMENT
+	
+	&ELEMENT   #2
+		&NAME Hf
+		&ATOMNUMBER 72
+		&FRACTION   0.05
+		
+		&ISOTOPE  #1
+			&BARYONNUMBER 179
+			&MOLEMASS 179.00    !(g/mole)
+			&FRACTION   1.0
+		&ENDISOTOPE
+	&ENDELEMENT
+	
+	&ELEMENT   #3
+		&NAME Re
+		&ATOMNUMBER 75
+		&FRACTION   0.05
+		
+		&ISOTOPE  #1
+			&BARYONNUMBER 185
+			&MOLEMASS 185.00    !(g/mole)
+			&FRACTION   1.0
+		&ENDISOTOPE
+	&ENDELEMENT
+	
+&ENDSUBCTRL

@@ -2,6 +2,7 @@
 #include "G4SteppingManager.hh"
 #include "G4Step.hh"
 #include "NWGlobal.h"
+#include "NWVAuxiliaryTrackInformation.h"
 
 using namespace std;
 
@@ -38,12 +39,67 @@ void NWSteppingAction_Iso::UserSteppingAction(const G4Step* stepping) {
 	double DeltaEng;
 	G4ThreeVector prePosition;
 	G4ThreeVector postPosition;
-
+	int totalSecondBaryonNum;
+	int totalSecondAtomNum;
+	bool matrixAtomReaction;
 	//int trackIndex = -1;
 
 	const G4ParticleDefinition *particle = stepping->GetTrack()->GetParticleDefinition();
 
 	//const G4DynamicParticle *theDynamicParticle = stepping->GetTrack()->GetDynamicParticle();
+
+	/*
+	if (NULL != stepping->GetTrack()->GetAuxiliaryTrackInformationMap()) {
+		if (stepping->GetTrack()->GetAuxiliaryTrackInformationMap()->size() > 0) {
+			std::cout << "----Current TrackID---- " << stepping->GetTrack()->GetTrackID() << std::endl;
+			std::cout << "----Current StepID---- " << stepping->GetTrack()->GetCurrentStepNumber() << std::endl;
+			dynamic_cast<NWVAuxiliaryTrackInformation*>(stepping->GetTrack()->GetAuxiliaryTrackInformation(0))->Print();
+		}
+	}
+	*/
+
+	std::cout << "####################################" << std::endl;
+	std::cout << particle->GetParticleName() << std::endl;
+	std::cout << particle->GetPDGCharge() << std::endl;
+	std::cout << particle->GetAtomicNumber() << std::endl;
+	std::cout << particle->GetBaryonNumber() << std::endl;
+
+	totalSecondBaryonNum = 0;
+
+	totalSecondAtomNum = 0;
+
+	if (stepping->GetSecondaryInCurrentStep()->size() > 0) {
+
+		NWVAuxiliaryTrackInformation* aux;
+
+		std::vector<const G4Track*>::const_iterator it = stepping->GetSecondaryInCurrentStep()->begin();
+
+		for (; it != stepping->GetSecondaryInCurrentStep()->end(); it++) {
+			(*it)->SetAuxiliaryTrackInformation(0, aux = new NWVAuxiliaryTrackInformation());
+
+			aux->SetCreatorStepID(stepping->GetTrack()->GetCurrentStepNumber());
+
+			aux->SetCreatorTrackID(stepping->GetTrack()->GetTrackID());
+
+			totalSecondBaryonNum += (*it)->GetParticleDefinition()->GetBaryonNumber();
+
+			totalSecondAtomNum += (*it)->GetParticleDefinition()->GetAtomicNumber();
+
+			(*it)->GetParticleDefinition()->GetPDGCharge();
+		}
+	}
+
+	if (fStopAndKill == stepping->GetTrack()->GetTrackStatus()) {
+		if (totalSecondBaryonNum > particle->GetBaryonNumber()) {
+			matrixAtomReaction = true;
+		}
+	}
+	else {
+		if (totalSecondBaryonNum > 0) {
+			matrixAtomReaction = true;
+		}
+	}
+
 
 	if (particle->GetAtomicNumber() != NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetAtomNumber() &&
 		particle->GetAtomicNumber() > 2 &&
