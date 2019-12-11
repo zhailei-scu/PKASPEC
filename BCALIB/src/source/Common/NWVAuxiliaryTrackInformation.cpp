@@ -11,7 +11,7 @@ NWVAuxiliaryTrackInformation::~NWVAuxiliaryTrackInformation() {
 }
 
 
-void NWVAuxiliaryTrackInformation::Print() {
+void NWVAuxiliaryTrackInformation::Print() const{
 	std::cout << "Creator Track ID: " << this->CreatorTrackID << std::endl;
 	std::cout << "Creator Step ID: " << this->CreatorStepID << std::endl;
 }

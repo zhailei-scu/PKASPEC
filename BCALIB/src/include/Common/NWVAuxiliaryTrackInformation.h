@@ -12,7 +12,7 @@ public:
 
 	void CleanUp();
 
-	void Print();
+	void Print() const;
 
 private:
 	int CreatorTrackID;

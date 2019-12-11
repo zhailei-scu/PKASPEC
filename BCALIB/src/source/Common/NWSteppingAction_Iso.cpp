@@ -41,7 +41,7 @@ void NWSteppingAction_Iso::UserSteppingAction(const G4Step* stepping) {
 	G4ThreeVector postPosition;
 	int totalSecondBaryonNum;
 	int totalSecondAtomNum;
-	bool matrixAtomReaction;
+	//bool matrixAtomReaction;
 	//int trackIndex = -1;
 
 	const G4ParticleDefinition *particle = stepping->GetTrack()->GetParticleDefinition();
@@ -57,12 +57,6 @@ void NWSteppingAction_Iso::UserSteppingAction(const G4Step* stepping) {
 		}
 	}
 	*/
-
-	std::cout << "####################################" << std::endl;
-	std::cout << particle->GetParticleName() << std::endl;
-	std::cout << particle->GetPDGCharge() << std::endl;
-	std::cout << particle->GetAtomicNumber() << std::endl;
-	std::cout << particle->GetBaryonNumber() << std::endl;
 
 	totalSecondBaryonNum = 0;
 
@@ -91,12 +85,12 @@ void NWSteppingAction_Iso::UserSteppingAction(const G4Step* stepping) {
 
 	if (fStopAndKill == stepping->GetTrack()->GetTrackStatus()) {
 		if (totalSecondBaryonNum > particle->GetBaryonNumber()) {
-			matrixAtomReaction = true;
+			//matrixAtomReaction = true;
 		}
 	}
 	else {
 		if (totalSecondBaryonNum > 0) {
-			matrixAtomReaction = true;
+			//matrixAtomReaction = true;
 		}
 	}
 
