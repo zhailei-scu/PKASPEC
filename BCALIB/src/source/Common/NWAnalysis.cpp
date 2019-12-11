@@ -595,6 +595,7 @@ void Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData,do
 	int ZoneCount;
 	int corr_i;
 	int corr_j;
+	size_t m;
 	/*Body*/
 
 	ceil_Interval[0] = ceil_Interval[1] = NWGlobal::GetInstance()->GetSimParamters().GetLinkCellInterval_xy();
@@ -838,7 +839,7 @@ void Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData,do
 
 									objectLinkID = kk * ceilingNum_OneDim[0] * ceilingNum_OneDim[1] + jj * ceilingNum_OneDim[0] + ii;
 
-									for (size_t m = 0; m < linkedCells_StepInfo[objectLinkID].size(); m++) {
+									for (m = 0; m < linkedCells_StepInfo[objectLinkID].size(); m++) {
 
 										int objectEventID = linkedCells_EventID[objectLinkID].at(m);
 										int objectTrackID = linkedCells_TrackID[objectLinkID].at(m);
