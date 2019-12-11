@@ -610,8 +610,10 @@ void New_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 	int ZoneCount;
 	int corr_i;
 	int corr_j;
-	size_t m;
+	size_t mm;
 	/*Body*/
+
+	mm = 0;
 
 	ceil_Interval[0] = ceil_Interval[1] = NWGlobal::GetInstance()->GetSimParamters().GetLinkCellInterval_xy();
 
@@ -832,11 +834,11 @@ void New_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 
 					objectLinkID = kk;
 
-					for (m = 0; m < linkedCells_StepInfo[objectLinkID].size(); m++) {
+					for (mm = 0; mm < linkedCells_StepInfo[objectLinkID].size(); mm++) {
 
-						int objectEventID = linkedCells_EventID[objectLinkID].at(m);
-						int objectTrackID = linkedCells_TrackID[objectLinkID].at(m);
-						int objectStepID = linkedCells_StepInfo[objectLinkID].at(m)->GetStepID();
+						int objectEventID = linkedCells_EventID[objectLinkID].at(mm);
+						int objectTrackID = linkedCells_TrackID[objectLinkID].at(mm);
+						int objectStepID = linkedCells_StepInfo[objectLinkID].at(mm)->GetStepID();
 
 						if (subjectEventID != objectEventID || subjectTrackID != objectTrackID || subjectStepID != objectStepID) {
 
