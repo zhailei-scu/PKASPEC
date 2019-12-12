@@ -410,7 +410,6 @@ void NWAnalysis_New::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 						boundary[2][0] = min(iteratorStepInfo->GetpostPosition().getZ(), boundary[2][0]);
 						boundary[0][1] = max(iteratorStepInfo->GetpostPosition().getX(), boundary[0][1]);
 						boundary[1][1] = max(iteratorStepInfo->GetpostPosition().getY(), boundary[1][1]);
-						boundary[2][1] = max(iteratorStepInfo->GetpostPosition().getZ(), boundary[2][1]);
 
 					}
 					else if (ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
@@ -425,7 +424,6 @@ void NWAnalysis_New::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 						boundary[2][0] = min(iteratorStepInfo->GetprePosition().getZ(), boundary[2][0]);
 						boundary[0][1] = max(iteratorStepInfo->GetprePosition().getX(), boundary[0][1]);
 						boundary[1][1] = max(iteratorStepInfo->GetprePosition().getY(), boundary[1][1]);
-						boundary[2][1] = max(iteratorStepInfo->GetprePosition().getZ(), boundary[2][1]);
 
 					}
 
@@ -451,6 +449,8 @@ void NWAnalysis_New::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 		}
 	}
+
+	boundary[2][1] = 0.5*NWGlobal::GetInstance()->GetSimParamters().GetHalfWorld_z();
 
 	if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
 		ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
@@ -653,8 +653,8 @@ void New_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 		newBoundary[i][0] = (beamCenter[i] - (ZoneNum - 1 + 0.50)*ceil_Interval[i]);
 		newBoundary[i][1] = (beamCenter[i] + (ZoneNum - 1 + 0.50)*ceil_Interval[i]);
 	}
-	newBoundary[2][0] = boundary[2][0];
-	newBoundary[2][1] = boundary[2][0] + ceilingNum_OneDim[2] * ceil_Interval[2];
+	newBoundary[2][1] = boundary[2][1];
+	newBoundary[2][0] = boundary[2][1] - ceilingNum_OneDim[2] * ceil_Interval[2];
 
 
 	std::cout << "new_boundary_x " << newBoundary[0][0] << " " << newBoundary[0][1] << std::endl;
@@ -684,7 +684,7 @@ void New_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 		std::vector<StepInfo*>().swap(linkedCells_StepInfo[i]);
 	}
 
-
+	/*
 	for (int k = 0; k < ceilingNum_OneDim[2]; k++) {
 		for (int j = 0; j < ceilingNum_OneDim[1]; j++) {
 			SubjectZoneID_Y = max(ZoneCenter[1] - j, j - ZoneCenter[1]);
@@ -705,6 +705,8 @@ void New_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 			}
 		}
 	}
+	*/
+
 
 	it = storedData->begin();
 
@@ -735,7 +737,7 @@ void New_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 
 					ceilIndex[0] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
 					ceilIndex[1] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
-					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getZ() - newBoundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
+					ceilIndex[2] = min(int((newBoundary[2][1] - iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition().getZ()) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
 
 					shiftPosition = iteratorTrackInfo->GetStepsInfo()->at(index).GetpostPosition();
 
@@ -758,7 +760,7 @@ void New_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedDat
 
 					ceilIndex[0] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getX() - newBoundary[0][0]) / ceil_Interval[0]), ceilingNum_OneDim[0] - 1);
 					ceilIndex[1] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getY() - newBoundary[1][0]) / ceil_Interval[1]), ceilingNum_OneDim[1] - 1);
-					ceilIndex[2] = min(int((iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getZ() - newBoundary[2][0]) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
+					ceilIndex[2] = min(int((newBoundary[2][1] - iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition().getZ()) / ceil_Interval[2]), ceilingNum_OneDim[2] - 1);
 
 					shiftPosition = iteratorTrackInfo->GetStepsInfo()->at(index).GetprePosition();
 				}

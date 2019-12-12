@@ -691,7 +691,7 @@ void Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData,do
 		std::vector<StepInfo*>().swap(linkedCells_StepInfo[i]);
 	}
 
-
+	/*
 	for (int k = 0; k < ceilingNum_OneDim[2]; k++) {
 		for (int j = 0; j < ceilingNum_OneDim[1]; j++) {
 			SubjectZoneID_Y = max(ZoneCenter[1] - j,j - ZoneCenter[1]);
@@ -712,6 +712,7 @@ void Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData,do
 			}
 		}
 	}
+	*/
 
 	it= storedData->begin();
 
