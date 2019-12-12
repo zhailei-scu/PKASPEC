@@ -279,8 +279,7 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 
 
 void Dev_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData, double boundary[][2],
-	fstream* ofsAnalysisPath_DistanceXYZ, fstream *ofsAnalysisPath_linkedCellPosition,
-	fstream* ofsAnalysisPath_ZoneCount, fstream* ofsAnalysisPath_CeilCount) {
+	fstream* ofsAnalysisPath_DistanceXYZ,fstream* ofsAnalysisPath_ZoneCount, fstream* ofsAnalysisPath_CeilCount) {
 	/*Local Vars*/
 	double ceil_Interval[3];
 	int ceilingNum_OneDim[3];
@@ -1074,7 +1073,7 @@ void NWAnalysis_GPU::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 	}
 
-	Dev_Cal_MinDist_LinkedCell(storedData, boundary, &ofsAnalysisPath_DistanceXYZ, &ofsAnalysisPath_linkedCellPosition, &ofsAnalysisPath_ZoneCount, &ofsAnalysisPath_CeilXYCount);
+	Dev_Cal_MinDist_LinkedCell(storedData, boundary, &ofsAnalysisPath_DistanceXYZ, &ofsAnalysisPath_ZoneCount, &ofsAnalysisPath_CeilXYCount);
 
 
 	ofsAnalysis_EqualInterval.close();

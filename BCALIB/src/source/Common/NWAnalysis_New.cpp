@@ -8,8 +8,7 @@
 
 
 void New_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData, double boundary[][2],
-	fstream* ofsAnalysisPath_DistanceXYZ, fstream *ofsAnalysisPath_linkedCellPosition,
-	fstream* ofsAnalysisPath_ZoneCount, fstream* ofsAnalysisPath_CeilCount);
+	fstream* ofsAnalysisPath_DistanceXYZ,fstream* ofsAnalysisPath_ZoneCount, fstream* ofsAnalysisPath_CeilCount);
 
 
 NWAnalysis_New::NWAnalysis_New() {
@@ -528,7 +527,7 @@ void NWAnalysis_New::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 	}
 
-	New_Cal_MinDist_LinkedCell(storedData, boundary, &ofsAnalysisPath_DistanceXYZ, &ofsAnalysisPath_linkedCellPosition, &ofsAnalysisPath_ZoneCount, &ofsAnalysisPath_CeilXYCount);
+	New_Cal_MinDist_LinkedCell(storedData, boundary, &ofsAnalysisPath_DistanceXYZ, &ofsAnalysisPath_ZoneCount, &ofsAnalysisPath_CeilXYCount);
 
 
 	ofsAnalysis_EqualInterval.close();
@@ -558,8 +557,7 @@ void NWAnalysis_New::AnalysisResult(std::map<int, std::vector<TrackInfo>>* store
 
 
 void New_Cal_MinDist_LinkedCell(std::map<int, std::vector<TrackInfo>>* storedData, double boundary[][2],
-	fstream* ofsAnalysisPath_DistanceXYZ, fstream *ofsAnalysisPath_linkedCellPosition,
-	fstream* ofsAnalysisPath_ZoneCount, fstream* ofsAnalysisPath_CeilCount) {
+	fstream* ofsAnalysisPath_DistanceXYZ,fstream* ofsAnalysisPath_ZoneCount, fstream* ofsAnalysisPath_CeilCount) {
 	/*Local Vars*/
 	double ceil_Interval[3];
 	int ceilingNum_OneDim[3];
