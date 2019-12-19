@@ -111,7 +111,7 @@ G4ThreeVector NWBeam::CalOriginPositionXY(int CurrentEventsIndex,int TotalEvents
 		default:
 		{
 			std::cout << "Unknown turnon mode type: " << this->turnOnMode << std::endl;
-			system("pause");
+			getchar();
 			exit(1);
 		}
 	}

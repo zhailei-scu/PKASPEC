@@ -47,6 +47,8 @@ NWSimParameters& NWSimParameters::operator=(const NWSimParameters & r) {
 
 	this->linkCellInterval_z = r.linkCellInterval_z;
 
+	this->Analysis_CutEnergy = r.Analysis_CutEnergy;
+
 	this->targetMaterial = r.targetMaterial;
 
 	this->beam = r.beam;
@@ -80,6 +82,8 @@ void NWSimParameters::Clean() {
 	this->linkCellNum_z = 10;
 
 	this->linkCellInterval_z = 20 *mm;
+
+	this->Analysis_CutEnergy = 5.5E-5*MeV;
 
 	this->beam.Clean();
 
@@ -121,6 +125,8 @@ void NWSimParameters::SetDefulatValue() {
 	this->linkCellInterval_z = 20 * mm;
 
 	this->linkCellNum_z = 10;
+
+	this->Analysis_CutEnergy = 5.5E-5*MeV;
 
 	//beam
 	this->beam.SetTurnOnMode(BeamMode(Area_Random));

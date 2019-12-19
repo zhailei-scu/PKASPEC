@@ -64,6 +64,8 @@ private:
 
 	double linkCellInterval_z;
 
+	double Analysis_CutEnergy = 5.5E-5*MeV;
+
 private:
 	NWMaterial targetMaterial;
 
@@ -141,6 +143,13 @@ public:
 		return this->linkCellInterval_xy;
 	}
 
+	inline void SetAnalysis_CutEnergy(const double theAnalysis_CutEnergy) {
+		this->Analysis_CutEnergy = theAnalysis_CutEnergy;
+	}
+
+	inline double GetAnalysis_CutEnergy() const{
+		return this->Analysis_CutEnergy;
+	}
 
 	inline void SetLinkCellInterval_z(const double theLinkCellInterval_z) {
 		this->linkCellInterval_z = theLinkCellInterval_z;

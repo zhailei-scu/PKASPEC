@@ -27,7 +27,7 @@ void AnalysisTheResult(int argc, char* argv[]) {
 		std::cout << "You must special the 1) the original file path" << std::endl;
 		std::cout << "You must special the 2) the start of selectted GPU ID" << std::endl;
 		std::cout << "You must special the 3) the number of selectted GPU ID" << std::endl;
-		system("pause");
+		getchar();
 		exit(1);
 	}
 	std::string originalDataFilePath;

@@ -114,7 +114,7 @@ void NWSteppingAction_InletEstAndInEstTillEnd::UserSteppingAction(const G4Step* 
 						std::cout << stepping->GetTrack()->GetCurrentStepNumber() << std::endl;
 						std::cout << particle->GetParticleName() << std::endl;
 						std::cout << stepping->GetTrack()->GetParentID() << std::endl;
-						system("pause");
+						getchar();
 						exit(1);
 					}
 
@@ -198,7 +198,7 @@ void NWSteppingAction_InletEstAndInEstTillEnd::UserSteppingAction(const G4Step* 
 			std::cout << "The recorded track id is not match." << std::endl;
 			std::cout << it->second.GetCurrentTrackID() << std::endl;
 			std::cout << stepping->GetTrack()->GetTrackID() << std::endl;
-			system("pause");
+			getchar();
 			exit(1);
 		}
 
@@ -206,7 +206,7 @@ void NWSteppingAction_InletEstAndInEstTillEnd::UserSteppingAction(const G4Step* 
 			std::cout << "The recorded track id is not match." << std::endl;
 			std::cout << it->second.GetParentTrackID() << std::endl;
 			std::cout << stepping->GetTrack()->GetParentID() << std::endl;
-			system("pause");
+			getchar();
 			exit(1);
 		}
 
@@ -215,7 +215,7 @@ void NWSteppingAction_InletEstAndInEstTillEnd::UserSteppingAction(const G4Step* 
 			std::cout << "The recorded particle id is not match." << std::endl;
 			std::cout << particle->GetParticleName() << std::endl;
 			std::cout << it->second.GetParticleName() << std::endl;
-			system("pause");
+			getchar();
 			exit(1);
 		}
 

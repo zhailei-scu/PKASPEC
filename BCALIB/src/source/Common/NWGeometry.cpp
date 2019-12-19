@@ -91,7 +91,7 @@ G4VPhysicalVolume* NWGeometry::Construct() {
 
 	if (!targetMaterial) {
 		std::cout << "The target materials is not defined in nist database: " << NWGlobal::GetInstance()->GetSimParamters().GetTargetMaterial().GetMaterialName() << std::endl;;
-		system("pause");
+		getchar();
 		exit(1);
 	}
 

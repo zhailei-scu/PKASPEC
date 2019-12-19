@@ -68,7 +68,7 @@ void NWActionInitialization::Build() const{
 		default:
 		{
 			std::cout << "Unknown record way: " << NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() << std::endl;
-			system("pause");
+			getchar();
 			exit(1);
 		}
 		break;

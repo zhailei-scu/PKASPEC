@@ -148,28 +148,28 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 	cudaStatus = cudaMalloc((void**)&Dev_ShiftPos, sizeof(ThreeVector)*totalSize);
 	if (cudaStatus != cudaSuccess) {
 		std::cout << "The memory allocate not right !" << std::endl;
-		system("pause");
+		getchar();
 		exit(1);
 	}
 
 	cudaStatus = cudaMalloc((void**)&Dev_ResultInnerCeilZID, sizeof(int)*totalSize);
 	if (cudaStatus != cudaSuccess) {
 		std::cout << "The memory allocate not right !" << std::endl;
-		system("pause");
+		getchar();
 		exit(1);
 	}
 
 	cudaStatus = cudaMalloc((void**)&Dev_ResultCeilZID, sizeof(int)*totalSize);
 	if (cudaStatus != cudaSuccess) {
 		std::cout << "The memory allocate not right !" << std::endl;
-		system("pause");
+		getchar();
 		exit(1);
 	}
 
 	cudaStatus = cudaMalloc((void**)&Dev_CeilZID, sizeof(int)*totalSize);
 	if (cudaStatus != cudaSuccess) {
 		std::cout << "The memory allocate not right !" << std::endl;
-		system("pause");
+		getchar();
 		exit(1);
 	}
 
@@ -177,14 +177,14 @@ void Dev_Statistic(std::vector<int>* linkedCells_EventID,
 	cudaStatus = cudaMalloc((void**)&Dev_StartID, sizeof(int)*totalCeilZ);
 	if (cudaStatus != cudaSuccess) {
 		std::cout << "The memory allocate not right !" << std::endl;
-		system("pause");
+		getchar();
 		exit(1);
 	}
 
 	cudaStatus = cudaMalloc((void**)&Dev_PKANumEachCeilZ, sizeof(int)*totalCeilZ);
 	if (cudaStatus != cudaSuccess) {
 		std::cout << "The memory allocate not right !" << std::endl;
-		system("pause");
+		getchar();
 		exit(1);
 	}
 

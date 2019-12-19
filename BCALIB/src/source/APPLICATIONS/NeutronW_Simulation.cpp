@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 
 	if (argc < 2) {
 		std::cout << "You must special the event loops that you run" << std::endl;
-		system("pause");
+		getchar();
 		exit(1);
 	}
 

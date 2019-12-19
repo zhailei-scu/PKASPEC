@@ -88,7 +88,7 @@ void NWMaterial::ConstructSimpleMaterial(MaterialType type) {
 	default:
 	{
 		std::cout << "Unkonwn material type "<< type << std::endl;
-		system("pause");
+		getchar();
 		exit(1);
 	}
 	break;

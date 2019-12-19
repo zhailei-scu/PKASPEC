@@ -45,7 +45,7 @@ QGSP_BIC_HP_Process StepInfo::ConvertToProcessID(std::string processName) {
 	}
 	else {
 		std::cout << "Unkonown process name in QGSP_BIC_HP model: " << processName << std::endl;
-		system("pause");
+		getchar();
 		exit(1);
 	}
 
@@ -76,7 +76,7 @@ std::string StepInfo::ConvertToProcessName(const QGSP_BIC_HP_Process processID) 
 	}
 	else {
 		std::cout << "Unkonown process ID in QGSP_BIC_HP model: " << processID << std::endl;
-		system("pause");
+		getchar();
 		exit(1);
 	}
 
@@ -229,6 +229,21 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 			std::cout << EventID << std::endl;
 		}
 
+		if (ConcentReaction(InletEstAndInEstTillEnd) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() ||
+			ConcentReaction(InletToFirstNonEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction() || 
+			ConcentReaction(MatrixAtom) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
+
+			if (preEng < NWGlobal::GetInstance()->GetSimParamters().GetAnalysis_CutEnergy()) {
+				continue;
+			}
+		}
+		else if (ConcentReaction(InletToLastEst) == NWGlobal::GetInstance()->GetSimParamters().GetTheConcentReaction()) {
+			if (deltaEng < NWGlobal::GetInstance()->GetSimParamters().GetAnalysis_CutEnergy()) {
+				continue;
+			}
+		}
+
+
 		if (0 == NWInfoStore::GetInstance()->GetEventsInfo()->count(EventID)) {
 
 			NWInfoStore::GetInstance()->GetEventsInfo()->insert(map<int, vector<TrackInfo>>::value_type(EventID, vector<TrackInfo>()));
@@ -251,7 +266,7 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 				if (dumpCountTrackInfo > 1) {
 					cout << "There are dumplicate case for event: " << EventID
 						<< "track : " << TrackID << endl;
-					system("pause");
+					getchar();
 				}
 			}
 		}
@@ -271,7 +286,7 @@ void NWInfoStore::ReadEventsInfo(std::string path) {
 					cout << "There are dumplicate case for event: " << EventID
 						<< " track : " << TrackID
 						<< " step : " << StepID << endl;
-					system("pause");
+					getchar();
 				}
 			}
 		}

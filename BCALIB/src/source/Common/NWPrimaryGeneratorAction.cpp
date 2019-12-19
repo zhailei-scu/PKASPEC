@@ -20,7 +20,7 @@ NWPrimaryGeneratorAction::NWPrimaryGeneratorAction() {
 		msg << "The particle : " << NWGlobal::GetInstance()->GetSimParamters().GetNWBeam().GetGunParticleName()->c_str() << "cannot be finded!";
 		G4Exception("NWPrimaryGeneratorAction::GeneratePrimaries", "Code01", FatalException, msg);
 
-		system("pause");
+		getchar();
 		exit(1);
 	}
 
@@ -93,7 +93,7 @@ void NWPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
 		msg << "The targetBox is not defined yet!";
 		G4Exception("NWPrimaryGeneratorAction::GeneratePrimaries", "Code02", FatalException, msg);
 
-		system("pause");
+		getchar();
 		exit(1);
 	}
 	G4Box* fTargetVolumBox = dynamic_cast<G4Box*>(fTargetLogicalBox->GetSolid());
@@ -104,7 +104,7 @@ void NWPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent) {
 		msg << "The worldBox is not defined yet!";
 		G4Exception("NWPrimaryGeneratorAction::GeneratePrimaries", "Code02", FatalException, msg);
 
-		system("pause");
+		getchar();
 		exit(1);
 	}
 	G4Box* fWorldVolumBox = dynamic_cast<G4Box*>(fWorldLogicalBox->GetSolid());

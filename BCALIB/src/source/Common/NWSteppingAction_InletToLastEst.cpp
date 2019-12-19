@@ -71,7 +71,7 @@ void NWSteppingAction_InletToLastEst::UserSteppingAction(const G4Step* stepping)
 
 						if (Cond == NotForced &&  (PostStepLoops - np - 1) != PSDIPIDTriggered) {
 							std::cout << "The are wrong between : " << PostStepLoops - np - 1 << " and " << PSDIPIDTriggered << std::endl;
-							//system("pause");
+							//getchar();
 						}
 
 
