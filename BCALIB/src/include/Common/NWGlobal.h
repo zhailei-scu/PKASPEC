@@ -45,9 +45,11 @@ public:
 public:
 	void PrintInfo();
 
-	void InitialGlobal(const std::string& mode);
+	void InitialGlobal(const std::string& mode,const NWSimParameters & simParameters);
 
 	NWSimParameters const & GetSimParamters() const;
+
+	void NWGlobal::SetSimParamters(const NWSimParameters &simParamters);
 
 public:
 	class NWGlobalGarbo {

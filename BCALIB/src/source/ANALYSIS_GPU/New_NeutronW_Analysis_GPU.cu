@@ -14,6 +14,7 @@ void AnalysisTheResult(int argc, char* argv[]) {
 	int selectedDeviceStart;
 	int numberOfSelectedDevice;
 	cudaError theError;
+	double ParticleEnergy;
 	/*Body*/
 
 	cudaGetDeviceCount(&deviceCount);
@@ -22,11 +23,12 @@ void AnalysisTheResult(int argc, char* argv[]) {
 
 	NWAnalysis_GPU analysis;
 
-	if (argc < 3) {
+	if (argc < 4) {
 		std::cout << "The argument number is: " << argc << std::endl;
 		std::cout << "You must special the 1) the original file path" << std::endl;
 		std::cout << "You must special the 2) the start of selectted GPU ID" << std::endl;
 		std::cout << "You must special the 3) the number of selectted GPU ID" << std::endl;
+		std::cout << "You must special the 4) the particle energy" << std::endl;
 		getchar();
 		exit(1);
 	}
@@ -44,6 +46,11 @@ void AnalysisTheResult(int argc, char* argv[]) {
 	ss << argv[3];
 	ss >> numberOfSelectedDevice;
 
+	ss.clear();
+	ss.str("");
+	ss << argv[4];
+	ss >> ParticleEnergy;
+
 	if ((selectedDeviceStart + numberOfSelectedDevice) < 0 || (selectedDeviceStart + numberOfSelectedDevice) > deviceCount) {
 		std::cout << "You can only use the device from 0 to "<< deviceCount -1 <<std::endl;
 		getchar();
@@ -57,13 +64,28 @@ void AnalysisTheResult(int argc, char* argv[]) {
 		exit(1);
 	}
 
-	NWGlobal::GetInstance()->InitialGlobal(analysisMode);
+
+	/*Parameters*/
+	NWSimParameters* theSimParemeters = new NWSimParameters();
+
+	theSimParemeters->SetDefulatValue();
+
+	NWBeam *theBeam = new NWBeam();
+
+	theBeam->SetGunEnergy(ParticleEnergy*MeV);
+
+	theSimParemeters->SetBeam(*theBeam);
+
+	NWGlobal::GetInstance()->InitialGlobal(analysisMode,*theSimParemeters);
 
 	NWInfoStore::GetInstance()->ReadEventsInfo(originalDataFilePath);
 
 	std::cout << "Read done, execute the new analysis..." << std::endl;
 
 	analysis.AnalysisResult(NWInfoStore::GetInstance()->GetEventsInfo());
+
+	delete theSimParemeters;
+	delete theBeam;
 }
 
 int main(int argc, char* argv[]) {

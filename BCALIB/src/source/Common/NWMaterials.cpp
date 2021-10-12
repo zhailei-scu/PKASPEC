@@ -85,6 +85,14 @@ void NWMaterial::ConstructSimpleMaterial(MaterialType type) {
 	}
 	break;
 
+	case G4_Fe:
+	{
+		this->theModel = MaterialModel(G4Default);
+		this->name = "G4_Fe";
+		this->atomNumber = 26;
+	}
+	break;
+
 	default:
 	{
 		std::cout << "Unkonwn material type "<< type << std::endl;

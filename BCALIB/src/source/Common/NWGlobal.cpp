@@ -28,7 +28,7 @@ NWGlobal* NWGlobal::GetInstance() {
 	return nWGlobalInstance;
 }
 
-void NWGlobal::InitialGlobal(const std::string& mode) {
+void NWGlobal::InitialGlobal(const std::string& mode,const NWSimParameters & simParameters) {
 
 	int OutWidth;
 	std::stringstream ss;
@@ -37,7 +37,7 @@ void NWGlobal::InitialGlobal(const std::string& mode) {
 	ss.clear();
 	ss.str("");
 
-	this->simParamters.SetDefulatValue();
+	this->SetSimParamters(simParameters);
 
 	OutWidth = this->simParamters.GetOutWidth();
 
@@ -140,6 +140,10 @@ void NWGlobal::InitialGlobal(const std::string& mode) {
 
 void NWGlobal::PrintInfo(){
 	this->simParamters.PrintParameters();
+}
+
+void NWGlobal::SetSimParamters(const NWSimParameters &simParamters){
+	this->simParamters = simParamters;
 }
 
 NWSimParameters const & NWGlobal::GetSimParamters() const{

@@ -14,7 +14,8 @@ enum MaterialType
 	G4_W,
 	G4_Zr,
 	User_W,
-	User_Zr
+	User_Zr,
+	G4_Fe
 };
 
 

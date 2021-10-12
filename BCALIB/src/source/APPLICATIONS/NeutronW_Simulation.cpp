@@ -11,12 +11,23 @@
 #include <sstream>
 #include "../../../../LIB/src/include/MiniUtilities/EXNUMB.h"
 
-void RunTheSimulation(int EventLoops) {
+void RunTheSimulation(int EventLoops,double ParticleEnergy) {
 
 	NWGlobal::GetInstance()->SetEventLoops(EventLoops);
 
+	/*Parameters*/
+	NWSimParameters* theSimParemeters = new NWSimParameters();
+
+	theSimParemeters->SetDefulatValue();
+
+	NWBeam *theBeam = new NWBeam();
+
+	theBeam->SetGunEnergy(ParticleEnergy*MeV);
+
+	theSimParemeters->SetBeam(*theBeam);
+
 	/*Out Path*/
-	NWGlobal::GetInstance()->InitialGlobal(simMode);
+	NWGlobal::GetInstance()->InitialGlobal(simMode,*theSimParemeters);
 
 	NWGlobal::GetInstance()->PrintInfo();
 
@@ -47,15 +58,20 @@ void RunTheSimulation(int EventLoops) {
 	//NWAnalysis::GetInstance()->AnalysisResult(NWInfoStore::GetInstance()->GetEventsInfo());
 
 	if (runManager) delete runManager;
+
+	delete theSimParemeters;
+
+	delete theBeam;
 }
 
 int main(int argc, char* argv[]) {
 
 	int EventLoops;
+	double ParticleEnergy;
 	stringstream ss;
 
-	if (argc < 2) {
-		std::cout << "You must special the event loops that you run" << std::endl;
+	if (argc < 3) {
+		std::cout << "You must special the event loops that you run and the particle energy" << std::endl;
 		getchar();
 		exit(1);
 	}
@@ -65,8 +81,20 @@ int main(int argc, char* argv[]) {
 	ss >> EventLoops;
 
 	std::cout << "The event loops is: " << EventLoops <<std::endl;
+	
+	stringstream().swap(ss);
+	ss.clear();
 
-	RunTheSimulation(EventLoops);
+	ss << argv[2];
+
+	ss >> ParticleEnergy;
+
+	std::cout << "The particle energy is: " << ParticleEnergy <<" MeV"<< std::endl;
+
+	stringstream().swap(ss);
+	ss.clear();
+
+	RunTheSimulation(EventLoops, ParticleEnergy);
 
 	return 0;
 }

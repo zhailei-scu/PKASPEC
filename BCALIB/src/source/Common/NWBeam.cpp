@@ -3,6 +3,23 @@
 
 NWBeam::NWBeam() {
 	this->Clean();
+
+	/*Defalut value*/
+	double FluxRange[2][2];
+
+	SetTurnOnMode(BeamMode(Area_Random));
+
+	SetGunEnergy(14.4*MeV);
+
+	SetGunParticleName(G4String("neutron"));
+
+	SetGunParticleStartDirection(G4ThreeVector(0, 0, -1));
+
+	FluxRange[0][0] = -10 * mm;  //x0
+	FluxRange[0][1] = 10 * mm;  //x1
+	FluxRange[1][0] = -10 * mm;  //y0
+	FluxRange[1][1] = 10 * mm;  //y1
+	SetFluxRange(FluxRange);
 }
 
 NWBeam::~NWBeam() {

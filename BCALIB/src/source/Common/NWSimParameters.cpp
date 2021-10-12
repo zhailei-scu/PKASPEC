@@ -12,6 +12,7 @@ std::string analysisMode = std::string("analysis");
 
 NWSimParameters::NWSimParameters() {
 	this->Clean();
+	SetDefulatValue();
 }
 
 NWSimParameters::~NWSimParameters() {
@@ -118,7 +119,7 @@ void NWSimParameters::SetDefulatValue() {
 
 	//-----Change below----
 
-	this->theConcentReaction = ConcentReaction(Iso);
+	this->theConcentReaction = ConcentReaction(MatrixAtom);
 
 	this->linkCellInterval_xy = 20 * mm;
 
@@ -126,7 +127,8 @@ void NWSimParameters::SetDefulatValue() {
 
 	this->linkCellNum_z = 10;
 
-	this->Analysis_CutEnergy = 5.5E-5*MeV;
+	//this->Analysis_CutEnergy = 5.5E-5*MeV;
+	this->Analysis_CutEnergy = 0.E0*MeV;
 
 	//beam
 	this->beam.SetTurnOnMode(BeamMode(Area_Random));
@@ -144,7 +146,7 @@ void NWSimParameters::SetDefulatValue() {
 	this->beam.SetFluxRange(FluxRange);
 
 	//Material
-	this->targetMaterial.ConstructSimpleMaterial(MaterialType(G4_W));
+	this->targetMaterial.ConstructSimpleMaterial(MaterialType(G4_Fe));
 }
 
 void NWSimParameters::PrintParameters() {

@@ -7,10 +7,12 @@
 void AnalysisTheResult(int argc, char* argv[]) {
 
 	NWAnalysis_New analysis;
+	double ParticleEnergy;
+	stringstream ss;
 
-	if (argc < 2) {
+	if (argc < 3) {
 		std::cout << "The argument number is: " << argc << std::endl;
-		std::cout << "You must special the 1) the original file path" << std::endl;
+		std::cout << "You must special the 1) the original file path and particle energy" << std::endl;
 		getchar();
 		exit(1);
 	}
@@ -18,7 +20,27 @@ void AnalysisTheResult(int argc, char* argv[]) {
 
 	originalDataFilePath = std::string(argv[1]);
 
-	NWGlobal::GetInstance()->InitialGlobal(analysisMode);
+	stringstream().swap(ss);
+	ss.clear();
+
+	ss << argv[2];
+	ss >> ParticleEnergy;
+
+	stringstream().swap(ss);
+	ss.clear();
+
+	/*Parameters*/
+	NWSimParameters* theSimParemeters = new NWSimParameters();
+
+	theSimParemeters->SetDefulatValue();
+
+	NWBeam *theBeam = new NWBeam();
+
+	theBeam->SetGunEnergy(ParticleEnergy*MeV);
+
+	theSimParemeters->SetBeam(*theBeam);
+
+	NWGlobal::GetInstance()->InitialGlobal(analysisMode,*theSimParemeters);
 
 	NWInfoStore::GetInstance()->ReadEventsInfo(originalDataFilePath);
 
