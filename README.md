@@ -2,6 +2,10 @@ A C++ package to apply geant4 to tracking netron step by step.</br>
 
 Modelling: A binary collision approximate(BCA) softwares which externed from Geant4 to analysis netron primary knocked atoms by tracking particle step by step.</br>
 
+
+SCOPE:Particle transportation simulation;neutron transportation track
+
+
 Author: Lei Zhai.</br>
 
 Data:From about 2019/09 to 2020/02.</br>
